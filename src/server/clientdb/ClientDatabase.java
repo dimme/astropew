@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import server.CatastrophicException;
+import common.CatastrophicException;
 
 public class ClientDatabase implements ClientDB{
 	

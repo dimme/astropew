@@ -3,7 +3,7 @@ package server.clientdb;
 import java.net.SocketAddress;
 import java.util.Collection;
 
-import server.CatastrophicException;
+import common.CatastrophicException;
 
 public interface ClientDB {
 

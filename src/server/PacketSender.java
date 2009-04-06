@@ -1,5 +1,6 @@
 package server;
 
+import common.CatastrophicException;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
