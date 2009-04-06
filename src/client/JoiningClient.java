@@ -12,8 +12,7 @@ import common.PackageType;
 
 public class JoiningClient {
 	
-	public static int bytesToInt(byte[] b, int off, int len)
-    {
+	public static int bytesToInt(byte[] b, int off, int len){
             int val = 0;
             int mult = 1;
             for (int i=off+len-1; i>=off; i--)
@@ -31,8 +30,7 @@ public class JoiningClient {
             return val;
     }
 	
-	public static long bytesToLong(byte[] b, int off, int len)
-    {
+	public static long bytesToLong(byte[] b, int off, int len){
 		long val = 0;
         int mult = 1;
         for (int i=off+len-1; i>=off; i--)
@@ -80,7 +78,7 @@ public class JoiningClient {
 		
 		DatagramSocket sock = null;
 		try {
-			sock = new DatagramSocket(25000);
+			sock = new DatagramSocket();
 		} catch (SocketException e) {
 			System.out.println("unable to create socket.");
 			System.exit(1);
