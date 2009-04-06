@@ -2,8 +2,6 @@ package server;
 
 import java.net.SocketAddress;
 
-import common.MessageType;
-
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
