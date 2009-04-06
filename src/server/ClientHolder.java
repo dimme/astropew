@@ -7,7 +7,7 @@ public class ClientHolder implements InfoRouter {
 
 	public ClientHolder(){
 		clients = new ArrayList<Client>();
-	}
+	} 
 	
 	public boolean addClient(Client c){
 		return clients.add(c);
