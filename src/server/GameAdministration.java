@@ -18,14 +18,20 @@ public class GameAdministration {
 	}
 	
 	public void newConnection(String name, SocketAddress saddr) {
-		Client c = cdb.createClient(name, saddr);
-		ps.send(PacketDataFactory.createInitializer(c.getID(), 12345), c);
 		
-		byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name);
+		Client c = cdb.getClient(saddr);
 		
-		for (Client cl : cdb.getClients()) {
-			ps.send(data, cl);
+		if (c == null) {
+			c = cdb.createClient(name, saddr);
+			
+			byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name);
+			
+			for (Client cl : cdb.getClients()) {
+				ps.send(data, cl);
+			}
 		}
+		
+		ps.send(PacketDataFactory.createInitializer(c.getID(), 12345), c);
 	}
 	
 }
