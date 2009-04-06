@@ -17,7 +17,7 @@ public class UDPTestSender {
 		DatagramPacket pack = new DatagramPacket(new byte[(2<<15) - 1], (2<<15)-1, addr, port);
 		
 		for (int i=0; i<10000; i++) {
-			//String data = i + " a b c d e f g h i j k l m n o p q r s t u v w x y z � � � Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tortor ligula, venenatis ultricies, tempus in, tristique quis, elit. Ut molestie libero elementum eros. Phasellus eget justo sit amet arcu cursus malesuada. Nullam velit arcu, posuere congue, volutpat vel, scelerisque elementum, neque. Nam suscipit. Nulla sollicitudin. Maecenas posuere congue enim. Etiam tempus sem. Vivamus faucibus fringilla sem. Donec euismod, turpis sit amet elementum vestibulum, tortor nibh pharetra urna, eget tristique sem tortor ultrices enim. Sed in erat.";
+			//String data = i + " a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tortor ligula, venenatis ultricies, tempus in, tristique quis, elit. Ut molestie libero elementum eros. Phasellus eget justo sit amet arcu cursus malesuada. Nullam velit arcu, posuere congue, volutpat vel, scelerisque elementum, neque. Nam suscipit. Nulla sollicitudin. Maecenas posuere congue enim. Etiam tempus sem. Vivamus faucibus fringilla sem. Donec euismod, turpis sit amet elementum vestibulum, tortor nibh pharetra urna, eget tristique sem tortor ultrices enim. Sed in erat.";
 			String data = i + "";
 			pack.setData( data.getBytes() );
 			sock.send(pack);
