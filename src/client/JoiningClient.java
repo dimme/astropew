@@ -1,22 +1,30 @@
 package client;
 
 import common.CatastrophicException;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
-import common.MessageType;
-import common.PackageType;
-import common.Util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JoiningClient {
 	
+    private NetworkThread nt;
+
+    public JoiningClient(String name, String hostname, int port) {
+        try {
+            ConsoleNetworkObserver cno = new ConsoleNetworkObserver();
+            nt = new NetworkThread(name, hostname, port);
+            nt.addNetworkObserver(cno);
+            nt.start();
+
+            ClientFrame cf = new ClientFrame(this);
+        } catch (CatastrophicException ex) {
+            Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        } catch (RuntimeException ex) {
+            Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
+    }
 
     public static void main(String args[]){
         if(args.length != 3){
@@ -25,19 +33,13 @@ public class JoiningClient {
         }
 
         int port = Integer.parseInt(args[0]);
-        NetworkThread nt;
-        try {
-            ConsoleNetworkObserver cno = new ConsoleNetworkObserver();
-            nt = new NetworkThread(args[2], args[1], port);
-            nt.addNetworkObserver(cno);
-            nt.start();
-        } catch (CatastrophicException ex) {
-            Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(1);
-        } catch (RuntimeException ex) {
-            Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(1);
-        }
+
+        new JoiningClient(args[2], args[1], port);
+
        //Generate world with the seed. etc..
+    }
+
+    public void stop() {
+        nt.setRunning(false);
     }
 }

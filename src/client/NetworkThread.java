@@ -79,7 +79,7 @@ public class NetworkThread extends Thread{
     }
 
     public void run() {
-        while(running){
+        while(isRunning()){
             try {
                 sock.receive(rec);
                 if( rec.getData()[0] == PackageType.INITIALIZER ){
@@ -102,7 +102,7 @@ public class NetworkThread extends Thread{
             }
         }
 
-        while (running) {
+        while (isRunning()) {
             try {
                 sock.receive(rec);
                 byte[] bt = new byte[rec.getLength()];
@@ -126,5 +126,22 @@ public class NetworkThread extends Thread{
      */
     public void setConnected(boolean connected) {
         this.connected = connected;
+    }
+
+    /**
+     * @return the running
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * @param running the running to set
+     */
+    public void setRunning(boolean running) {
+        this.running = running;
+        if( running == false && sock != null && sock.isConnected()) {
+            sock.close();
+        }
     }
 }
