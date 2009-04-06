@@ -3,6 +3,8 @@ package server.clientdb;
 import java.net.SocketAddress;
 import java.util.Collection;
 
+import server.CatastrophicException;
+
 public interface ClientDB {
 
 	public Client getClient(SocketAddress saddr);
@@ -14,6 +16,7 @@ public interface ClientDB {
 	 * Calculate and set id. 
 	 * @param name requested player name
 	 * @param saddr SocketAddr for the client
+	 * @throws CatastrophicException 
 	 */
 	public Client createClient(String name, SocketAddress saddr);
 	

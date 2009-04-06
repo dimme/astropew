@@ -32,6 +32,8 @@
 
 package bananatest;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,9 +80,13 @@ public class Lesson2 extends BaseGame {
          */
         public static void main(String[] args) {
                 Lesson2 app = new Lesson2();
-                //We will load our own "fantastic" Flag Rush logo. Yes, I'm an artist.
-                app.setConfigShowMode(ConfigShowMode.AlwaysShow, Lesson2.class.getClassLoader()
-                                .getResource("jmetest/data/images/FlagRush.png"));
+                //We will load our own "fantastic" AstroPew logo. Yes, I'm an artist.
+                try {
+					app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL("file:/h/d1/t/dt06al4/Desktop/pew.jpeg"));
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 app.start();
         }
 
@@ -108,7 +114,6 @@ public class Lesson2 extends BaseGame {
         protected void render(float interpolation) {
                 //Clear the screen
                 display.getRenderer().clearBuffers();
-
                 display.getRenderer().draw(scene);
 
         }
