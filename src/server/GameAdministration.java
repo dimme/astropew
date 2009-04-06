@@ -19,6 +19,7 @@ public class GameAdministration {
 	
 	public void newConnection(String name, SocketAddress saddr) {
 		Client c = cdb.createClient(name, saddr);
+		ps.send(PacketDataFactory.createInitializer(c.getID(), 12345), c);
 		sendMessage(MessageType.PLAYER_JOINED, name);
 	}
 	

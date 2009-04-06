@@ -14,7 +14,7 @@ public class ClientDatabase implements ClientDB{
 	
 	private HashMap<Integer, Client> id2Client;
 	private HashMap<SocketAddress, Integer> addr2Id;
-	int nextId;
+	private int nextId;
 	
 	public ClientDatabase(){
 		addr2Id = new HashMap<SocketAddress, Integer>();

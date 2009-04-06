@@ -15,4 +15,8 @@ public class Client {
 	public int hashCode() {
 		return id;
 	}
+	
+	public int getID() {
+		return id;
+	}
 }

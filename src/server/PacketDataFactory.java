@@ -17,12 +17,33 @@ public class PacketDataFactory {
 		return b;
 	}
 	
+	public static byte[] createInitializer(int id, long worldseed) {
+		byte[] b = new byte[1+4+8];
+		
+		b[0] = PackageType.INITIALIZER;
+		put(id, b, 1);
+		put(worldseed, b, 5);
+		
+		return b;
+	}
 	
-	private static void putInt(int i, byte[] dst, int offset) {
+	
+	private static void put(int i, byte[] dst, int offset) {
 		dst[offset+0] = (byte)( (i >> 24) % 256 );
 		dst[offset+1] = (byte)( (i >> 16) % 256 );
 		dst[offset+2] = (byte)( (i >>  8) % 256 );
 		dst[offset+3] = (byte)( (i      ) % 256 );
+	}
+	
+	private static void put(long l, byte[] dst, int offset) {
+		dst[offset+0] = (byte)( (l >> 56) % 256 );
+		dst[offset+1] = (byte)( (l >> 48) % 256 );
+		dst[offset+2] = (byte)( (l >> 40) % 256 );
+		dst[offset+3] = (byte)( (l >> 32) % 256 );
+		dst[offset+4] = (byte)( (l >> 24) % 256 );
+		dst[offset+5] = (byte)( (l >> 16) % 256 );
+		dst[offset+6] = (byte)( (l >>  8) % 256 );
+		dst[offset+7] = (byte)( (l      ) % 256 );
 	}
 	
 	private static void putBytes(byte[] src, byte[] dst, int offset) {
