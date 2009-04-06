@@ -1,7 +1,7 @@
 package server;
 
 public class CatastrophicException extends Exception{
-	public CatastrophicException(String msg) {
-		super(msg);
+	public CatastrophicException(Throwable cause) {
+		super(cause);
 	}
 }

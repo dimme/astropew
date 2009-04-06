@@ -22,7 +22,6 @@ public class ClientDatabase implements ClientDB{
 		nextId = 0;
 	}
 	
-	@Override
 	public synchronized Client createClient(String name, SocketAddress saddr){
 		if(addr2Id.containsKey(saddr)){
 			return id2Client.get(addr2Id.get(saddr));
@@ -37,7 +36,7 @@ public class ClientDatabase implements ClientDB{
 			
 		} catch (SocketException e) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-			throw new RuntimeException(new CatastrophicException(e.getMessage())); //weird
+			throw new RuntimeException(new CatastrophicException(e));
 		}
 		
 		Client c = new Client(dp,nextId);
@@ -50,7 +49,6 @@ public class ClientDatabase implements ClientDB{
 		return c;
 	}
 
-	@Override
 	public synchronized Client getClient(SocketAddress saddr) {
 		if(addr2Id.containsKey(saddr)){
 			return id2Client.get(addr2Id.get(saddr));
@@ -58,7 +56,6 @@ public class ClientDatabase implements ClientDB{
 		return null;
 	}
 
-	@Override
 	public synchronized Collection<Client> getClients() {
 		return id2Client.values();
 	}
