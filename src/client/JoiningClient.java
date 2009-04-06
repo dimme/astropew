@@ -94,35 +94,36 @@ public class JoiningClient {
 		
 		int id = -1;
 		long randSeed = -1l;
-		while(true){
-			try {
-				sock.setSoTimeout(5000);
-				sock.receive(rec);
-				if( rec.getData()[0] == PackageType.INITIALIZER ){
-					id = bytesToInt(rec.getData(), 1, 4);
-					randSeed = bytesToLong(rec.getData(),5,8);
-					sock.setSoTimeout(0);
-					System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
-				}
-				if(rec.getData()[0] == PackageType.PLAYER_JOINED ){ 
-					int nid = bytesToInt(rec.getData(), 1, 4);
-					byte[] bt = new byte[rec.getLength() - 5];
-					System.arraycopy(rec.getData(), 5, bt, 0, bt.length);
-
-					System.out.println("PLayer Joined. ID = " + nid + " Name = " + new String(bt));
-				}
-			} catch (SocketTimeoutException e ) {
-				try {
-					sock.send(send);
-				} catch (IOException e1) {
-					System.out.println("IOException: Unable to send packet.");
-					System.exit(1);
-				}
-			} catch (IOException e) {
-				System.out.println("IOException: Unable to send packet.");
-				System.exit(1);
+		try {
+		sock.setSoTimeout(5000);
+		while(true){		
+			sock.receive(rec);
+			if( rec.getData()[0] == PackageType.INITIALIZER ){
+				id = bytesToInt(rec.getData(), 1, 4);
+				randSeed = bytesToLong(rec.getData(),5,8);
+				sock.setSoTimeout(0);
+				System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
 			}
+			if(rec.getData()[0] == PackageType.PLAYER_JOINED ){ 
+				int nid = bytesToInt(rec.getData(), 1, 4);
+				byte[] bt = new byte[rec.getLength() - 5];
+				System.arraycopy(rec.getData(), 5, bt, 0, bt.length);
+
+				System.out.println("PLayer Joined. ID = " + nid + " Name = " + new String(bt));
+			}
+			
 		}
+	} catch (SocketTimeoutException e ) {
+		try {
+			sock.send(send);
+		} catch (IOException e1) {
+			System.out.println("IOException: Unable to send packet.");
+			System.exit(1);
+		}
+	} catch (IOException e) {
+		System.out.println("IOException: Unable to send packet.");
+		System.exit(1);
+	}
 		
 		
 		
