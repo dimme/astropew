@@ -104,7 +104,7 @@ public class JoiningClient {
 				sock.setSoTimeout(0);
 				System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
 			}
-			if( rec.getData()[0] == PackageType.INITIALIZER ){
+			if( rec.getData()[0] == PackageType.PLAYER_LEFT ){
 				int lid = bytesToInt(rec.getData(), 1, 4);
 				System.out.println("PLayer Left. ID = " + lid);
 			}
