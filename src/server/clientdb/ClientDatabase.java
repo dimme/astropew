@@ -12,52 +12,48 @@ import server.CatastrophicException;
 
 public class ClientDatabase implements ClientDB{
 	
-	private HashMap<Integer, Client> id2Client;
-	private HashMap<SocketAddress, Integer> addr2Id;
+	private HashMap<Integer, Client> idmap;
+	private HashMap<SocketAddress, Client> addrmap;
 	private int nextId;
 	
 	public ClientDatabase(){
-		addr2Id = new HashMap<SocketAddress, Integer>();
-		id2Client = new HashMap<Integer, Client>();
-		nextId = 0;
+		addrmap = new HashMap<SocketAddress, Client>();
+		idmap = new HashMap<Integer, Client>();
+		nextId = 1;
 	}
 	
 	public synchronized Client createClient(String name, SocketAddress saddr){
-		if(addr2Id.containsKey(saddr)){
-			return id2Client.get(addr2Id.get(saddr));
+		Client c;
+		
+		c = addrmap.get(saddr);
+		if( c != null){
+			return c;
 		}
 		
-		int size = 65000;
-		byte[] b = new byte[size];
 		
-		DatagramPacket dp = null;
 		try {
-			dp = new DatagramPacket(b, size, saddr);			
+			DatagramPacket dp = new DatagramPacket(new byte[65000], 65000, saddr);			
+			c = new Client(dp,nextId);
+			
+			addrmap.put(saddr,c);
+			idmap.put(nextId,c);
+			
+			nextId++;
+					
+			return c;
 			
 		} catch (SocketException e) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 			throw new RuntimeException(new CatastrophicException(e));
 		}
-		
-		Client c = new Client(dp,nextId);
-		
-		addr2Id.put(saddr, nextId);
-		id2Client.put(nextId,c);
-		
-		nextId++;
-				
-		return c;
 	}
 
 	public synchronized Client getClient(SocketAddress saddr) {
-		if(addr2Id.containsKey(saddr)){
-			return id2Client.get(addr2Id.get(saddr));
-		}
-		return null;
+		return addrmap.get(saddr);
 	}
 
 	public synchronized Collection<Client> getClients() {
-		return id2Client.values();
+		return idmap.values();
 	}
 
 }
