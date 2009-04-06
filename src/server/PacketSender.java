@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import server.clientdb.Client;
+
 public class PacketSender {
 	
 	DatagramSocket sock;
@@ -19,8 +21,12 @@ public class PacketSender {
 		sock = new DatagramSocket();
 	}
 	
-	public synchronized void send(byte[] data, Client c) {
+	public void send(byte[] data, Client c) {
 		exec.submit( new SendTask(data, c) );
+	}
+	
+	public void stop() {
+		exec.shutdown();
 	}
 	
 	private class SendTask implements Runnable {
@@ -37,6 +43,7 @@ public class PacketSender {
 			c.dg.setData(data);
 			try {
 				sock.send(c.dg);
+				//TODO: Klar?
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 			}
