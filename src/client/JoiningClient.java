@@ -27,7 +27,9 @@ public class JoiningClient {
         int port = Integer.parseInt(args[0]);
         NetworkThread nt;
         try {
+            ConsoleNetworkObserver cno = new ConsoleNetworkObserver();
             nt = new NetworkThread(args[2], args[1], port);
+            nt.addNetworkObserver(cno);
             nt.start();
         } catch (CatastrophicException ex) {
             Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);

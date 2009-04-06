@@ -13,6 +13,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,11 +30,25 @@ public class NetworkThread extends Thread{
     private boolean connected;
     private boolean running = true;
 
+    private List<NetworkObserver> networkObservers;
+
+    public void addNetworkObserver(NetworkObserver nwo) {
+        networkObservers.add(nwo);
+    }
+
+    public void notifyNetworkObservers(byte[] data) {
+        for( NetworkObserver nwo : networkObservers ) {
+            nwo.packetReceived(data);
+        }
+    }
+
     public NetworkThread() {
         setConnected(false);
+        networkObservers = new LinkedList<NetworkObserver>();
     }
 
     public NetworkThread(String name, String hostname, int port)  throws CatastrophicException {
+        this();
         connect(name, hostname, port);
     }
 
@@ -89,16 +105,9 @@ public class NetworkThread extends Thread{
         while (running) {
             try {
                 sock.receive(rec);
-                if (rec.getData()[0] == PackageType.PLAYER_LEFT) {
-                    int lid = Util.bytesToInt(rec.getData(), 1, 4);
-                    System.out.println("PLayer Left. ID = " + lid);
-                }
-                if (rec.getData()[0] == PackageType.PLAYER_JOINED) {
-                    int nid = Util.bytesToInt(rec.getData(), 1, 4);
-                    byte[] bt = new byte[rec.getLength() - 5];
-                    System.arraycopy(rec.getData(), 5, bt, 0, bt.length);
-                    System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
-                }
+                byte[] bt = new byte[rec.getLength()];
+                System.arraycopy(rec.getData(), 0, bt, 0, bt.length);
+                notifyNetworkObservers(bt);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
