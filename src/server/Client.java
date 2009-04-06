@@ -10,4 +10,8 @@ public class Client {
 		this.id = id;
 		dg = packet;
 	}
+	
+	public int hashCode() {
+		return id;
+	}
 }
