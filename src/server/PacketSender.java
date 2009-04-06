@@ -43,9 +43,9 @@ public class PacketSender {
 			c.dg.setData(data);
 			try {
 				sock.send(c.dg);
-				//TODO: Klar?
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+				throw new RuntimeException(new CatastrophicException(e));
 			}
 		}
 			

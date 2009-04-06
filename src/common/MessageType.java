@@ -1,5 +1,5 @@
 package common;
 
 public interface MessageType {
-	public static final byte PLAYER_JOINED = 32;
+	public static final byte CHAT = 32;
 }

@@ -20,14 +20,11 @@ public class GameAdministration {
 	public void newConnection(String name, SocketAddress saddr) {
 		Client c = cdb.createClient(name, saddr);
 		ps.send(PacketDataFactory.createInitializer(c.getID(), 12345), c);
-		sendMessage(MessageType.PLAYER_JOINED, name);
-	}
-	
-	private void sendMessage(int msgtype, String str) {
-		byte[] data = PacketDataFactory.createMessagePacket(MessageType.PLAYER_JOINED, str);
 		
-		for (Client c : cdb.getClients()) {
-			ps.send(data, c);
+		byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name);
+		
+		for (Client cl : cdb.getClients()) {
+			ps.send(data, cl);
 		}
 	}
 	

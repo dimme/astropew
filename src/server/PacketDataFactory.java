@@ -12,7 +12,7 @@ public class PacketDataFactory {
 		
 		b[0] = PackageType.MESSAGE;
 		b[1] = msgtype;
-		putBytes(sb, b, 2);
+		put(sb, b, 2);
 		
 		return b;
 	}
@@ -23,6 +23,17 @@ public class PacketDataFactory {
 		b[0] = PackageType.INITIALIZER;
 		put(id, b, 1);
 		put(worldseed, b, 5);
+		
+		return b;
+	}
+	
+	public static byte[] createPlayerJoined(int id, String name) {
+		byte[] sb = name.getBytes();
+		byte[] b = new byte[1 + 4 + sb.length];
+		
+		b[0] = PackageType.PLAYER_JOINED;
+		put(id,b,1);
+		put(sb,b,5);
 		
 		return b;
 	}
@@ -46,7 +57,7 @@ public class PacketDataFactory {
 		dst[offset+7] = (byte)( (l      ) % 256 );
 	}
 	
-	private static void putBytes(byte[] src, byte[] dst, int offset) {
+	private static void put(byte[] src, byte[] dst, int offset) {
 		System.arraycopy(src, 0, dst, offset, src.length);
 	}
 }
