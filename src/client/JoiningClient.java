@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import common.MessageType;
 import common.PackageType;
 
 public class JoiningClient {
@@ -100,7 +101,15 @@ public class JoiningClient {
 				if( rec.getData()[0] == PackageType.INITIALIZER ){
 					id = bytesToInt(rec.getData(), 1, 4);
 					randSeed = bytesToLong(rec.getData(),5,8);
-					break;
+					
+					System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
+				}
+				if(rec.getData()[0] == PackageType.PLAYER_JOINED ){ 
+					int nid = bytesToInt(rec.getData(), 1, 4);
+					byte[] bt = new byte[rec.getLength() - 5];
+					System.arraycopy(rec.getData(), 4, bt, 0, bt.length);
+
+					System.out.println("PLayer Joined. ID = " + nid + " Name = " + new String(bt));
 				}
 			} catch (SocketTimeoutException e ) {
 				try {
@@ -115,7 +124,7 @@ public class JoiningClient {
 			}
 		}
 		
-		System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
+		
 		
 		//Generate world with the seed. etc..
 		
