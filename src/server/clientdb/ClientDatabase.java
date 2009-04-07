@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.CatastrophicException;
+import common.Util;
 
 public class ClientDatabase implements ClientDB{
 	
@@ -31,7 +32,7 @@ public class ClientDatabase implements ClientDB{
 		}
 		
 		try {
-			DatagramPacket dp = new DatagramPacket(new byte[65000], 65000, saddr);			
+			DatagramPacket dp = new DatagramPacket(new byte[Util.PACKET_SIZE], Util.PACKET_SIZE, saddr);			
 			c = new Client(dp,nextId);
 			
 			addrmap.put(saddr,c);
