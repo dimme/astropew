@@ -5,8 +5,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 public class ClientFrame extends JFrame {
-	JoiningClient jc;
-	public ClientFrame(JoiningClient jc) {
+	GameClient jc;
+	public ClientFrame(GameClient jc) {
 		this.jc = jc;
 
 		init();
@@ -17,7 +17,7 @@ public class ClientFrame extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent we) {
-				jc.stop();
+				//jc.stop();
 				System.exit(0);
 			}
 		});
