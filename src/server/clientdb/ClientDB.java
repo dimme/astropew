@@ -21,6 +21,6 @@ public interface ClientDB {
 	 */
 	public Client createClient(String name, SocketAddress saddr);
 	
-	public void removeClient(SocketAddress saddr);
-	public void removeClient(int id);
+	public Client removeClient(SocketAddress saddr);
+	public Client removeClient(int id);
 }

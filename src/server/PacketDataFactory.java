@@ -38,4 +38,11 @@ public class PacketDataFactory {
 		
 		return b;
 	}
+	
+	public static byte[] createPlayerLeft(int id) {
+		byte[] b = new byte[1 + 4];
+		b[0] = PackageType.PLAYER_LEFT;
+		Util.put(id, b, 1);
+		return b;
+	}
 }

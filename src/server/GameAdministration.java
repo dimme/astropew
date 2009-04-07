@@ -25,12 +25,22 @@ public class GameAdministration {
 			
 			byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name);
 			
-			for (Client cl : cdb.getClients()) {
-				ps.send(data, cl);
-			}
+			sendToAll(data);
 		}
 		
 		ps.send(PacketDataFactory.createInitializer(c.getID(), 12345), c);
 	}
 	
+	public void leaving(SocketAddress saddr) {
+		Client removed = cdb.removeClient(saddr);
+		
+		byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
+		sendToAll(data);
+	}
+	
+	private void sendToAll(byte[] data) {
+		for (Client c : cdb.getClients()) {
+			ps.send(data, c);
+		}
+	}
 }
