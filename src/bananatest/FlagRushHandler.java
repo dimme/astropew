@@ -37,6 +37,8 @@ import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.action.KeyNodeBackwardAction;
 import com.jme.input.action.KeyNodeForwardAction;
+import com.jme.input.action.KeyNodeLookDownAction;
+import com.jme.input.action.KeyNodeLookUpAction;
 import com.jme.input.action.KeyNodeRotateLeftAction;
 import com.jme.input.action.KeyNodeRotateRightAction;
 import com.jme.scene.Spatial;
@@ -73,8 +75,8 @@ public class FlagRushHandler extends InputHandler {
 		keyboard.set("backward", KeyInput.KEY_S);
 		keyboard.set("turnRight", KeyInput.KEY_D);
 		keyboard.set("turnLeft", KeyInput.KEY_A);
-		keyboard.set("turnUp", KeyInput.KEY_UP);
-		keyboard.set("turnDown", KeyInput.KEY_DOWN);
+		keyboard.set("turnUp", KeyInput.KEY_DOWN);
+		keyboard.set("turnDown", KeyInput.KEY_UP);
 	}
 
 	/**
@@ -98,12 +100,12 @@ public class FlagRushHandler extends InputHandler {
 		rotateLeft.setLockAxis(node.getLocalRotation().getRotationColumn(1));
 		addAction(rotateLeft, "turnLeft", true);
 		
-		KeyNodeRotateRightAction rotateUp = new KeyNodeRotateRightAction(node, 5f);
-		rotateUp.setLockAxis(node.getLocalRotation().getRotationColumn(2));
+		KeyNodeLookUpAction rotateUp = new KeyNodeLookUpAction(node, 5f);
+		//rotateUp.setLockAxis(node.getLocalRotation().getRotationColumn(2));
 		addAction(rotateUp, "turnUp", true);
 	   
-		KeyNodeRotateLeftAction rotateDown = new KeyNodeRotateLeftAction(node, 5f);
-		rotateDown.setLockAxis(node.getLocalRotation().getRotationColumn(2));
+		KeyNodeLookDownAction rotateDown = new KeyNodeLookDownAction(node, 5f);
+		//rotateDown.setLockAxis(node.getLocalRotation().getRotationColumn(2));
 		addAction(rotateDown, "turnDown", true);
 	}
 }
