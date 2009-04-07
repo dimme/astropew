@@ -10,5 +10,5 @@ package client;
  * @author jonsturk
  */
 public interface NetworkObserver {
-    public void packetReceived(byte[] data);
+	public void packetReceived(byte[] data);
 }
