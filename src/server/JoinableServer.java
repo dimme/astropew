@@ -1,7 +1,6 @@
 package server;
 
 import common.PacketReaderThread;
-import common.PacketSender;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -27,7 +26,7 @@ public class JoinableServer extends Thread {
 			
 			DatagramSocket sock = new DatagramSocket();
 			PacketReaderThread pread = new PacketReaderThread(sock);
-			PacketSender ps = new PacketSender(sock);
+			ClientPacketSender ps = new ClientPacketSender(sock);
 			
 			GameAdministration gadm = new GameAdministration(cdb, ps);
 			GameLogic game = new GameLogic(gadm);

@@ -1,6 +1,5 @@
 package server;
 
-import common.PacketSender;
 import java.net.SocketAddress;
 
 import server.clientdb.Client;
@@ -9,9 +8,9 @@ import server.clientdb.ClientDB;
 public class GameAdministration {
 
 	private ClientDB cdb;
-	private PacketSender ps;
+	private ClientPacketSender ps;
 	
-	public GameAdministration(ClientDB cdb, PacketSender ps) {
+	public GameAdministration(ClientDB cdb, ClientPacketSender ps) {
 		this.cdb = cdb;
 		this.ps = ps;
 	}
