@@ -77,6 +77,8 @@ public class FlagRushHandler extends InputHandler {
 		keyboard.set("turnLeft", KeyInput.KEY_A);
 		keyboard.set("turnUp", KeyInput.KEY_DOWN);
 		keyboard.set("turnDown", KeyInput.KEY_UP);
+		keyboard.set("rollCCW", KeyInput.KEY_LEFT);
+		keyboard.set("rollCW", KeyInput.KEY_RIGHT);
 	}
 
 	/**
@@ -107,6 +109,9 @@ public class FlagRushHandler extends InputHandler {
 		KeyNodeLookDownAction rotateDown = new KeyNodeLookDownAction(node, 5f);
 		//rotateDown.setLockAxis(node.getLocalRotation().getRotationColumn(2));
 		addAction(rotateDown, "turnDown", true);
+		
+		//KeyNodeRotateLeftAction rollCW = new KeyNodeRotateLeftAction(node, 5f);
+		//addAction(rollCW, "rollCW", true);
 	}
 }
 

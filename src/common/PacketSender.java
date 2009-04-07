@@ -25,7 +25,11 @@ public class PacketSender {
 	}
 	
 	public void send(byte[] data, DatagramPacket dgp) {
-		exec.submit( new SendTask(data, dgp) );
+		addTask( new SendTask(data, dgp) );
+	}
+	
+	protected void addTask(Runnable task) {
+		exec.submit(task);
 	}
 	
 	public void stop() {
@@ -33,24 +37,43 @@ public class PacketSender {
 	}
 
 	
-	private class SendTask implements Runnable {
+	protected abstract class AbstractSendTask implements Runnable {
 		
-		private byte[] data;
-		private DatagramPacket dgp;
+		protected byte[] data;
 		
-		public SendTask(byte[] data, DatagramPacket dgp) {
+		public AbstractSendTask(byte[] data) {
 			this.data = data;
-			this.dgp = dgp;
 		}
 		
-		public void run() {
-			dgp.setData(data);
+		public final void run() {
 			try {
-				sock.send(dgp);
+				perform();
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 				throw new RuntimeException(new CatastrophicException(e));
 			}
+		}
+		
+		protected abstract void perform() throws IOException;
+		
+		protected void send(DatagramPacket dgp) throws IOException {
+			sock.send(dgp);
+		}
+	}
+	
+	private class SendTask extends AbstractSendTask {
+		
+		private DatagramPacket dgp;
+		
+		public SendTask(byte[] data, DatagramPacket dgp) {
+			super(data);
+			this.dgp = dgp;
+		}
+		
+		public void perform() throws IOException {
+			dgp.setData(data);
+			send(dgp);
+			dgp.setData(null, 0, 0);
 		}
 			
 	}

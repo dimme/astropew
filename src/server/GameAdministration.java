@@ -38,8 +38,6 @@ public class GameAdministration {
 	}
 	
 	private void sendToAll(byte[] data) {
-		for (Client c : cdb.getClients()) {
-			ps.send(data, c);
-		}
+		ps.sendToAll(data);
 	}
 }

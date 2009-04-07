@@ -5,6 +5,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +71,10 @@ public class ClientDatabase implements ClientDB{
 		Client c = idmap.remove(id);
 		addrmap.values().remove(c);
 		return c;
+	}
+
+	public Iterator<Client> iterator() {
+		return idmap.values().iterator();
 	}
 
 }

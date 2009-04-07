@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import common.CatastrophicException;
 
-public interface ClientDB {
+public interface ClientDB extends Iterable<Client>{
 
 	public Client getClient(SocketAddress saddr);
 	public Client getClient(int id);
