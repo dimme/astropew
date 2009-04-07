@@ -7,13 +7,19 @@ import java.util.logging.Logger;
 import common.PacketType;
 import common.PacketObserver;
 
-public class GameLogic implements PacketObserver {
+public class GameLogic extends common.GameLogic implements PacketObserver {
 	
 	private GameAdministration gadm;
 	
 	public GameLogic(GameAdministration gadm) {
+		super(new server.world.World());
 		this.gadm = gadm;
-		
+		Thread t = new Thread() {
+			public void run() {
+				world.start();
+			}
+		};
+		t.start();
 	}
 	
 	public void packetReceived(byte[] data, SocketAddress sender) {
@@ -30,5 +36,4 @@ public class GameLogic implements PacketObserver {
 				Logger.getLogger(getClass().getName()).log(Level.WARNING,"Unhandled packet type: " + ptype);
 		}
 	}
-	
 }

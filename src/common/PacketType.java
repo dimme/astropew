@@ -8,7 +8,7 @@ public interface PacketType {
 	public static final byte MESSAGE		 = 32;
 	
 	/**
-	 * Player position and direction
+	 * Player position, direction and orientation
 	 */
 	public static final byte PLAYER_POSITION = 33;
 	

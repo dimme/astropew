@@ -1,11 +1,12 @@
-package world;
+package common.world;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import common.Player;
 
 public abstract class WorldObject extends Node {
 	
-	//TODO: protected Player owner;
+	protected Player owner = NoPlayer.instance;
 	
 	public WorldObject(String name) {
 		super(name);

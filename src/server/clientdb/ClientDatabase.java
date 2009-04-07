@@ -33,8 +33,8 @@ public class ClientDatabase implements ClientDB{
 		}
 		
 		try {
-			DatagramPacket dp = new DatagramPacket(new byte[Util.PACKET_SIZE], Util.PACKET_SIZE, saddr);			
-			c = new Client(dp,nextId);
+			DatagramPacket dp = new DatagramPacket(null, 0, saddr);			
+			c = new Client(dp, nextId, name);
 			
 			addrmap.put(saddr,c);
 			idmap.put(nextId,c);

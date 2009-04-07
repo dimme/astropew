@@ -1,14 +1,17 @@
-package world;
+package common.world;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Pyramid;
+import common.Player;
 
 
 public class Ship extends MobileObject {
 
-	public Ship() {
+	public Ship(Player owner) {
 		super("Ship");
+		
+		this.owner = owner;
 		
 		Spatial shape = new Pyramid("ShipPyramid",1,3);
 		

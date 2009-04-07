@@ -1,4 +1,4 @@
-package world;
+package common.world;
 
 import com.jme.math.Vector3f;
 

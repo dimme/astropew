@@ -1,6 +1,6 @@
 package client;
 
-public class Player {
+public class Player implements common.Player{
 
 	private String name;
 	private int id;
@@ -19,8 +19,8 @@ public class Player {
 	}
 	
 	public boolean equals(Object o) {
-		if (o instanceof Player) {
-			return id == ((Player)o).id;
+		if (o instanceof common.Player) {
+			return id == ((common.Player)o).getID();
 		}
 		return false;
 	}
