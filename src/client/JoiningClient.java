@@ -9,21 +9,21 @@ import java.util.logging.Logger;
 public class JoiningClient {
 	private boolean connected;
 	
-	private NetworkThread nt;
+	//private NetworkThread nt;
 	private PacketSender sender;
 
 	public JoiningClient(String name, String hostname, int port) {
 		try {
 			ConsoleNetworkObserver cno = new ConsoleNetworkObserver();
-			nt = new NetworkThread(name, hostname, port);
-			nt.addNetworkObserver(cno);
-			nt.start();
+			//nt = new NetworkThread(name, hostname, port);
+			//nt.addNetworkObserver(cno);
+			//nt.start();
 
 			//ClientFrame cf = new ClientFrame(this);
-		} catch (CatastrophicException ex) {
+		} /*catch (CatastrophicException ex) {
 			Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
 			System.exit(1);
-		} catch (RuntimeException ex) {
+		} */catch (RuntimeException ex) {
 			Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
 			System.exit(1);
 		}
@@ -43,6 +43,6 @@ public class JoiningClient {
 	}
 
 	public void stop() {
-		nt.setRunning(false);
+		//nt.setRunning(false);
 	}
 }

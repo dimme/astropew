@@ -5,10 +5,12 @@
 
 package common;
 
+import java.net.SocketAddress;
+
 /**
  *
  * @author jonsturk
  */
 public interface PacketObserver {
-	public void packetReceived(byte[] data);
+	public void packetReceived(byte[] data, SocketAddress addr);
 }

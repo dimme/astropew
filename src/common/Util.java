@@ -10,6 +10,8 @@ package common;
  * @author jonsturk
  */
 public class Util {
+
+	public static final int PACKET_SIZE = 65000;
 	
 	public static int getInt(byte[] b, int off, int len){
 		int val = 0;
