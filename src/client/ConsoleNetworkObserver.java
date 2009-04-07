@@ -15,6 +15,11 @@ import common.Util;
 public class ConsoleNetworkObserver implements NetworkObserver {
 
     public void packetReceived(byte[] data) {
+        if (data[0] == PackageType.INITIALIZER) {
+            int id = Util.bytesToInt(data, 1, 4);
+            long randSeed = Util.bytesToLong(data,5,8);
+            System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
+        }
         if (data[0] == PackageType.PLAYER_LEFT) {
             int lid = Util.bytesToInt(data, 1, 4);
             System.out.println("PLayer Left. ID = " + lid);

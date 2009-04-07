@@ -16,7 +16,7 @@ public class JoiningClient {
             nt.addNetworkObserver(cno);
             nt.start();
 
-            ClientFrame cf = new ClientFrame(this);
+            //ClientFrame cf = new ClientFrame(this);
         } catch (CatastrophicException ex) {
             Logger.getLogger(JoiningClient.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);

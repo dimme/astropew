@@ -83,10 +83,7 @@ public class NetworkThread extends Thread{
             try {
                 sock.receive(rec);
                 if( rec.getData()[0] == PackageType.INITIALIZER ){
-                    int id = Util.bytesToInt(rec.getData(), 1, 4);
-                    long randSeed = Util.bytesToLong(rec.getData(),5,8);
-
-                    System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
+                    notifyNetworkObservers(rec.getData());
                     sock.setSoTimeout(0);
                     break;
                 }
