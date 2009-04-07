@@ -66,8 +66,6 @@ public class NetworkThread extends Thread {
 	}
 
 	private void connect() throws CatastrophicException {
-		System.out.println("Sending 'want to join'");
-		new Exception().printStackTrace();
 		if( isConnected() ) {
 			return;
 		}
@@ -102,7 +100,6 @@ public class NetworkThread extends Thread {
 				}
 			} catch (SocketTimeoutException e) {
 				// just loop and try again
-				System.out.println("Timeout, trying again..");
 				try {
 					connect();
 				} catch (CatastrophicException ex) {
