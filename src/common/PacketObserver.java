@@ -7,10 +7,12 @@ package common;
 
 import java.net.SocketAddress;
 
-/**
- *
- * @author jonsturk
- */
 public interface PacketObserver {
+	
+	/**
+	 * Make the {@link PacketObserver} handle the received data
+	 * @param data the received data
+	 * @param addr the {@link SocketAddress} from which the data came
+	 */
 	public void packetReceived(byte[] data, SocketAddress addr);
 }
