@@ -17,11 +17,9 @@ public class Util {
 
 		int val = 0;
 		int mult = 1;
-		for (int i=off+3; i>=off; i--)
-		{
+		for (int i=off+3; i>=off; i--){
 			int toadd = b[i];
-			if ( toadd < 0)
-			{
+			if ( toadd < 0){
 				toadd = 256 + toadd;
 			}
 			val += toadd * mult;
@@ -35,11 +33,9 @@ public class Util {
 	public static long getLong(byte[] b, int off){
 		long val = 0;
 		int mult = 1;
-		for (int i=off+7; i>=off; i--)
-		{
+		for (int i=off+7; i>=off; i--){
 				int toadd = b[i];
-				if ( toadd < 0)
-				{
+				if ( toadd < 0){
 						toadd = 256 + toadd;
 				}
 				val += toadd * mult;
