@@ -13,7 +13,15 @@ public class Util {
 
 	public static final int PACKET_SIZE = 65000;
 	
-	public static int getInt(byte[] b, int off){
+	
+	/**
+	 * reads 4 bytes (off, off+1, off+2 and off+3) from b and composits them 
+	 * to an int. The most significant byte will be at b[off].
+	 * @param b a byte array 
+	 * @param off offset to start reading the integer
+	 * @return the composited integer
+	 */
+	public static int getInt(byte[] b, int off) {
 
 		int val = 0;
 		int mult = 1;
@@ -30,7 +38,14 @@ public class Util {
 		return val;
 	}
 
-	public static long getLong(byte[] b, int off){
+	/**
+	 * reads 8 bytes from b and composits them 
+	 * to a long. The most significant byte will be at b[off].
+	 * @param b a byte array 
+	 * @param off offset to start reading the long
+	 * @return the composited long
+	 */
+	public static long getLong(byte[] b, int off) {
 		long val = 0;
 		int mult = 1;
 		for (int i=off+7; i>=off; i--){
@@ -46,6 +61,13 @@ public class Util {
 		return val;
 	}
 
+	/**
+	 * splits an int to 4 bytes and puts them in dst, starting at offset. The 
+	 * most significant byte is placed at dst[offset].
+	 * @param i the integer to put
+	 * @param dst the target array
+	 * @param offset the offset at which to start putting the values
+	 */
 	public static void put(int i, byte[] dst, int offset) {
 		dst[offset+0] = (byte)( (i >> 24) % 256 );
 		dst[offset+1] = (byte)( (i >> 16) % 256 );
@@ -53,6 +75,13 @@ public class Util {
 		dst[offset+3] = (byte)( (i	  ) % 256 );
 	}
 
+	/**
+	 * splits a long to 8 bytes and puts them in dst, starting at offset. The 
+	 * most significant byte is placed at dst[offset].
+	 * @param l the long to put
+	 * @param dst the target array
+	 * @param offset the offset at which to start putting the values
+	 */
 	public static void put(long l, byte[] dst, int offset) {
 		dst[offset+0] = (byte)( (l >> 56) % 256 );
 		dst[offset+1] = (byte)( (l >> 48) % 256 );
@@ -64,6 +93,15 @@ public class Util {
 		dst[offset+7] = (byte)( (l	  ) % 256 );
 	}
 
+	/**
+	 * Copies the values from src to dst, starting at dst[offset]. Will copy
+	 * the full length of src.
+	 * @param src the array to copy from
+	 * @param dst the array to copy to
+	 * @param offset the first position in dst
+	 * @throws ArrayIndexOutOfBoundsException if offset+src.length > dst.length
+	 * @throws NullPointerException if src or dst is null
+	 */
 	public static void put(byte[] src, byte[] dst, int offset) {
 		System.arraycopy(src, 0, dst, offset, src.length);
 	}
