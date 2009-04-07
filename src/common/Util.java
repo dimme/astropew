@@ -13,10 +13,10 @@ public class Util {
 
 	public static final int PACKET_SIZE = 65000;
 	
-	public static int getInt(byte[] b, int off, int len){
+	public static int getInt(byte[] b, int off){
 		int val = 0;
 		int mult = 1;
-		for (int i=off+len-1; i>=off; i--)
+		for (int i=off+3; i>=off; i--)
 		{
 			int toadd = b[i];
 			if ( toadd < 0)
@@ -31,10 +31,10 @@ public class Util {
 		return val;
 	}
 
-	public static long getLong(byte[] b, int off, int len){
+	public static long getLong(byte[] b, int off){
 		long val = 0;
 		int mult = 1;
-		for (int i=off+len-1; i>=off; i--)
+		for (int i=off+7; i>=off; i--)
 		{
 				int toadd = b[i];
 				if ( toadd < 0)
