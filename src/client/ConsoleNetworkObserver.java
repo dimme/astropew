@@ -23,15 +23,18 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			long randSeed = Util.getLong(data,5);
 			System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
 		}
-		if (data[0] == PackageType.PLAYER_LEFT) {
+		else if (data[0] == PackageType.PLAYER_LEFT) {
 			int lid = Util.getInt(data, 1);
 			System.out.println("PLayer Left. ID = " + lid);
 		}
-		if (data[0] == PackageType.PLAYER_JOINED) {
+		else if (data[0] == PackageType.PLAYER_JOINED) {
 			int nid = Util.getInt(data, 1);
 			byte[] bt = new byte[data.length - 5];
 			System.arraycopy(data, 5, bt, 0, bt.length);
 			System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
+		}
+		else {
+			System.out.println("Unhandled packet type: " + data[0]);
 		}
 	}
 
