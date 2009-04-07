@@ -32,6 +32,9 @@
 
 package jmetest;
 
+import jmetest.actions.AccelerateAction;
+import jmetest.actions.RotateAction;
+
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
@@ -41,6 +44,7 @@ import com.jme.input.action.KeyNodeLookDownAction;
 import com.jme.input.action.KeyNodeLookUpAction;
 import com.jme.input.action.KeyNodeRotateLeftAction;
 import com.jme.input.action.KeyNodeRotateRightAction;
+import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 
 /**
@@ -50,15 +54,24 @@ import com.jme.scene.Spatial;
  *
  */
 public class FlagRushHandler extends InputHandler {
+	
+	Ship ship;
+	
+	public void update(float time) {
+        super.update(time);
+        ship.update(time);
+        //we always want to allow friction to control the drift
+    }
 
 	/**
 	 * Supply the node to control and the api that will handle input creation.
 	 * @param node the node we wish to move
 	 * @param api the library that will handle creation of the input.
 	 */
-	public FlagRushHandler(Spatial node, String api) {
+	public FlagRushHandler(Ship node, String api) {
 		setKeyBindings(api);
 		setActions(node);
+		ship = node;
 	}
 
 	/**
@@ -66,17 +79,15 @@ public class FlagRushHandler extends InputHandler {
 	 * pressed. It then sets the jmetest.actions to be triggered based on if certain keys are pressed (WSAD).
 	 * @param api
 	 */
-	private void setKeyBindings(String api) {
+	private void setKeyBindings(String api) {	
 		KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 
 		keyboard.set("forward", KeyInput.KEY_W);
 		keyboard.set("backward", KeyInput.KEY_S);
-		keyboard.set("turnRight", KeyInput.KEY_RIGHT);
-		keyboard.set("turnLeft", KeyInput.KEY_LEFT);
-		keyboard.set("turnUp", KeyInput.KEY_DOWN);
-		keyboard.set("turnDown", KeyInput.KEY_UP);
-		keyboard.set("rollCCW", KeyInput.KEY_LEFT);
-		keyboard.set("rollCW", KeyInput.KEY_RIGHT);
+		keyboard.set("right", KeyInput.KEY_D);
+		keyboard.set("left", KeyInput.KEY_A);
+		keyboard.set("down", KeyInput.KEY_DOWN);
+		keyboard.set("up", KeyInput.KEY_UP);
 	}
 
 	/**
@@ -84,30 +95,20 @@ public class FlagRushHandler extends InputHandler {
 	 * rotating it.
 	 * @param node the node to control.
 	 */
-	private void setActions(Spatial node) {
+	private void setActions(Ship node) {
 		
-		KeyNodeForwardAction forward = new KeyNodeForwardAction(node, 30f);
-		addAction(forward, "forward", true);
-	   
-		KeyNodeBackwardAction backward = new KeyNodeBackwardAction(node, 15f);
-		addAction(backward, "backward", true);
-	   
-		KeyNodeRotateRightAction rotateRight = new KeyNodeRotateRightAction(node, 5f);
-		rotateRight.setLockAxis(node.getLocalRotation().getRotationColumn(1));
-		addAction(rotateRight, "turnRight", true);
-	   
-		KeyNodeRotateLeftAction rotateLeft = new KeyNodeRotateLeftAction(node, 5f);
-		rotateLeft.setLockAxis(node.getLocalRotation().getRotationColumn(1));
-		addAction(rotateLeft, "turnLeft", true);
-		
-		KeyNodeLookUpAction rotateUp = new KeyNodeLookUpAction(node, 5f);
-		addAction(rotateUp, "turnUp", true);
-	   
-		KeyNodeLookDownAction rotateDown = new KeyNodeLookDownAction(node, 5f);
-		addAction(rotateDown, "turnDown", true);
-		
-		//KeyNodeRotateLeftAction rollCW = new KeyNodeRotateLeftAction(node, 5f);
-		//addAction(rollCW, "rollCW", true);
+		AccelerateAction forward = new AccelerateAction(node, AccelerateAction.FORWARD);
+        addAction(forward, "forward", true);
+        AccelerateAction back = new AccelerateAction(node, AccelerateAction.BACKWARD);
+        addAction(back, "backward", true);
+        RotateAction rotateRight = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.RIGHT);
+        addAction(rotateRight, "right", true);
+        RotateAction rotateLeft = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.LEFT);
+        addAction(rotateLeft, "left", true);
+        RotateAction rotateUp = new RotateAction(node, RotateAction.VERTICAL, RotateAction.RIGHT);
+        addAction(rotateUp, "up", true);
+        RotateAction rotateDown = new RotateAction(node, RotateAction.VERTICAL, RotateAction.LEFT);
+        addAction(rotateDown, "down", true);
+
 	}
 }
-

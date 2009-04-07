@@ -13,26 +13,28 @@ import com.jme.math.Vector3f;
  *
  */
 public class AccelerateAction extends KeyInputAction {
+	public static final int FORWARD =  1;
+	public static final int BACKWARD = 0;
+	
+	private int direction;
     private Ship node;
-    private static final Vector3f tempVa = new Vector3f();  //temporary vector for the rotation
-
     /**
      * The Ship to accelerate is supplied during construction.
      * @param node the Ship to speed up.
      */
-    public AccelerateAction(Ship node) {
+    public AccelerateAction(Ship node, int direction) {
         this.node = node;
+        this.direction = direction;
     }
 
     /**
-     * the action calls the Ship's accelerate command which adjusts its velocity. It
-     * then translates the Ship based on this new velocity value.
+     * the action calls the Ship's accelerate command which adjusts its velocity. I
      */
     public void performAction(InputActionEvent evt) {
-        node.accelerate(evt.getTime());
-        Vector3f loc = node.getLocalTranslation();
-        loc.addLocal(node.getLocalRotation().getRotationColumn(2, tempVa)
-        		.multLocal(node.getVelocity() * evt.getTime()));
-        node.setLocalTranslation(loc);
+        if(direction == FORWARD) {
+            node.accelerate(evt.getTime());
+        } else if(direction == BACKWARD){
+            node.brake(evt.getTime());
+        }
     }
 }

@@ -1,9 +1,13 @@
 package jmetest;
 
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
 public class Ship extends Node {
+	
+	
+	private static final Vector3f tempVa = new Vector3f();
 	
 	private Spatial model;
 	private float velocity;
@@ -167,5 +171,10 @@ public class Ship extends Node {
         if(velocity > maxSpeed) {
             velocity = maxSpeed;
         }
+    }
+    
+    public void update(float time) {
+        this.localTranslation.addLocal(this.localRotation.getRotationColumn(2, tempVa)
+                .multLocal(velocity * time));
     }
 }

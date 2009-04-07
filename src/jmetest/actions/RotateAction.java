@@ -12,23 +12,32 @@ import com.jme.math.Vector3f;
  * traveling forward).
  *
  */
-public class RotateRightAction extends KeyInputAction {
+public class RotateAction extends KeyInputAction {
     //temporary variables to handle rotation
+	public static final int LEFT = 1;
+	public static final int RIGHT = -1;
+	
+	public static final int VERTICAL = 0; 
+	public static final int HORIZONTAL = 1; 
+	
     private static final Matrix3f incr = new Matrix3f();
     private static final Matrix3f tempMa = new Matrix3f();
     private static final Matrix3f tempMb = new Matrix3f();
 
     
-    private Vector3f upAxis = new Vector3f(0,1,0); //we are using +Y as our up
     
     private Ship node; //the node to manipulate
+	private int direction;
+	private int rotCol;
    
     /**
      * create a new action with the node to turn.
      * @param node the node to turn
      */
-    public RotateRightAction(Ship Ship) {
+    public RotateAction(Ship Ship, int rotCol, int direction) {
         this.node = Ship;
+        this.rotCol = rotCol;
+        this.direction = direction;
     }
 
     /**
@@ -36,15 +45,17 @@ public class RotateRightAction extends KeyInputAction {
      * backwards, swap direction.
      */
     public void performAction(InputActionEvent evt) {
+    	Vector3f rotAxis = node.getLocalRotation().getRotationColumn(rotCol);
         //we want to turn differently depending on which direction we are traveling in.
         if(node.getVelocity() < 0) {
-            incr.fromAngleNormalAxis(node.getTurnSpeed() * evt.getTime(), upAxis);
+            incr.fromAngleNormalAxis(direction * node.getTurnSpeed() * evt.getTime(), rotAxis);
         } else {
-            incr.fromAngleNormalAxis(-node.getTurnSpeed() * evt.getTime(), upAxis);
+            incr.fromAngleNormalAxis(direction * node.getTurnSpeed() * evt.getTime(), rotAxis);
         }
         node.getLocalRotation().fromRotationMatrix(
-                incr.mult(node.getLocalRotation().toRotationMatrix(tempMa),
-                        tempMb));
+                incr.mult(node.getLocalRotation().toRotationMatrix(tempMa), tempMb));
+        
+        
         node.getLocalRotation().normalize();
     }
 }
