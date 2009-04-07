@@ -10,7 +10,7 @@ package common;
  * @author jonsturk
  */
 public class Util {
-    public static int bytesToInt(byte[] b, int off, int len){
+    public static int getInt(byte[] b, int off, int len){
             int val = 0;
             int mult = 1;
             for (int i=off+len-1; i>=off; i--)
@@ -28,7 +28,7 @@ public class Util {
             return val;
     }
 
-	public static long bytesToLong(byte[] b, int off, int len){
+	public static long getLong(byte[] b, int off, int len){
 		long val = 0;
         int mult = 1;
         for (int i=off+len-1; i>=off; i--)
@@ -45,4 +45,26 @@ public class Util {
 
         return val;
     }
+
+	public static void put(int i, byte[] dst, int offset) {
+		dst[offset+0] = (byte)( (i >> 24) % 256 );
+		dst[offset+1] = (byte)( (i >> 16) % 256 );
+		dst[offset+2] = (byte)( (i >>  8) % 256 );
+		dst[offset+3] = (byte)( (i      ) % 256 );
+	}
+
+	public static void put(long l, byte[] dst, int offset) {
+		dst[offset+0] = (byte)( (l >> 56) % 256 );
+		dst[offset+1] = (byte)( (l >> 48) % 256 );
+		dst[offset+2] = (byte)( (l >> 40) % 256 );
+		dst[offset+3] = (byte)( (l >> 32) % 256 );
+		dst[offset+4] = (byte)( (l >> 24) % 256 );
+		dst[offset+5] = (byte)( (l >> 16) % 256 );
+		dst[offset+6] = (byte)( (l >>  8) % 256 );
+		dst[offset+7] = (byte)( (l      ) % 256 );
+	}
+
+	public static void put(byte[] src, byte[] dst, int offset) {
+		System.arraycopy(src, 0, dst, offset, src.length);
+	}
 }

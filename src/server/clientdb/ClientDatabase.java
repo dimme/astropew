@@ -30,7 +30,6 @@ public class ClientDatabase implements ClientDB{
 			return c;
 		}
 		
-		
 		try {
 			DatagramPacket dp = new DatagramPacket(new byte[65000], 65000, saddr);			
 			c = new Client(dp,nextId);

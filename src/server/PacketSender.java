@@ -4,7 +4,6 @@ import common.CatastrophicException;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
