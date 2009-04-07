@@ -5,6 +5,7 @@
 
 package client;
 
+import common.PacketObserver;
 import common.CatastrophicException;
 import common.PackageType;
 import common.Util;
@@ -25,8 +26,9 @@ import java.util.logging.Logger;
  */
 public class NetworkThread extends Thread {
 	private DatagramPacket rec;
-	private DatagramSocket sock;
 	private DatagramPacket send;
+
+	private DatagramSocket sock;
 
 	private boolean connected;
 	private boolean running = true;
@@ -35,14 +37,14 @@ public class NetworkThread extends Thread {
 	private String hostname;
 	private int port;
 
-	private List<NetworkObserver> networkObservers;
+	private List<PacketObserver> networkObservers;
 
-	public void addNetworkObserver(NetworkObserver nwo) {
+	public void addNetworkObserver(PacketObserver nwo) {
 		networkObservers.add(nwo);
 	}
 
 	public void notifyNetworkObservers(byte[] data) {
-		for( NetworkObserver nwo : networkObservers ) {
+		for( PacketObserver nwo : networkObservers ) {
 			nwo.packetReceived(data);
 		}
 	}
@@ -53,7 +55,7 @@ public class NetworkThread extends Thread {
 		this.port = port;
 		setConnected(false);
 		
-		networkObservers = new LinkedList<NetworkObserver>();
+		networkObservers = new LinkedList<PacketObserver>();
 		
 		rec = new DatagramPacket(new byte[65000], 65000);
 		

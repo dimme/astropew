@@ -2,12 +2,15 @@ package client;
 
 import common.CatastrophicException;
 
+import common.PacketSender;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JoiningClient {
+	private boolean connected;
 	
 	private NetworkThread nt;
+	private PacketSender sender;
 
 	public JoiningClient(String name, String hostname, int port) {
 		try {

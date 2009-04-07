@@ -5,6 +5,7 @@
 
 package client;
 
+import common.PacketObserver;
 import common.PackageType;
 import common.Util;
 
@@ -12,7 +13,7 @@ import common.Util;
  *
  * @author jonsturk
  */
-public class ConsoleNetworkObserver implements NetworkObserver {
+public class ConsoleNetworkObserver implements PacketObserver {
 
 	public void packetReceived(byte[] data) {
 		if (data[0] == PackageType.INITIALIZER) {
