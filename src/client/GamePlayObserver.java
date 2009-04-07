@@ -3,7 +3,7 @@ package client;
 import java.net.SocketAddress;
 
 import common.GameException;
-import common.PackageType;
+import common.PacketType;
 import common.PacketObserver;
 
 public class GamePlayObserver implements PacketObserver {
@@ -14,7 +14,7 @@ public class GamePlayObserver implements PacketObserver {
 	}
 	
 	public void packetReceived(byte[] data, SocketAddress addr) throws GameException {
-		if(data[0] == PackageType.INITIALIZER){
+		if(data[0] == PacketType.INITIALIZER){
 			client.initialized(addr);
 		}
 	}

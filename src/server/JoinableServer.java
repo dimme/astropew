@@ -26,7 +26,7 @@ public class JoinableServer extends Thread {
 			
 			DatagramSocket sock = new DatagramSocket();
 			PacketReaderThread pread = new PacketReaderThread(sock);
-			ClientPacketSender ps = new ClientPacketSender(cdb, sock);
+			PacketSender ps = new PacketSender(cdb, sock);
 			
 			GameAdministration gadm = new GameAdministration(cdb, ps);
 			GameLogic game = new GameLogic(gadm);

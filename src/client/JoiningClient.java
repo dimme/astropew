@@ -5,13 +5,13 @@ import common.CatastrophicException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import server.ClientPacketSender;
+import server.PacketSender;
 
 public class JoiningClient {
 	private boolean connected;
 	
 	//private NetworkThread nt;
-	private ClientPacketSender sender;
+	private PacketSender sender;
 
 	public JoiningClient(String name, String hostname, int port) {
 		try {

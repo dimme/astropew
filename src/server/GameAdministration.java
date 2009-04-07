@@ -8,9 +8,9 @@ import server.clientdb.ClientDB;
 public class GameAdministration {
 
 	private ClientDB cdb;
-	private ClientPacketSender ps;
+	private PacketSender ps;
 	
-	public GameAdministration(ClientDB cdb, ClientPacketSender ps) {
+	public GameAdministration(ClientDB cdb, PacketSender ps) {
 		this.cdb = cdb;
 		this.ps = ps;
 	}

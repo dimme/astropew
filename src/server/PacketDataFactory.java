@@ -1,6 +1,6 @@
 package server;
 
-import common.PackageType;
+import common.PacketType;
 import common.Util;
 
 public class PacketDataFactory {
@@ -11,7 +11,7 @@ public class PacketDataFactory {
 		
 		byte[] b = new byte[1 + 1 + sb.length];
 		
-		b[0] = PackageType.MESSAGE;
+		b[0] = PacketType.MESSAGE;
 		b[1] = msgtype;
 		Util.put(sb, b, 2);
 		
@@ -21,7 +21,7 @@ public class PacketDataFactory {
 	public static byte[] createInitializer(int id, long worldseed) {
 		byte[] b = new byte[1+4+8];
 		
-		b[0] = PackageType.INITIALIZER;
+		b[0] = PacketType.INITIALIZER;
 		Util.put(id, b, 1);
 		Util.put(worldseed, b, 5);
 		
@@ -32,7 +32,7 @@ public class PacketDataFactory {
 		byte[] sb = name.getBytes();
 		byte[] b = new byte[1 + 4 + sb.length];
 		
-		b[0] = PackageType.PLAYER_JOINED;
+		b[0] = PacketType.PLAYER_JOINED;
 		Util.put(id,b,1);
 		Util.put(sb,b,5);
 		
@@ -41,7 +41,7 @@ public class PacketDataFactory {
 	
 	public static byte[] createPlayerLeft(int id) {
 		byte[] b = new byte[1 + 4];
-		b[0] = PackageType.PLAYER_LEFT;
+		b[0] = PacketType.PLAYER_LEFT;
 		Util.put(id, b, 1);
 		return b;
 	}

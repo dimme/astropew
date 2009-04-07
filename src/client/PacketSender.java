@@ -5,12 +5,11 @@ import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-import common.PacketSender;
 import common.Util;
 
-public class ServerPacketSender extends PacketSender {
+public class PacketSender extends common.PacketSender {
 	DatagramPacket sendPacket;
-	public ServerPacketSender(DatagramSocket sock, SocketAddress saddr) throws SocketException {
+	public PacketSender(DatagramSocket sock, SocketAddress saddr) throws SocketException {
 		super(sock);
 		setSocketAddress(saddr);
 	}
@@ -21,6 +20,6 @@ public class ServerPacketSender extends PacketSender {
 	}
 	
 	public void send(byte[] data) {
-		super.send(data, sendPacket);
+		send(data, sendPacket);
 	}
 }

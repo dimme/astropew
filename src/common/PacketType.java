@@ -1,6 +1,6 @@
 package common;
 
-public interface PackageType {
+public interface PacketType {
 	
 	/**
 	 * Some kind of message to be shown.

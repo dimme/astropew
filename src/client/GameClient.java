@@ -2,9 +2,8 @@ package client;
 
 
 import common.CatastrophicException;
-import common.PackageType;
+import common.PacketType;
 import common.PacketReaderThread;
-import common.PacketSender;
 import common.Util;
 
 import java.net.DatagramPacket;
@@ -16,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameClient {
-	private ServerPacketSender sender;
+	private PacketSender sender;
 	private PacketReaderThread reader;
 
 	private DatagramSocket socket;
@@ -46,7 +45,7 @@ public class GameClient {
 	}
 	
 	public void stop() {
-		sender.send(new byte[]{PackageType.LEAVING});
+		sender.send(new byte[]{PacketType.LEAVING});
 		reader.halt();
 		sender.stop();
 		
@@ -58,7 +57,7 @@ public class GameClient {
 		try {
 			ClientFrame frame = new ClientFrame(this);
 			socket = new DatagramSocket();
-			sender = new ServerPacketSender(socket, address);
+			sender = new PacketSender(socket, address);
 			reader = new PacketReaderThread(socket);
 			reader.addPacketObserver(new GamePlayObserver(this));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
