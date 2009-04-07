@@ -17,8 +17,12 @@ public class PacketSender {
 	ExecutorService exec;
 	
 	public PacketSender() throws SocketException {
+		this(new DatagramSocket());
+	}
+	
+	public PacketSender(DatagramSocket sock) {
 		exec = Executors.newSingleThreadExecutor();
-		sock = new DatagramSocket();
+		this.sock = sock;
 	}
 	
 	public void send(byte[] data, Client c) {
