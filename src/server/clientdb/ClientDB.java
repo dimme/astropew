@@ -8,6 +8,7 @@ import common.CatastrophicException;
 public interface ClientDB {
 
 	public Client getClient(SocketAddress saddr);
+	public Client getClient(int id);
 	
 	public Collection<Client> getClients();
 	
@@ -20,4 +21,6 @@ public interface ClientDB {
 	 */
 	public Client createClient(String name, SocketAddress saddr);
 	
+	public void removeClient(SocketAddress saddr);
+	public void removeClient(int id);
 }
