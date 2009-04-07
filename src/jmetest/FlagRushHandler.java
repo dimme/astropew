@@ -63,7 +63,7 @@ public class FlagRushHandler extends InputHandler {
 
 	/**
 	 * creates the keyboard object, allowing us to obtain the values of a keyboard as keys are
-	 * pressed. It then sets the actions to be triggered based on if certain keys are pressed (WSAD).
+	 * pressed. It then sets the jmetest.actions to be triggered based on if certain keys are pressed (WSAD).
 	 * @param api
 	 */
 	private void setKeyBindings(String api) {
@@ -80,7 +80,7 @@ public class FlagRushHandler extends InputHandler {
 	}
 
 	/**
-	 * assigns action classes to triggers. These actions handle moving the node forward, backward and
+	 * assigns action classes to triggers. These jmetest.actions handle moving the node forward, backward and
 	 * rotating it.
 	 * @param node the node to control.
 	 */
