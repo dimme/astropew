@@ -1,5 +1,6 @@
 package server;
 
+import common.PacketSender;
 import java.net.SocketAddress;
 
 import server.clientdb.Client;

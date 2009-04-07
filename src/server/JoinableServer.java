@@ -1,5 +1,6 @@
 package server;
 
+import common.PacketSender;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
