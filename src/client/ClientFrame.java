@@ -5,9 +5,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 public class ClientFrame extends JFrame {
-	GameClient jc;
-	public ClientFrame(GameClient jc) {
-		this.jc = jc;
+	GameClient gc;
+	public ClientFrame(GameClient gc) {
+		this.gc = gc;
 
 		init();
 		setVisible(true);
@@ -17,10 +17,10 @@ public class ClientFrame extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent we) {
-				//jc.stop();
+				gc.stop();
 				System.exit(0);
 			}
 		});
-		setSize(800, 600);
+		setSize(100, 60);
 	}
 }

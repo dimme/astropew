@@ -74,7 +74,6 @@ public class PacketReaderThread extends Thread {
 	public void halt() {
 		running = false;
 		exec.shutdown();
-		socket.close();
 	}
 	
 	private class NotifyTask implements Runnable {

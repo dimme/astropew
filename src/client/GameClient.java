@@ -2,6 +2,7 @@ package client;
 
 
 import common.CatastrophicException;
+import common.PackageType;
 import common.PacketReaderThread;
 import common.PacketSender;
 import common.Util;
@@ -19,8 +20,6 @@ public class GameClient {
 	private PacketReaderThread reader;
 
 	private DatagramSocket socket;
-	private DatagramPacket sendPacket;
-
 	private String playername;
 	private boolean isInitialized = false;
 
@@ -41,15 +40,23 @@ public class GameClient {
 				sender.send(playername.getBytes());
 				wait(5000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
 			}
 		}
+	}
+	
+	public void stop() {
+		sender.send(new byte[]{PackageType.LEAVING});
+		reader.halt();
+		sender.stop();
+		
+		socket.close();
 	}
 
 	public GameClient(SocketAddress address, String playername) {
 		this.playername = playername;
 		try {
+			ClientFrame frame = new ClientFrame(this);
 			socket = new DatagramSocket();
 			sender = new ServerPacketSender(socket, address);
 			reader = new PacketReaderThread(socket);
