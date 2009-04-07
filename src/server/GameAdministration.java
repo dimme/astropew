@@ -27,7 +27,7 @@ public class GameAdministration {
 			sendToAll(data);
 		}
 		
-		ps.send(PacketDataFactory.createInitializer(c.getID(), 12345), c);
+		ps.send(PacketDataFactory.createInitializer(12345, c.getID(), name), c);
 	}
 	
 	public void leaving(SocketAddress saddr) {

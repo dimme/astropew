@@ -13,6 +13,7 @@ public class GameLogic implements PacketObserver {
 	
 	public GameLogic(GameAdministration gadm) {
 		this.gadm = gadm;
+		
 	}
 	
 	public void packetReceived(byte[] data, SocketAddress sender) {

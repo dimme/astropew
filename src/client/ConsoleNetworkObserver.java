@@ -19,13 +19,14 @@ public class ConsoleNetworkObserver implements PacketObserver {
 
 	public void packetReceived(byte[] data, SocketAddress saddr) {
 		if (data[0] == PacketType.INITIALIZER) {
-			int id = Util.getInt(data, 1);
-			long randSeed = Util.getLong(data,5);
-			System.out.println("Established contact with server. Got id: "+ id +". Got seed: "+ randSeed);
+			String name = new String(data, 13, data.length-13);
+			int id = Util.getInt(data, 9);
+			long randSeed = Util.getLong(data,1);
+			System.out.println("Established contact with server. Got id: "+ id +". Got name: "+name+". Got seed: "+ randSeed);
 		}
 		else if (data[0] == PacketType.PLAYER_LEFT) {
 			int lid = Util.getInt(data, 1);
-			System.out.println("PLayer Left. ID = " + lid);
+			System.out.println("Player Left. ID = " + lid);
 		}
 		else if (data[0] == PacketType.PLAYER_JOINED) {
 			int nid = Util.getInt(data, 1);

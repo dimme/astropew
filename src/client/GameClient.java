@@ -20,15 +20,10 @@ public class GameClient {
 	private PacketReaderThread reader;
 
 	private DatagramSocket socket;
-	private String playername;
 	private boolean isInitialized;
 	
-	private HashMap<Integer, PlayerRepresentation> otherPlayers;
-	
 	public GameClient(SocketAddress address, String playername) {
-		this.playername = playername;
 		isInitialized = false;
-		otherPlayers = new HashMap<Integer, PlayerRepresentation>();
 		
 		try {
 			ClientFrame frame = new ClientFrame(this);
@@ -39,19 +34,11 @@ public class GameClient {
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 
 			reader.start();
-			connect();
+			connect(playername);
 		} catch (SocketException ex) {
 			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
 			throw new RuntimeException(ex);
 		}
-	}
-	
-	public void addPlayer(PlayerRepresentation pr){
-		otherPlayers.put(pr.getId(), pr);
-	}
-	
-	public void removePlayer(PlayerRepresentation pr){
-		otherPlayers.remove(pr.getId());
 	}
 
 	public synchronized void initialized( SocketAddress newAddr) throws CatastrophicException {
@@ -65,7 +52,7 @@ public class GameClient {
 		}
 	}
 	
-	public synchronized void connect() {
+	public synchronized void connect(String playername) {
 		while(!isInitialized ) {
 			try {
 				sender.send(playername.getBytes());

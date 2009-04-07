@@ -1,9 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package common;
+
+import com.jme.math.Vector3f;
 
 /**
  *
@@ -22,7 +20,6 @@ public class Util {
 	 * @return the composited integer
 	 */
 	public static int getInt(byte[] b, int off) {
-
 		int val = 0;
 		int mult = 1;
 		for (int i=off+3; i>=off; i--){
@@ -36,6 +33,28 @@ public class Util {
 		}
 
 		return val;
+	}
+	
+	/**
+	 * reads 4 bytes from b and composits them into a float.
+	 * @param b a byte array
+	 * @param off the offset to start reading at
+	 * @return the composited float
+	 */
+	public static float getFloat(byte[] b, int off) {
+		return Float.intBitsToFloat(getInt(b, off));
+	}
+	
+	/**
+	 * Fills v with three floats read from off, off+4 and off+8.
+	 * @param b array to read bytes from
+	 * @param off offset to start reading at
+	 * @param v vector to fill 
+	 */
+	public static void getVector3f(byte[] b, int off, Vector3f v) {
+		v.x = getFloat(b, off);
+		v.y = getFloat(b, off+4);
+		v.z = getFloat(b, off+8);
 	}
 
 	/**
@@ -73,6 +92,29 @@ public class Util {
 		dst[offset+1] = (byte)( (i >> 16) % 256 );
 		dst[offset+2] = (byte)( (i >>  8) % 256 );
 		dst[offset+3] = (byte)( (i	  ) % 256 );
+	}
+	
+	/**
+	 * splits a float to 4 bytes and puts them in dst, starting at offset.
+	 * @param f the float to put
+	 * @param dst the target array
+	 * @param offset the offset at which to start putting the values
+	 */
+	public static void put(float f, byte[] dst, int offset) {
+		int i = Float.floatToRawIntBits(f);
+		put(i, dst, offset);
+	}
+	
+	/**
+	 * Takes the floats from v and puts them at offset, offset+4 and offset+8
+	 * @param v vector of floats
+	 * @param dst target array
+	 * @param offset the offset for x
+	 */
+	public static void put(Vector3f v, byte[] dst, int offset) {
+		put(v.x, dst, offset);
+		put(v.y, dst, offset+4);
+		put(v.z, dst, offset+8);
 	}
 
 	/**

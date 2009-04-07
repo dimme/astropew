@@ -18,12 +18,14 @@ public class PacketDataFactory {
 		return b;
 	}
 	
-	public static byte[] createInitializer(int id, long worldseed) {
-		byte[] b = new byte[1+4+8];
+	public static byte[] createInitializer(long worldseed, int id, String name) {
+		byte[] sb = name.getBytes();
+		byte[] b = new byte[1+8+4+sb.length];
 		
 		b[0] = PacketType.INITIALIZER;
-		Util.put(id, b, 1);
-		Util.put(worldseed, b, 5);
+		Util.put(worldseed, b, 1);
+		Util.put(id, b, 9);
+		Util.put(sb, b, 13);
 		
 		return b;
 	}
