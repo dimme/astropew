@@ -45,6 +45,7 @@ import jmetest.terrain.TestTerrain;
 
 import com.jme.app.BaseGame;
 import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingVolume;
 import com.jme.image.Texture;
 import com.jme.input.ChaseCamera;
 import com.jme.input.InputHandler;
@@ -59,6 +60,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Pyramid;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -67,8 +70,11 @@ import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
+import com.jmex.model.collada.schema.backType;
+import com.jmex.model.collada.schema.frontType;
 import com.jmex.terrain.util.MidPointHeightMap;
 import com.jmex.terrain.util.ProceduralTextureGenerator;
+import com.sun.org.apache.xpath.internal.operations.Quo;
 
 /**
  * <code>Tutorial 4</code> Builds the environment (surrounding structure and sky).
@@ -211,7 +217,7 @@ public class Lesson5 extends BaseGame {
 	 * @see com.jme.app.BaseGame#initGame()
 	 */
 	protected void initGame() {
-		display.setTitle("Flag Rush");
+		display.setTitle("Astro Pew");
 	   
 		scene = new Node("Scene graph node");
 		/** Create a ZBuffer to display pixels closest to the camera above farther ones.  */
@@ -226,12 +232,8 @@ public class Lesson5 extends BaseGame {
 		cs.setCullFace(CullState.Face.Back);
 		scene.setRenderState(cs);
 	   
-		//Add terrain to the scene
-		buildTerrain();
 		//Light the world
 		buildLighting();
-		//add the force field fence
-		buildEnvironment();
 		//Add the skybox
 		buildSkyBox();
 		//Build the player
@@ -254,22 +256,22 @@ public class Lesson5 extends BaseGame {
 	 */
 	private void buildPlayer() {
 		//box stand in
-		Box b = new Box("box", new Vector3f(), 0.35f,0.25f,0.5f);
+		Box b = new Box("box", new Vector3f(), 0.35f,0.25f,0.8f);
 		b.setModelBound(new BoundingBox());
 		b.updateModelBound();
 	   
+		Sphere s = new Sphere("sphere",new Vector3f(0f,0.25f,-0.45f),40,40,0.35f);
+		
+		Pyramid p = new Pyramid("pyramid",0.7f,0.3f);
+		p.setLocalTranslation(0f,0.4f,0.45f);
+		
 		player = new Node("Player Node");
 		player.setLocalTranslation(new Vector3f(100,0, 100));
 		scene.attachChild(player);
+		player.attachChild(p);
 		player.attachChild(b);
+		player.attachChild(s);
 		player.updateWorldBound();
-	}
-   
-	/**
-	 * buildEnvironment will create a fence.
-	 */
-	private void buildEnvironment() {
-
 	}
 
 	/**
@@ -290,38 +292,6 @@ public class Lesson5 extends BaseGame {
 		scene.setRenderState(lightState);
 	}
 
-	/**
-	 * build the height map and terrain block.
-	 */
-	private void buildTerrain() {
-	   
-	   
-		MidPointHeightMap heightMap = new MidPointHeightMap(64, 1f);
-		// Scale the data
-		Vector3f terrainScale = new Vector3f(4, 0.0575f, 4);
-		// create a terrainblock
-
-		// generate a terrain texture with 2 textures
-		ProceduralTextureGenerator pt = new ProceduralTextureGenerator(
-				heightMap);
-		pt.addTexture(new ImageIcon(TestTerrain.class.getClassLoader()
-				.getResource("jmetest/data/texture/grassb.png")), -128, 0, 128);
-		pt.addTexture(new ImageIcon(TestTerrain.class.getClassLoader()
-				.getResource("jmetest/data/texture/dirt.jpg")), 0, 128, 255);
-		pt.addTexture(new ImageIcon(TestTerrain.class.getClassLoader()
-				.getResource("jmetest/data/texture/highest.jpg")), 128, 255,
-				384);
-		pt.createTexture(32);
-	   
-		// assign the texture to the terrain
-		TextureState ts = display.getRenderer().createTextureState();
-		Texture t1 = TextureManager.loadTexture(pt.getImageIcon().getImage(),
-				Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear, true);
-		ts.setTexture(t1, 0);
-	   
-	   
-	}
-   
 	/**
 	 * buildSkyBox creates a new skybox object with all the proper textures. The
 	 * textures used are the standard skybox textures from all the tests.
@@ -419,13 +389,9 @@ public class Lesson5 extends BaseGame {
 		super.quit();
 		System.exit(0);
 	}
-   
-	/**
-	 * clean up the textures.
-	 *
-	 * @see com.jme.app.BaseGame#cleanup()
-	 */
-	protected void cleanup() {
 
-	}
+
+	protected void cleanup() {
+		
+	}   
 }

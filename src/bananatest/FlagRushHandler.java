@@ -57,10 +57,8 @@ public class FlagRushHandler extends InputHandler {
 	 * @param api the library that will handle creation of the input.
 	 */
 	public FlagRushHandler(Spatial node, String api) {
-
 		setKeyBindings(api);
 		setActions(node);
-
 	}
 
 	/**
@@ -73,8 +71,8 @@ public class FlagRushHandler extends InputHandler {
 
 		keyboard.set("forward", KeyInput.KEY_W);
 		keyboard.set("backward", KeyInput.KEY_S);
-		keyboard.set("turnRight", KeyInput.KEY_D);
-		keyboard.set("turnLeft", KeyInput.KEY_A);
+		keyboard.set("turnRight", KeyInput.KEY_RIGHT);
+		keyboard.set("turnLeft", KeyInput.KEY_LEFT);
 		keyboard.set("turnUp", KeyInput.KEY_DOWN);
 		keyboard.set("turnDown", KeyInput.KEY_UP);
 		keyboard.set("rollCCW", KeyInput.KEY_LEFT);
@@ -103,11 +101,9 @@ public class FlagRushHandler extends InputHandler {
 		addAction(rotateLeft, "turnLeft", true);
 		
 		KeyNodeLookUpAction rotateUp = new KeyNodeLookUpAction(node, 5f);
-		//rotateUp.setLockAxis(node.getLocalRotation().getRotationColumn(2));
 		addAction(rotateUp, "turnUp", true);
 	   
 		KeyNodeLookDownAction rotateDown = new KeyNodeLookDownAction(node, 5f);
-		//rotateDown.setLockAxis(node.getLocalRotation().getRotationColumn(2));
 		addAction(rotateDown, "turnDown", true);
 		
 		//KeyNodeRotateLeftAction rollCW = new KeyNodeRotateLeftAction(node, 5f);
