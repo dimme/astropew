@@ -28,13 +28,13 @@ public class JoiningClient {
 
     public static void main(String args[]){
         if(args.length != 3){
-                System.out.println("Proper use: port adress name");
+                System.out.println("Proper use: adress port name");
                 System.exit(1);
         }
 
-        int port = Integer.parseInt(args[0]);
+        int port = Integer.parseInt(args[1]);
 
-        new JoiningClient(args[2], args[1], port);
+        new JoiningClient(args[2], args[0], port);
 
        //Generate world with the seed. etc..
     }

@@ -51,6 +51,10 @@ public class ClientDatabase implements ClientDB{
 	public synchronized Client getClient(SocketAddress saddr) {
 		return addrmap.get(saddr);
 	}
+	
+	public synchronized Client getClient(int id) {
+		return idmap.get(id);
+	}
 
 	public synchronized Collection<Client> getClients() {
 		return idmap.values();
