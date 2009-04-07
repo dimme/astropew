@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package bananatest;
+package jmetest;
 
 import java.net.MalformedURLException;
 import java.net.URL;

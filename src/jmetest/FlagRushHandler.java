@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package bananatest;
+package jmetest;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;

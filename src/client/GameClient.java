@@ -11,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +21,38 @@ public class GameClient {
 
 	private DatagramSocket socket;
 	private String playername;
-	private boolean isInitialized = false;
+	private boolean isInitialized;
+	
+	private HashMap<Integer, PlayerRepresentation> otherPlayers;
+	
+	public GameClient(SocketAddress address, String playername) {
+		this.playername = playername;
+		isInitialized = false;
+		otherPlayers = new HashMap<Integer, PlayerRepresentation>();
+		
+		try {
+			ClientFrame frame = new ClientFrame(this);
+			socket = new DatagramSocket();
+			sender = new PacketSender(socket, address);
+			reader = new PacketReaderThread(socket);
+			reader.addPacketObserver(new GamePlayObserver(this));
+			reader.addPacketObserver(new ConsoleNetworkObserver());
+
+			reader.start();
+			connect();
+		} catch (SocketException ex) {
+			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public void addPlayer(PlayerRepresentation pr){
+		otherPlayers.put(pr.getId(), pr);
+	}
+	
+	public void removePlayer(PlayerRepresentation pr){
+		otherPlayers.remove(pr.getId());
+	}
 
 	public synchronized void initialized( SocketAddress newAddr) throws CatastrophicException {
 		try {
@@ -50,24 +82,6 @@ public class GameClient {
 		sender.stop();
 		
 		socket.close();
-	}
-
-	public GameClient(SocketAddress address, String playername) {
-		this.playername = playername;
-		try {
-			ClientFrame frame = new ClientFrame(this);
-			socket = new DatagramSocket();
-			sender = new PacketSender(socket, address);
-			reader = new PacketReaderThread(socket);
-			reader.addPacketObserver(new GamePlayObserver(this));
-			reader.addPacketObserver(new ConsoleNetworkObserver());
-
-			reader.start();
-			connect();
-		} catch (SocketException ex) {
-			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
-			throw new RuntimeException(ex);
-		}
 	}
 
 	public static void main(String[] args) {
