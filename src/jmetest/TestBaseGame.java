@@ -1,7 +1,9 @@
 package jmetest;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jmetest.renderer.TestSkybox;
@@ -21,17 +23,19 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.shape.Box;
+import com.jme.scene.shape.*;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 
-public class Lesson7 extends BaseGame {
-    private static final Logger logger = Logger.getLogger(Lesson7.class
+public class TestBaseGame extends BaseGame {
+    private static final Logger logger = Logger.getLogger(TestBaseGame.class
             .getName());
    
     // fence that will keep us in.
@@ -61,7 +65,7 @@ public class Lesson7 extends BaseGame {
      * Main entry point of the application
      */
     public static void main(String[] args) {
-        Lesson7 app = new Lesson7();
+        TestBaseGame app = new TestBaseGame();
         // We will load our own "fantastic" Flag Rush logo. Yes, I'm an artist.
         try {
 			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL("file:/h/d1/t/dt06al4/Desktop/pew.jpeg"));
@@ -178,16 +182,14 @@ public class Lesson7 extends BaseGame {
         cs.setCullFace(CullState.Face.Back);
         scene.setRenderState(cs);
        
-        //Add terrain to the scene
-        buildTerrain();
         //Light the world
         buildLighting();
-        //add the force field fence
-        buildEnvironment();
         //Add the skybox
         buildSkyBox();
         //Build the player
         buildPlayer();
+        //Build the universe
+        buildUniverse();
         //build the chase cam
         buildChaseCamera();
         //build the player input
@@ -215,10 +217,10 @@ public class Lesson7 extends BaseGame {
         //set the vehicles attributes (these numbers can be thought
         //of as Unit/Second).
         player = new Ship("Player Node", b);
-        player.setAcceleration(15);
-        player.setBraking(15);
+        player.setAcceleration(50);
+        player.setBraking(100);
         player.setTurnSpeed(2.5f);
-        player.setMaxSpeed(25);
+        player.setMaxSpeed(250);
         player.setMinSpeed(15);
        
         player.setLocalTranslation(new Vector3f(100,0, 100));
@@ -226,14 +228,62 @@ public class Lesson7 extends BaseGame {
         scene.updateGeometricState(0, true);
         player.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
     }
-   
-    /**
-     * buildEnvironment will create a fence.
-     */
-    private void buildEnvironment() {
-    }
+    
+    private void buildUniverse() {
+    	Random rand = new Random();
+    	
+    	
+    	
+    	TextureState ts1 = display.getRenderer().createTextureState();
+    	Texture texture1 = TextureManager.loadTexture("files/earth.jpg",
+	               Texture.MinificationFilter.Trilinear,
+	               Texture.MagnificationFilter.Bilinear,
+	               1.0f,
+	               true);
+	    ts1.setTexture(texture1);
+	    ts1.setEnabled(true);
+	    
+	    TextureState ts2 = display.getRenderer().createTextureState();
+    	Texture texture2 = TextureManager.loadTexture("files/moon.jpg",
+	               Texture.MinificationFilter.Trilinear,
+	               Texture.MagnificationFilter.Bilinear,
+	               1.0f,
+	               true);
+	    ts2.setTexture(texture2);
+	    ts2.setEnabled(true);
+    	
+    	
+    	for (int i = 0; i < 200; i++) {
+    		float x = rand.nextInt(5000) - 2500;
+    		float y = rand.nextInt(5000) - 2500;
+    		float z = rand.nextInt(5000) - 2500;
+    		
+    		Vector3f location = new Vector3f(x,y,z);
+    		int radius = rand.nextInt(200) + 10;
+    		
+    		//float r = rand.nextFloat();
+    		//float g = rand.nextFloat();
+    		//float b = rand.nextFloat();
+    		//ColorRGBA color = new ColorRGBA(r,g,b,1);
+    		//MaterialState ms = display.getRenderer().createMaterialState();
+    		//ms.setEmissive(color);
+    		//ms.setAmbient(color);
+    		
+    		
+    	    
+    		Sphere s = new Sphere("Planet: "+i,location,40,40,radius);
 
-    /**
+    		if (i % 2 == 0)
+    			s.setRenderState(ts1);
+    		else
+    			s.setRenderState(ts2);
+    		
+    		scene.attachChild(s);
+    	}
+		
+	}
+   
+   /**
      * creates a light for the terrain.
      */
     private void buildLighting() {
@@ -251,12 +301,6 @@ public class Lesson7 extends BaseGame {
         scene.setRenderState(lightState);
     }
 
-    /**
-     * build the height map and terrain block.
-     */
-    private void buildTerrain() {
-    }
-   
     /**
      * buildSkyBox creates a new skybox object with all the proper textures. The
      * textures used are the standard skybox textures from all the tests.
