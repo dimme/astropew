@@ -4,14 +4,11 @@ package client;
 import common.CatastrophicException;
 import common.ClientPacketType;
 import common.PacketReaderThread;
-import common.Util;
 
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,14 +25,14 @@ public class GameClient {
 		isInitialized = false;
 		
 		try {
-			Vector3f test = new Vector3f();
+			new Vector3f();
 		} catch (NoClassDefFoundError e) {
 			System.err.println("Couldn't find class Vector3f. Please make sure jME_2.0.jar is included in your classpath.");
 			System.exit(1);
 		}
 		
 		try {
-			ClientFrame frame = new ClientFrame(this);
+			new ClientFrame(this);
 			socket = new DatagramSocket();
 			sender = new PacketSender(socket, address);
 			reader = new PacketReaderThread(socket);
