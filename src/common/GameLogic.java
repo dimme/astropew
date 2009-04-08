@@ -7,9 +7,9 @@ import common.world.Ship;
 
 public abstract class GameLogic {
 	protected HashMap<Player, Ship> shiptable = new HashMap<Player, Ship>();
-	protected Game world;
+	protected Game game;
 	
-	public GameLogic(Game world) {
-		this.world = world;
+	public GameLogic(Game game) {
+		this.game = game;
 	}
 }

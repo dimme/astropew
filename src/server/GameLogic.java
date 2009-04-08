@@ -16,7 +16,7 @@ public class GameLogic extends common.GameLogic implements PacketObserver {
 		this.gadm = gadm;
 		Thread t = new Thread() {
 			public void run() {
-				world.start();
+				game.start();
 			}
 		};
 		t.start();
