@@ -4,6 +4,10 @@ public interface PacketType {
 	
 	/**
 	 * Some kind of message to be shown.
+	 * A MESSAGE packet contains:
+	 * PacketType - byte - 1 byte
+	 * MessageType - byte - 1 byte
+	 * Message - String - arbitrary length
 	 */
 	public static final byte MESSAGE		 = 32;
 	
@@ -20,7 +24,7 @@ public interface PacketType {
 	/**
 	 * Sent to joining client to acknowledge their joining
 	 * An INITIALIZER packet contains: 
-	 * Code - byte - 1 byte
+	 * PacketType - byte - 1 byte
 	 * Random Seed - long - 8 bytes
 	 * ID - int - 4 byte
 	 * Requested name - String - arbitrary length
@@ -30,7 +34,7 @@ public interface PacketType {
 	/**
 	 * Sends info about a joining player to other players
 	 * A PLAYER_JOINED packet contains: 
-	 * Code - byte - 1 byte
+	 * PacketType - byte - 1 byte
 	 * ID - int - 4 byte
 	 * Requested name - String - arbitrary length
 	 */
@@ -39,7 +43,7 @@ public interface PacketType {
 	/**
 	 * Informs players that someone left.
 	 * A PLAYER_LEFT packet contains:
-	 * Code - byte - 1 byte
+	 * PacketType - byte - 1 byte
 	 * ID - int - 4 byte
 	 */
 	public static final byte PLAYER_LEFT	 = 37;
