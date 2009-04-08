@@ -147,4 +147,17 @@ public class Util {
 	public static void put(byte[] src, byte[] dst, int offset) {
 		System.arraycopy(src, 0, dst, offset, src.length);
 	}
+	
+	public static String hex(byte b) {
+		int i = b;
+		if ( i < 0){
+			i = 256 + i;
+		}
+		String s = Integer.toHexString(i);
+		
+		if (s.length() < 2) {
+			return "0" + s;
+		}
+		return s;
+	}
 }

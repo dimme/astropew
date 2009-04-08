@@ -35,8 +35,17 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
 		}
 		else {
-			System.out.println("Unhandled packet type: " + data[0]);
+			System.out.println("Unhandled packet type: " + data[0] + ", length: " + data.length);
+			System.out.println("\t" + "Data: " + hex(data));
 		}
+	}
+	
+	private String hex(byte[] bytes) {
+		StringBuilder sb = new StringBuilder();
+		for (byte b : bytes) {
+			sb.append(Util.hex(b));
+		}
+		return sb.toString();
 	}
 
 }
