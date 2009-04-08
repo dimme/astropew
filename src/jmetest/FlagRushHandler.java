@@ -78,6 +78,8 @@ public class FlagRushHandler extends InputHandler {
 		keyboard.set("backward", KeyInput.KEY_S);
 		keyboard.set("right", KeyInput.KEY_D);
 		keyboard.set("left", KeyInput.KEY_A);
+		keyboard.set("real_right", KeyInput.KEY_RIGHT);
+		keyboard.set("real_left", KeyInput.KEY_LEFT);
 		keyboard.set("down", KeyInput.KEY_DOWN);
 		keyboard.set("up", KeyInput.KEY_UP);
 	}
@@ -97,6 +99,10 @@ public class FlagRushHandler extends InputHandler {
         addAction(rotateRight, "right", true);
         RotateAction rotateLeft = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.LEFT);
         addAction(rotateLeft, "left", true);
+        RotateAction rotateRealRight = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.RIGHT);
+        addAction(rotateRealRight, "real_right", true);
+        RotateAction rotateRealLeft = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.LEFT);
+        addAction(rotateRealLeft, "real_left", true);
         RotateAction rotateUp = new RotateAction(node, RotateAction.VERTICAL, RotateAction.RIGHT);
         addAction(rotateUp, "up", true);
         RotateAction rotateDown = new RotateAction(node, RotateAction.VERTICAL, RotateAction.LEFT);
