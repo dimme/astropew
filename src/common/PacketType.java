@@ -13,6 +13,14 @@ public interface PacketType {
 	
 	/**
 	 * Player position, direction and orientation
+	 * byte[] b = new byte[1 + 8 + 4 + 3*3*4]; //type time playerid pos/dir/ort
+	 * A PLAYER_POSITION packet contains:
+	 * PacketType - byte - 1 byte
+	 * Time - long - 8 byte
+	 * ID - int - 4 byte
+	 * pos - Vector3f - 12 byte
+	 * dir - Vector3f - 12 byte
+	 * ort - Vector3f - 12 byte
 	 */
 	public static final byte PLAYER_POSITION = 33;
 	
