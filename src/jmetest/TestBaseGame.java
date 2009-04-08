@@ -316,31 +316,16 @@ public class TestBaseGame extends BaseGame {
 	private void buildSkyBox() {
 		skybox = new Skybox("skybox", 10, 10, 10);
 
-		Texture north = TextureManager.loadTexture("files/galaxy.jpg",
-				Texture.MinificationFilter.BilinearNearestMipMap,
-				Texture.MagnificationFilter.Bilinear);
-		Texture south = TextureManager.loadTexture("files/galaxy.jpg",
-				Texture.MinificationFilter.BilinearNearestMipMap,
-				Texture.MagnificationFilter.Bilinear);
-		Texture east = TextureManager.loadTexture("files/galaxy.jpg",
-				Texture.MinificationFilter.BilinearNearestMipMap,
-				Texture.MagnificationFilter.Bilinear);
-		Texture west = TextureManager.loadTexture("files/galaxy.jpg",
-				Texture.MinificationFilter.BilinearNearestMipMap,
-				Texture.MagnificationFilter.Bilinear);
-		Texture up = TextureManager.loadTexture("files/galaxy.jpg",
-				Texture.MinificationFilter.BilinearNearestMipMap,
-				Texture.MagnificationFilter.Bilinear);
-		Texture down = TextureManager.loadTexture("files/galaxy.jpg",
+		Texture tx = TextureManager.loadTexture("files/galaxy.jpg",
 				Texture.MinificationFilter.BilinearNearestMipMap,
 				Texture.MagnificationFilter.Bilinear);
 
-		skybox.setTexture(Skybox.Face.North, north);
-		skybox.setTexture(Skybox.Face.West, west);
-		skybox.setTexture(Skybox.Face.South, south);
-		skybox.setTexture(Skybox.Face.East, east);
-		skybox.setTexture(Skybox.Face.Up, up);
-		skybox.setTexture(Skybox.Face.Down, down);
+		skybox.setTexture(Skybox.Face.North, tx);
+		skybox.setTexture(Skybox.Face.West, tx);
+		skybox.setTexture(Skybox.Face.South, tx);
+		skybox.setTexture(Skybox.Face.East, tx);
+		skybox.setTexture(Skybox.Face.Up, tx);
+		skybox.setTexture(Skybox.Face.Down, tx);
 		skybox.preloadTextures();
 		scene.attachChild(skybox);
 	}
