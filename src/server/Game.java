@@ -1,10 +1,13 @@
 package server;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import server.clientdb.Client;
 
 
 import com.jme.app.SimpleHeadlessApp;
@@ -15,32 +18,31 @@ import com.jme.system.GameSettings;
 import common.world.NoPlayer;
 import common.world.Ship;
 
-public class Game extends SimpleHeadlessApp implements common.Game {
+public class Game extends SimpleHeadlessApp {
 
 	private long last = 0;
 	private PacketSender ps;
-	private List<Ship> ships;
 	private long frameTime = 0;
 	private float ticklength;
+	private GameLogic logic;
 	
 	public Game(PacketSender ps) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
 		last = System.currentTimeMillis();
-		ships = new LinkedList<Ship>();
 		this.ps=ps;
+		
+		logic = new GameLogic();
+		
+		Thread t = new Thread() {
+			public void run() {
+				Game.this.start();
+			}
+		};
+		t.start();
 	}
 	
 	protected void simpleInitGame() {
-		Ship s = new Ship(NoPlayer.instance);
-		s.setLocalTranslation(3, 4, 5);
-		attachChild( s );
-		ships.add(s);
-		
 		ticklength = 1f/timer.getResolution();
-	}
-
-	public void attachChild(Spatial child) {
-		super.rootNode.attachChild(child);
 	}
 	
 	public void simpleRender() {
@@ -55,7 +57,7 @@ public class Game extends SimpleHeadlessApp implements common.Game {
 			cur = System.currentTimeMillis();
 		}
 		last += 10;
-		for (Ship s : ships) {
+		for (Ship s : logic.getShips()) {
 			ps.sendToAll( PacketDataFactory.createPosition(frameTime, s) );
 		}
 	}
@@ -63,10 +65,21 @@ public class Game extends SimpleHeadlessApp implements common.Game {
 	public void simpleUpdate() {
 		long old = frameTime;
 		frameTime = timer.getTime();
-		for (Ship s : ships) {
+		for (Ship s : logic.getShips()) {
 			s.getLocalTranslation().addLocal( 
 					s.getMovement().mult(ticklength*(frameTime-old)));
 		}
+	}
+
+	public void newClient(Client c) {
+		Ship s = new Ship(c);
+		rootNode.attachChild(s);
+		logic.addShip(s);
+	}
+
+	public void clientLeaving(Client c) {
+		Ship s = logic.removeShip(c);
+		s.removeFromParent();
 	}
 	
 	public GameSettings getNewSettings() {

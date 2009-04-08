@@ -9,10 +9,12 @@ public class GameAdministration {
 
 	private ClientDB cdb;
 	PacketSender ps;
+	Game game;
 	
-	public GameAdministration(ClientDB cdb, PacketSender ps) {
+	public GameAdministration(ClientDB cdb, PacketSender ps, Game game) {
 		this.cdb = cdb;
 		this.ps = ps;
+		this.game = game;
 	}
 	
 	public void newConnection(String name, SocketAddress saddr) {
@@ -21,6 +23,8 @@ public class GameAdministration {
 		
 		if (c == null) {
 			c = cdb.createClient(name, saddr);
+			
+			game.newClient(c);
 			
 			byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name);
 			
@@ -32,6 +36,8 @@ public class GameAdministration {
 	
 	public void leaving(SocketAddress saddr) {
 		Client removed = cdb.removeClient(saddr);
+		
+		game.clientLeaving(removed);
 		
 		byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
 		sendToAll(data);

@@ -11,11 +11,11 @@ public class IncomingConnectionServer extends Thread {
 	
 	boolean running = true;
 	DatagramSocket sock;
-	GameAdministration gadm;
+	PacketDecoder pd;
 	
-	public IncomingConnectionServer(int port, GameAdministration gadm) throws SocketException {
+	public IncomingConnectionServer(int port, PacketDecoder pd) throws SocketException {
 		sock = new DatagramSocket(port);
-		this.gadm = gadm;
+		this.pd = pd;
 	}
 	
 	/**
@@ -35,9 +35,8 @@ public class IncomingConnectionServer extends Thread {
 				
 				byte[] b = new byte[p.getLength()];
 				System.arraycopy(p.getData(), 0, b, 0, b.length);
-				String name = new String(b);
 				
-				gadm.newConnection(name, p.getSocketAddress());
+				pd.newConnection(b, p.getSocketAddress());
 				
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);

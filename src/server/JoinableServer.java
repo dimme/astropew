@@ -28,12 +28,14 @@ public class JoinableServer extends Thread {
 			PacketReaderThread pread = new PacketReaderThread(sock);
 			PacketSender ps = new PacketSender(cdb, sock);
 			
-			GameAdministration gadm = new GameAdministration(cdb, ps);
-			GameLogic game = new GameLogic(gadm);
+			Game game = new Game(ps);
+			GameAdministration gadm = new GameAdministration(cdb, ps, game);
 			
-			pread.addPacketObserver(game);
+			PacketDecoder pd = new PacketDecoder(gadm, game);
 			
-			IncomingConnectionServer ics = new IncomingConnectionServer(34567, gadm);
+			pread.addPacketObserver(pd);
+			
+			IncomingConnectionServer ics = new IncomingConnectionServer(34567, pd);
 			
 			pread.start();
 			ics.start();

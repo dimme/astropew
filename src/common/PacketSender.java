@@ -45,7 +45,7 @@ public class PacketSender {
 
 	
 	protected abstract class AbstractSendTask implements Runnable {
-		
+		protected final byte[] nullbytes = new byte[1];
 		protected byte[] data;
 		
 		public AbstractSendTask(byte[] data) {
@@ -58,6 +58,9 @@ public class PacketSender {
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 				throw new RuntimeException(new CatastrophicException(e));
+			} catch (Throwable t) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, t.getMessage(), t);
+				throw new RuntimeException(t);
 			}
 		}
 		
@@ -80,7 +83,7 @@ public class PacketSender {
 		public void perform() throws IOException {
 			dgp.setData(data);
 			send(dgp);
-			dgp.setData(null, 0, 0);
+			dgp.setData(nullbytes, 0, 0);
 		}
 			
 	}

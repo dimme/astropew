@@ -8,7 +8,6 @@ import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
 public class PacketSender extends common.PacketSender {
-	
 	ClientDB cdb;
 	
 	public PacketSender(ClientDB cdb) throws SocketException {
@@ -41,7 +40,7 @@ public class PacketSender extends common.PacketSender {
 			{
 				c.dg.setData(data);
 				send(c.dg);
-				c.dg.setData(null, 0, 0);
+				c.dg.setData(nullbytes, 0, 0);
 			}
 		}
 	}
