@@ -4,14 +4,12 @@ package client;
 import common.CatastrophicException;
 import common.PacketType;
 import common.PacketReaderThread;
-import common.Util;
 
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.util.HashMap;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +24,7 @@ public class GameClient {
 		isInitialized = false;
 		
 		try {
-			ClientFrame frame = new ClientFrame(this);
+			/*ClientFrame frame =*/ new ClientFrame(this);
 			socket = new DatagramSocket();
 			sender = new PacketSender(socket, address);
 			reader = new PacketReaderThread(socket);

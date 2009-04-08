@@ -4,7 +4,6 @@ import jmetest.Ship;
 
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
-import com.jme.math.Vector3f;
 
 /**
  * AccelerateAction defines the action that occurs when the key is pressed to 

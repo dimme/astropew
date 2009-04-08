@@ -16,7 +16,6 @@ import com.jme.system.GameSettings;
 
 import common.world.NoPlayer;
 import common.world.Ship;
-import common.world.WorldObject;
 
 public class World extends SimpleHeadlessApp implements common.world.World {
 

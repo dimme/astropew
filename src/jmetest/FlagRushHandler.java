@@ -38,14 +38,6 @@ import jmetest.actions.RotateAction;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.action.KeyNodeBackwardAction;
-import com.jme.input.action.KeyNodeForwardAction;
-import com.jme.input.action.KeyNodeLookDownAction;
-import com.jme.input.action.KeyNodeLookUpAction;
-import com.jme.input.action.KeyNodeRotateLeftAction;
-import com.jme.input.action.KeyNodeRotateRightAction;
-import com.jme.math.Vector3f;
-import com.jme.scene.Spatial;
 
 /**
  * Input Handler for the Flag Rush game. This controls a supplied spatial

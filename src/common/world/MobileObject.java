@@ -4,7 +4,7 @@ import com.jme.math.Vector3f;
 
 
 public abstract class MobileObject extends WorldObject {
-	
+	private static final long serialVersionUID = 1L;
 	public MobileObject(String name) {
 		super(name);
 	}

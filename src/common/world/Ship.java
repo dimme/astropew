@@ -7,7 +7,7 @@ import common.Player;
 
 
 public class Ship extends MobileObject {
-
+	private static final long serialVersionUID = 1L;
 	public Ship(Player owner) {
 		super("Ship");
 		

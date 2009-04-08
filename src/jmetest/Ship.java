@@ -6,7 +6,7 @@ import com.jme.scene.Spatial;
 
 public class Ship extends Node {
 	
-	
+	private static final long serialVersionUID = 1L;
 	private static final Vector3f tempVa = new Vector3f();
 	
 	private Spatial model;
