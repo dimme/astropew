@@ -22,6 +22,8 @@ public class World extends SimpleHeadlessApp implements common.world.World {
 	private long last = 0;
 	private PacketSender ps;
 	private List<Ship> ships;
+	private long frameTime = 0;
+	private float ticklength;
 	
 	public World(PacketSender ps) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
@@ -35,6 +37,8 @@ public class World extends SimpleHeadlessApp implements common.world.World {
 		s.setLocalTranslation(3, 4, 5);
 		attachChild( s );
 		ships.add(s);
+		
+		ticklength = 1f/timer.getResolution();
 	}
 
 	public void attachChild(Spatial child) {
@@ -54,12 +58,17 @@ public class World extends SimpleHeadlessApp implements common.world.World {
 		}
 		last += 10;
 		for (Ship s : ships) {
-			ps.sendToAll( PacketDataFactory.createPosition(last, s) );
+			ps.sendToAll( PacketDataFactory.createPosition(frameTime, s) );
 		}
 	}
 	
 	public void simpleUpdate() {
-		//TODO: Move stuff
+		long old = frameTime;
+		frameTime = timer.getTime();
+		for (Ship s : ships) {
+			s.getLocalTranslation().addLocal( 
+					s.getMovement().mult(ticklength*(frameTime-old)));
+		}
 	}
 	
 	public GameSettings getNewSettings() {
