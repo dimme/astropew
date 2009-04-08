@@ -288,16 +288,23 @@ public class TestBaseGame extends BaseGame {
      */
     private void buildLighting() {
         /** Set up a basic, default light. */
-        DirectionalLight light = new DirectionalLight();
-        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
-        light.setDirection(new Vector3f(1,-1,0));
-        light.setEnabled(true);
+        DirectionalLight light1 = new DirectionalLight();
+        light1.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+        light1.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
+        light1.setDirection(new Vector3f(1,-1,0));
+        light1.setEnabled(true);
+        
+        DirectionalLight light2 = new DirectionalLight();
+        light2.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+        light2.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
+        light2.setDirection(new Vector3f(1,1,0));
+        light2.setEnabled(true);
 
           /** Attach the light to a lightState and the lightState to rootNode. */
         LightState lightState = display.getRenderer().createLightState();
         lightState.setEnabled(true);
-        lightState.attach(light);
+        lightState.attach(light1);
+        lightState.attach(light2);
         scene.setRenderState(lightState);
     }
 
@@ -309,34 +316,22 @@ public class TestBaseGame extends BaseGame {
     private void buildSkyBox() {
         skybox = new Skybox("skybox", 10, 10, 10);
 
-        Texture north = TextureManager.loadTexture(
-            TestSkybox.class.getClassLoader().getResource(
-            "jmetest/data/texture/north.jpg"),
+        Texture north = TextureManager.loadTexture("files/galaxy.jpg",
             Texture.MinificationFilter.BilinearNearestMipMap,
             Texture.MagnificationFilter.Bilinear);
-        Texture south = TextureManager.loadTexture(
-            TestSkybox.class.getClassLoader().getResource(
-            "jmetest/data/texture/south.jpg"),
+        Texture south = TextureManager.loadTexture("files/galaxy.jpg",
             Texture.MinificationFilter.BilinearNearestMipMap,
             Texture.MagnificationFilter.Bilinear);
-        Texture east = TextureManager.loadTexture(
-            TestSkybox.class.getClassLoader().getResource(
-            "jmetest/data/texture/east.jpg"),
+        Texture east = TextureManager.loadTexture("files/galaxy.jpg",
             Texture.MinificationFilter.BilinearNearestMipMap,
             Texture.MagnificationFilter.Bilinear);
-        Texture west = TextureManager.loadTexture(
-            TestSkybox.class.getClassLoader().getResource(
-            "jmetest/data/texture/west.jpg"),
+        Texture west = TextureManager.loadTexture("files/galaxy.jpg",
             Texture.MinificationFilter.BilinearNearestMipMap,
             Texture.MagnificationFilter.Bilinear);
-        Texture up = TextureManager.loadTexture(
-            TestSkybox.class.getClassLoader().getResource(
-            "jmetest/data/texture/top.jpg"),
+        Texture up = TextureManager.loadTexture("files/galaxy.jpg",
             Texture.MinificationFilter.BilinearNearestMipMap,
             Texture.MagnificationFilter.Bilinear);
-        Texture down = TextureManager.loadTexture(
-            TestSkybox.class.getClassLoader().getResource(
-            "jmetest/data/texture/bottom.jpg"),
+        Texture down = TextureManager.loadTexture("files/galaxy.jpg",
             Texture.MinificationFilter.BilinearNearestMipMap,
             Texture.MagnificationFilter.Bilinear);
 
