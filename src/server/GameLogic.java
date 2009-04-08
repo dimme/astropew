@@ -4,7 +4,7 @@ import java.net.SocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import common.PacketType;
+import common.ClientPacketType;
 import common.PacketObserver;
 
 public class GameLogic extends common.GameLogic implements PacketObserver {
@@ -26,7 +26,7 @@ public class GameLogic extends common.GameLogic implements PacketObserver {
 		byte ptype = data[0];
 		
 		switch (ptype) {
-			case PacketType.LEAVING:
+			case ClientPacketType.LEAVING:
 				//TODO: Should this be moved? To GameAdministration, perhaps?
 				// Pro: Wouldn't need a reference to gadm.
 				// Con: more observers to call...

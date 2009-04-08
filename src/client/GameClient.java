@@ -2,7 +2,7 @@ package client;
 
 
 import common.CatastrophicException;
-import common.PacketType;
+import common.ClientPacketType;
 import common.PacketReaderThread;
 
 import java.net.DatagramSocket;
@@ -62,7 +62,7 @@ public class GameClient {
 	}
 	
 	public void stop() {
-		sender.send(new byte[]{PacketType.LEAVING});
+		sender.send(new byte[]{ClientPacketType.LEAVING});
 		reader.halt();
 		sender.stop();
 		

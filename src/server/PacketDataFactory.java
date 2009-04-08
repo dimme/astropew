@@ -1,6 +1,6 @@
 package server;
 
-import common.PacketType;
+import common.ServerPacketType;
 import common.Util;
 import common.world.Ship;
 
@@ -12,7 +12,7 @@ public class PacketDataFactory {
 		
 		byte[] b = new byte[1 + 1 + sb.length];
 		
-		b[0] = PacketType.MESSAGE;
+		b[0] = ServerPacketType.MESSAGE;
 		b[1] = msgtype;
 		Util.put(sb, b, 2);
 		
@@ -23,7 +23,7 @@ public class PacketDataFactory {
 		byte[] sb = name.getBytes();
 		byte[] b = new byte[1+8+4+sb.length];
 		
-		b[0] = PacketType.INITIALIZER;
+		b[0] = ServerPacketType.INITIALIZER;
 		Util.put(worldseed, b, 1);
 		Util.put(id, b, 9);
 		Util.put(sb, b, 13);
@@ -35,7 +35,7 @@ public class PacketDataFactory {
 		byte[] sb = name.getBytes();
 		byte[] b = new byte[1 + 4 + sb.length];
 		
-		b[0] = PacketType.PLAYER_JOINED;
+		b[0] = ServerPacketType.PLAYER_JOINED;
 		Util.put(id,b,1);
 		Util.put(sb,b,5);
 		
@@ -44,7 +44,7 @@ public class PacketDataFactory {
 	
 	public static byte[] createPlayerLeft(int id) {
 		byte[] b = new byte[1 + 4];
-		b[0] = PacketType.PLAYER_LEFT;
+		b[0] = ServerPacketType.PLAYER_LEFT;
 		Util.put(id, b, 1);
 		return b;
 	}
@@ -52,7 +52,7 @@ public class PacketDataFactory {
 	public static byte[] createPosition(long time, Ship s) {
 		byte[] b = new byte[1 + 8 + 4 + 3*3*4]; //type time playerid pos/dir/ort
 		
-		b[0] = PacketType.PLAYER_POSITION;
+		b[0] = ServerPacketType.PLAYER_POSITION;
 		Util.put(time, b, 1);
 		Util.put(s.getOwner().getID(), b, 9);
 		Util.put(s.getLocalTranslation(), b, 13);
