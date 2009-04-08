@@ -70,10 +70,9 @@ public class TestBaseGame extends BaseGame {
 	 */
 	public static void main(String[] args) {
 		TestBaseGame app = new TestBaseGame();
-		// We will load our own "fantastic" Flag Rush logo. Yes, I'm an artist.
+		// We will load our own "fantastic" AstroPew logo. Yes, I'm an artist.
 		try {
-			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL(
-					"file:/h/d1/t/dt06al4/Desktop/pew.jpeg"));
+			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL("file:files/pew.jpeg"));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
