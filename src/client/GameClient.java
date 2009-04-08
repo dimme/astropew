@@ -17,7 +17,7 @@ import com.jme.math.Vector3f;
 public class GameClient {
 	private PacketSender sender;
 	private PacketReaderThread reader;
-
+	
 	private DatagramSocket socket;
 	private boolean isInitialized;
 	
@@ -33,10 +33,11 @@ public class GameClient {
 		
 		try {
 			new ClientFrame(this);
+			Game game = new Game();
 			socket = new DatagramSocket();
 			sender = new PacketSender(socket, address);
 			reader = new PacketReaderThread(socket);
-			reader.addPacketObserver(new GamePlayObserver(this));
+			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 
 			reader.start();
@@ -58,7 +59,7 @@ public class GameClient {
 		}
 	}
 	
-	public synchronized void connect(String playername) {
+	private synchronized void connect(String playername) {
 		while(!isInitialized ) {
 			try {
 				sender.send(playername.getBytes());

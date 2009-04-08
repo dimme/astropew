@@ -1,5 +1,5 @@
 #!/bin/sh
 
 cd bin;
-java -cp ./:../jME_2.0.jar client.GameClient localhost 34567 $1;
+java -Xmx256m -cp ./:../jME_2.0.jar -Djava.library.path=../lib/natives  client.GameClient localhost 34567 $1;
 

@@ -51,10 +51,11 @@ public class Util {
 	 * @param off offset to start reading at
 	 * @param v vector to fill 
 	 */
-	public static void getVector3f(byte[] b, int off, Vector3f v) {
+	public static Vector3f getVector3f(byte[] b, int off, Vector3f v) {
 		v.x = getFloat(b, off);
 		v.y = getFloat(b, off+4);
 		v.z = getFloat(b, off+8);
+		return v;
 	}
 
 	/**

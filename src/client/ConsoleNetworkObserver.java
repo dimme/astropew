@@ -34,7 +34,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			System.arraycopy(data, 5, bt, 0, bt.length);
 			System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
 		} else if (data[0] == ServerPacketType.PLAYER_POSITION){
-			System.out.println("Recieved a player_position packet");
+			/*System.out.println("Recieved a player_position packet");
 			System.out.println("The time was: "+Util.getLong(data, 1));
 			System.out.println("The player was: "+Util.getInt(data, 9));
 			Vector3f v = new Vector3f();
@@ -43,7 +43,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			Util.getVector3f(data, 25, v);
 			System.out.println(v);
 			Util.getVector3f(data, 37, v);
-			System.out.println(v);
+			System.out.println(v);*/
 		} else if (data[0] == ServerPacketType.MESSAGE) {
 			System.out.println("Recieved msg: "+new String(data,1,data.length-1));
 		} else {
