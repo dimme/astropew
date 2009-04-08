@@ -43,7 +43,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 	private String hex(byte[] bytes) {
 		StringBuilder sb = new StringBuilder();
 		for (byte b : bytes) {
-			sb.append(Util.hex(b));
+			Util.hex(b, sb);
 		}
 		return sb.toString();
 	}

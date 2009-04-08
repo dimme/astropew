@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,6 +69,10 @@ public class PacketReaderThread extends Thread {
 				if (running) {
 					// TODO: throw runtime exception?
 					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+				}
+			} catch (RejectedExecutionException e) {
+				if (running) {
+					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		}

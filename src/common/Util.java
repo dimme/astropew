@@ -149,15 +149,22 @@ public class Util {
 	}
 	
 	public static String hex(byte b) {
+		StringBuilder sb = new StringBuilder();
+		hex(b, sb);
+		return sb.toString();
+	}
+	
+	public static void hex(byte b, StringBuilder sb) {
+		char[] c = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 		int i = b;
+		
 		if ( i < 0){
 			i = 256 + i;
 		}
-		String s = Integer.toHexString(i);
 		
-		if (s.length() < 2) {
-			return "0" + s;
-		}
-		return s;
+		int j = i/16;
+		
+		sb.append( c[j] );
+		sb.append( c[i - j*16] );
 	}
 }
