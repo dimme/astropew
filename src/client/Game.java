@@ -1,9 +1,9 @@
-package client.world;
+package client;
 
 import com.jme.app.SimpleGame;
 import com.jme.scene.Spatial;
 
-public class World extends SimpleGame implements common.world.World{
+public class Game extends SimpleGame implements common.Game{
 
 	protected void simpleInitGame() {
 		// TODO Auto-generated method stub

@@ -1,11 +1,10 @@
 package client;
 
-import client.world.World;
 
 public class GameLogic extends common.GameLogic 
 {
 
-	public GameLogic(World world) {
+	public GameLogic(Game world) {
 		super(world);
 	}
 	

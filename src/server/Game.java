@@ -1,4 +1,4 @@
-package server.world;
+package server;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import server.PacketDataFactory;
-import server.PacketSender;
 
 import com.jme.app.SimpleHeadlessApp;
 import com.jme.scene.Spatial;
@@ -17,7 +15,7 @@ import com.jme.system.GameSettings;
 import common.world.NoPlayer;
 import common.world.Ship;
 
-public class World extends SimpleHeadlessApp implements common.world.World {
+public class Game extends SimpleHeadlessApp implements common.Game {
 
 	private long last = 0;
 	private PacketSender ps;
@@ -25,7 +23,7 @@ public class World extends SimpleHeadlessApp implements common.world.World {
 	private long frameTime = 0;
 	private float ticklength;
 	
-	public World(PacketSender ps) {
+	public Game(PacketSender ps) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
 		last = System.currentTimeMillis();
 		ships = new LinkedList<Ship>();
