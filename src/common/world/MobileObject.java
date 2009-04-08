@@ -9,6 +9,9 @@ public abstract class MobileObject extends WorldObject {
 		super(name);
 	}
 	
-	Vector3f movement = Vector3f.ZERO;
+	protected Vector3f movement = Vector3f.ZERO;
 	
+	public Vector3f getMovement() {
+		return movement;
+	}
 }

@@ -1,20 +1,41 @@
 package server.world;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import server.PacketDataFactory;
+import server.PacketSender;
 
 import com.jme.app.SimpleHeadlessApp;
 import com.jme.scene.Spatial;
 import com.jme.system.AbstractGameSettings;
 import com.jme.system.GameSettings;
 
+import common.world.NoPlayer;
+import common.world.Ship;
+import common.world.WorldObject;
+
 public class World extends SimpleHeadlessApp implements common.world.World {
 
-	public World() {
+	private long last = 0;
+	private PacketSender ps;
+	private List<Ship> ships;
+	
+	public World(PacketSender ps) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
+		last = System.currentTimeMillis();
+		ships = new LinkedList<Ship>();
+		this.ps=ps;
 	}
 	
 	protected void simpleInitGame() {
-		
+		Ship s = new Ship(NoPlayer.instance);
+		s.setLocalTranslation(3, 4, 5);
+		attachChild( s );
+		ships.add(s);
 	}
 
 	public void attachChild(Spatial child) {
@@ -22,11 +43,24 @@ public class World extends SimpleHeadlessApp implements common.world.World {
 	}
 	
 	public void simpleRender() {
-		System.out.println("RENDERED!");
+		long cur = System.currentTimeMillis();
+		while (last+10 > cur) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Interrupted while sleeping.");
+				throw new RuntimeException(e);
+			}
+			cur = System.currentTimeMillis();
+		}
+		last += 10;
+		for (Ship s : ships) {
+			ps.sendToAll( PacketDataFactory.createPosition(last, s) );
+		}
 	}
 	
 	public void simpleUpdate() {
-		System.out.println("UPDATE!");
+		//TODO: Move stuff
 	}
 	
 	public GameSettings getNewSettings() {

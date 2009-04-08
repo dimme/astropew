@@ -12,4 +12,8 @@ public abstract class WorldObject extends Node {
 		super(name);
 	}
 	
+	public Player getOwner() {
+		return owner;
+	}
+	
 }

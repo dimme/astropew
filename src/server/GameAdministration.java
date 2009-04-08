@@ -8,7 +8,7 @@ import server.clientdb.ClientDB;
 public class GameAdministration {
 
 	private ClientDB cdb;
-	private PacketSender ps;
+	PacketSender ps;
 	
 	public GameAdministration(ClientDB cdb, PacketSender ps) {
 		this.cdb = cdb;

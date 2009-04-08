@@ -12,7 +12,7 @@ public class GameLogic extends common.GameLogic implements PacketObserver {
 	private GameAdministration gadm;
 	
 	public GameLogic(GameAdministration gadm) {
-		super(new server.world.World());
+		super(new server.world.World(gadm.ps));
 		this.gadm = gadm;
 		Thread t = new Thread() {
 			public void run() {

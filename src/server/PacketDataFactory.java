@@ -2,6 +2,7 @@ package server;
 
 import common.PacketType;
 import common.Util;
+import common.world.Ship;
 
 public class PacketDataFactory {
 
@@ -45,6 +46,19 @@ public class PacketDataFactory {
 		byte[] b = new byte[1 + 4];
 		b[0] = PacketType.PLAYER_LEFT;
 		Util.put(id, b, 1);
+		return b;
+	}
+
+	public static byte[] createPosition(long time, Ship s) {
+		byte[] b = new byte[1 + 8 + 4 + 3*3*4]; //type time playerid pos/dir/ort
+		
+		b[0] = PacketType.PLAYER_POSITION;
+		Util.put(time, b, 1);
+		Util.put(s.getOwner().getID(), b, 9);
+		Util.put(s.getLocalTranslation(), b, 13);
+		Util.put(s.getLocalRotation().getRotationColumn(2), b, 25);
+		Util.put(s.getMovement(), b, 37);
+		
 		return b;
 	}
 }
