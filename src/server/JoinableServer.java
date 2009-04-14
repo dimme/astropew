@@ -1,6 +1,6 @@
 package server;
 
-import common.PacketReaderThread;
+import common.network.PacketReaderThread;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -34,7 +34,7 @@ public class JoinableServer extends Thread {
 			PacketDecoder pd = new PacketDecoder(gadm, game);
 			
 			pread.addPacketObserver(pd);
-			pread.addPacketObserver(new PacketAcker(ps,cdb));
+			pread.addPacketObserver(new AckingObserver(ps,cdb));
 			
 			IncomingConnectionServer ics = new IncomingConnectionServer(34567, pd);
 			

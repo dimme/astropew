@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.ClientPacketType;
-import common.PacketObserver;
+import common.network.PacketObserver;
 
 public class PacketDecoder implements PacketObserver {
 

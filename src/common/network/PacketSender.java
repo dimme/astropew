@@ -1,4 +1,4 @@
-package common;
+package common.network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import common.CatastrophicException;
+
 public class PacketSender {
 
 	private DatagramSocket sock;
 	private ExecutorService exec;
-	
+	private DeliveryService dserv;
 	
 	public PacketSender() throws SocketException {
 		this(new DatagramSocket());
@@ -23,10 +25,15 @@ public class PacketSender {
 	public PacketSender(DatagramSocket sock) {
 		exec = Executors.newSingleThreadExecutor();
 		this.sock = sock;
+		dserv = new DeliveryService(this);
 	}
 	
-	public void send(byte[] data, UDPPacket udpp) {
-		addTask( new SendTask(data, udpp) );
+	public void send(byte[] data, UDPConnection udpc) {
+		addTask( new SendTask(data, udpc) );
+	}
+	
+	public void controlledSend(byte[] data, UDPConnection udpc) {
+		addTask( new ControlledSendTask(data, udpc) );
 	}
 	
 	protected void addTask(Runnable task) {
@@ -73,18 +80,30 @@ public class PacketSender {
 	
 	private class SendTask extends AbstractSendTask {
 		
-		private UDPPacket udpp;
+		protected UDPConnection udpc;
 		
-		public SendTask(byte[] data, UDPPacket udpp) {
+		public SendTask(byte[] data, UDPConnection udpc) {
 			super(data);
-			this.udpp = udpp;
+			this.udpc = udpc;
 		}
 		
 		public void perform() throws IOException {
-			udpp.dgp.setData(data);
-			send(udpp.dgp);
-			udpp.dgp.setData(nullbytes, 0, 0);
+			udpc.dgp.setData(data);
+			send(udpc.dgp);
+			udpc.dgp.setData(nullbytes, 0, 0);
 		}
 			
+	}
+	
+	private class ControlledSendTask extends SendTask {
+
+		public ControlledSendTask(byte[] data, UDPConnection udpc) {
+			super(data, udpc);
+		}
+		
+		public void perform() throws IOException {
+			dserv.addDelivery(data, udpc);
+			super.perform();
+		}
 	}
 }

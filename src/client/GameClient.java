@@ -3,7 +3,7 @@ package client;
 
 import common.CatastrophicException;
 import common.ClientPacketType;
-import common.PacketReaderThread;
+import common.network.PacketReaderThread;
 
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -41,7 +41,7 @@ public class GameClient {
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 			reader.start();
 			connect(playername);
-			reader.addPacketObserver(new PacketAcker(sender, sender.sendPacket));
+			reader.addPacketObserver(new AckingObserver(sender, sender.sendPacket));
 		} catch (SocketException ex) {
 			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
 			throw new RuntimeException(ex);

@@ -60,19 +60,19 @@ public class ClientDatabase implements ClientDB{
 		return idmap.values();
 	}
 
-	public Client removeClient(SocketAddress saddr) {
+	public synchronized Client removeClient(SocketAddress saddr) {
 		Client c = addrmap.remove(saddr);
 		idmap.values().remove(c);
 		return c;
 	}
 
-	public Client removeClient(int id) {
+	public synchronized Client removeClient(int id) {
 		Client c = idmap.remove(id);
 		addrmap.values().remove(c);
 		return c;
 	}
 
-	public Iterator<Client> iterator() {
+	public synchronized Iterator<Client> iterator() {
 		return idmap.values().iterator();
 	}
 

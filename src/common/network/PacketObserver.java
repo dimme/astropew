@@ -3,9 +3,11 @@
  * and open the template in the editor.
  */
 
-package common;
+package common.network;
 
 import java.net.SocketAddress;
+
+import common.GameException;
 
 public interface PacketObserver {
 	

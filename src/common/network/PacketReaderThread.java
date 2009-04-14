@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package common;
+package common.network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -16,6 +16,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import common.CatastrophicException;
+import common.GameException;
+import common.Util;
 
 /**
  *

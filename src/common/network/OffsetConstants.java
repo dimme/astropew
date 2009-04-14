@@ -1,13 +1,13 @@
-package common;
+package common.network;
 
-public interface OffsetAndSizeConstants {
+public interface OffsetConstants {
 
 	//SHARED
 	
 	public static final byte PACKET_TYPE_OFFSET = 0;
 	public static final byte SEQUENCE_NUMBER_OFFSET = 1;
 	
-	//SERVER
+	//FROM SERVER
 	
 	public static final byte MESSAGE_MESSAGE_TYPE_OFFSET = 2;
 	public static final byte MESSAGE_STRING_OFFSET = 3;
@@ -26,10 +26,10 @@ public interface OffsetAndSizeConstants {
 	public static final byte PLAYER_JOINED_ID_OFFSET = 2;
 	public static final byte PLAYER_JOINED_STRING_OFFSET = 6;
 	
-	public static final byte PLAYER_LEFT_ID_OFFSET = 3;
-	public static final byte PLAYER_LEFT_SIZE = 7;
+	public static final byte PLAYER_LEFT_ID_OFFSET = 2;
+	public static final byte PLAYER_LEFT_SIZE = 6;
 
-	//CLIENT
+	//FROM CLIENT
 	
 	public static final byte PLAYER_MOVEMENT_TICK_OFFSET = 2;
 	public static final byte PLAYER_MOVEMENT_DIR_OFFSET = 10;

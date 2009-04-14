@@ -7,7 +7,7 @@ import java.net.SocketException;
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
-public class PacketSender extends common.PacketSender {
+public class PacketSender extends common.network.PacketSender {
 	ClientDB cdb;
 	
 	public PacketSender(ClientDB cdb) throws SocketException {
@@ -21,7 +21,11 @@ public class PacketSender extends common.PacketSender {
 	}
 	
 	public void send(byte[] data, Client c) {
-		send(data, c.udpp);
+		send(data, c.udpc);
+	}
+	
+	public void controlledSend(byte[] data, Client c) {
+		controlledSend(data, c.udpc);
 	}
 	
 	public void sendToAll(byte[] data) { 
@@ -38,9 +42,9 @@ public class PacketSender extends common.PacketSender {
 			//TODO: Think about concurrency problems with iterating over cdb... 
 			for ( Client c : cdb )
 			{
-				c.udpp.dgp.setData(data);
-				send(c.udpp.dgp);
-				c.udpp.dgp.setData(nullbytes, 0, 0);
+				c.udpc.dgp.setData(data);
+				send(c.udpc.dgp);
+				c.udpc.dgp.setData(nullbytes, 0, 0);
 			}
 		}
 	}
