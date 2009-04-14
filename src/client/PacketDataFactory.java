@@ -7,7 +7,7 @@ import common.world.Ship;
 public class PacketDataFactory {
 
 	public static byte[] createMovement(long time, Ship s){
-		byte[] b = new byte[33]; //1 + 8 + 2*3*4
+		byte[] b = new byte[34]; //1 + 1 + 8 + 2*3*4
 		b[0] = ClientPacketType.PLAYER_MOVEMENT;
 		b[1] = 0; //Seq number
 		Util.put(time, b, 2);
