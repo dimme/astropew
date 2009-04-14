@@ -24,18 +24,19 @@ public class GamePlayObserver implements PacketObserver {
 	}
 	
 	public void packetReceived(byte[] data, SocketAddress addr) throws GameException {
-		if(data[OffsetAndSizeConstants.PACKET_TYPE_OFFSET] == ServerPacketType.INITIALIZER) {
+		byte unmaskedData = (byte) (data[OffsetAndSizeConstants.PACKET_TYPE_OFFSET] & Util.CONTROLLED_PACKET_UNMASK);
+		if(unmaskedData == ServerPacketType.INITIALIZER) {
 			String name = new String(data, OffsetAndSizeConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetAndSizeConstants.INITIALIZER_STRING_OFFSET);
 			int id = Util.getInt(data, OffsetAndSizeConstants.INITIALIZER_ID_OFFSET);
 			game.addPlayer(id, name);
 			client.initialized(addr);
-		} else if(data[OffsetAndSizeConstants.PACKET_TYPE_OFFSET] == ServerPacketType.PLAYER_JOINED) {
+		} else if(unmaskedData == ServerPacketType.PLAYER_JOINED) {
 			String name = new String(data, OffsetAndSizeConstants.PLAYER_JOINED_STRING_OFFSET, data.length - OffsetAndSizeConstants.PLAYER_JOINED_STRING_OFFSET);
 			int id = Util.getInt(data, OffsetAndSizeConstants.PLAYER_JOINED_ID_OFFSET);
 			game.addPlayer(id, name);
-		} else if(data[OffsetAndSizeConstants.PACKET_TYPE_OFFSET] == ServerPacketType.PLAYER_LEFT) {
+		} else if(unmaskedData == ServerPacketType.PLAYER_LEFT) {
 			//TODO: remove player from system.
-		} else if (data[OffsetAndSizeConstants.PACKET_TYPE_OFFSET] == ServerPacketType.PLAYER_POSITION) {
+		} else if (unmaskedData == ServerPacketType.PLAYER_POSITION) {
 			int id = Util.getInt(data, OffsetAndSizeConstants.PLAYER_POSITION_ID_OFFSET);
 			long tick = Util.getLong(data, OffsetAndSizeConstants.PLAYER_POSITION_TICK_OFFSET);
 			Vector3f pos = Util.getVector3f(data, OffsetAndSizeConstants.PLAYER_POSITION_POS_OFFSET, new Vector3f());

@@ -39,9 +39,9 @@ public class GameClient {
 			reader = new PacketReaderThread(socket);
 			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
-
 			reader.start();
 			connect(playername);
+			reader.addPacketObserver(new PacketAcker(sender, sender.sendPacket));
 		} catch (SocketException ex) {
 			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
 			throw new RuntimeException(ex);

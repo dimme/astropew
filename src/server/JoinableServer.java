@@ -34,6 +34,7 @@ public class JoinableServer extends Thread {
 			PacketDecoder pd = new PacketDecoder(gadm, game);
 			
 			pread.addPacketObserver(pd);
+			pread.addPacketObserver(new PacketAcker(ps,cdb));
 			
 			IncomingConnectionServer ics = new IncomingConnectionServer(34567, pd);
 			
