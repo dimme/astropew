@@ -59,7 +59,7 @@ public class PacketDataFactory {
 		
 		b[OffsetAndSizeConstants.PACKET_TYPE_OFFSET] = ServerPacketType.PLAYER_POSITION;
 		b[OffsetAndSizeConstants.SEQUENCE_NUMBER_OFFSET] = 0;
-		Util.put(time, b, OffsetAndSizeConstants.PLAYER_POSITION_TIME_OFFSET);
+		Util.put(time, b, OffsetAndSizeConstants.PLAYER_POSITION_TICK_OFFSET);
 		Util.put(s.getOwner().getID(), b, OffsetAndSizeConstants.PLAYER_POSITION_ID_OFFSET);
 		Util.put(s.getLocalTranslation(), b, OffsetAndSizeConstants.PLAYER_POSITION_POS_OFFSET);
 		Util.put(s.getLocalRotation().getRotationColumn(2), b, OffsetAndSizeConstants.PLAYER_POSITION_DIR_OFFSET);
