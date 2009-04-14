@@ -23,7 +23,7 @@ public class GamePlayObserver implements PacketObserver {
 		this.game = game;
 	}
 	
-	public void packetReceived(byte[] data, SocketAddress addr) throws GameException {
+	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
 		byte unmaskedData = (byte) (data[OffsetConstants.PACKET_TYPE_OFFSET] & Util.CONTROLLED_PACKET_UNMASK);
 		if(unmaskedData == ServerPacketType.INITIALIZER) {
 			String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
@@ -44,8 +44,9 @@ public class GamePlayObserver implements PacketObserver {
 			Vector3f ort = Util.getVector3f(data, OffsetConstants.PLAYER_POSITION_ORT_OFFSET, new Vector3f());
 			game.updatePosition(pos, dir, ort, id, tick);
 		} else {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
+			return false;
 		}
+		return true;
 	}
 
 }

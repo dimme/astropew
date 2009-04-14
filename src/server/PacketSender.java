@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import common.network.PacketReaderThread;
+
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
 public class PacketSender extends common.network.PacketSender {
 	ClientDB cdb;
 	
-	public PacketSender(ClientDB cdb) throws SocketException {
-		super();
-		this.cdb = cdb;
-	}
-	
-	public PacketSender(ClientDB cdb, DatagramSocket sock) {
-		super(sock);
+	public PacketSender(ClientDB cdb, DatagramSocket sock, PacketReaderThread pread) {
+		super(sock, pread);
 		this.cdb = cdb;
 	}
 	

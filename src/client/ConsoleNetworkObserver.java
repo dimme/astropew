@@ -13,7 +13,7 @@ import common.network.PacketObserver;
  */
 public class ConsoleNetworkObserver implements PacketObserver {
 
-	public void packetReceived(byte[] data, SocketAddress saddr) {
+	public boolean packetReceived(byte[] data, SocketAddress saddr) {
 		byte unmaskedData = (byte) (data[OffsetConstants.PACKET_TYPE_OFFSET] & Util.CONTROLLED_PACKET_UNMASK);
 		if (unmaskedData == ServerPacketType.INITIALIZER) {
 			String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
@@ -47,6 +47,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			/*System.out.println("Unhandled packet type: " + unmaskedData + ", length: " + data.length);
 			System.out.println("\t" + "Data: " + hex(data));*/
 		}
+		return false;
 	}
 	
 	private String hex(byte[] bytes) {

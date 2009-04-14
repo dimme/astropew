@@ -35,10 +35,10 @@ public class GameClient {
 			new ClientFrame(this);
 			Game game = new Game();
 			socket = new DatagramSocket();
-			sender = new PacketSender(socket, address);
 			reader = new PacketReaderThread(socket);
 			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
+			sender = new PacketSender(socket, address, reader);
 			reader.start();
 			connect(playername);
 			reader.addPacketObserver(new AckingObserver(sender, sender.sendPacket));

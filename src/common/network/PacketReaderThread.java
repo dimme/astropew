@@ -40,15 +40,22 @@ public class PacketReaderThread extends Thread {
 		observers.remove(po);
 	}
 
-	public void notifyPacketObservers(byte[] data, SocketAddress addr) throws GameException {
+	private void notifyPacketObservers(byte[] data, SocketAddress addr) throws GameException {
+		boolean handled = false;
 		for( PacketObserver po : observers ) {
 			try {
-				po.packetReceived(data, addr);
+				if (po.packetReceived(data, addr)) {
+					handled = true;
+				}
 			}catch (CatastrophicException e) {
 				throw e;
 			}catch (GameException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 			}
+		}
+		
+		if (!handled) {
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
 		}
 	}
 

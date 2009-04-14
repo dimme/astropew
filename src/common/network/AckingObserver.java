@@ -13,13 +13,15 @@ public abstract class AckingObserver implements PacketObserver {
 		this.ps = ps;
 	}
 
-	public void packetReceived(byte[] data, SocketAddress addr) throws GameException {
+	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
 		if ( ( data[OffsetConstants.PACKET_TYPE_OFFSET] & Util.CONTROLLED_PACKET_MASK ) == Util.CONTROLLED_PACKET_MASK  ) {
 			byte[] sendData = new byte[2];
 			sendData[0] = CommonPacketType.ACK;
 			sendData[1] = data[OffsetConstants.SEQUENCE_NUMBER_OFFSET];	
 			ps.send(sendData, getUDPConnection(addr));
+			System.out.println("Acking packet...");
 		}
+		return false;
 	}
 	
 	protected abstract UDPConnection getUDPConnection(SocketAddress saddr);

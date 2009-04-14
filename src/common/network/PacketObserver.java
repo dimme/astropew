@@ -16,5 +16,5 @@ public interface PacketObserver {
 	 * @param data the received data
 	 * @param addr the {@link SocketAddress} from which the data came
 	 */
-	public void packetReceived(byte[] data, SocketAddress addr) throws GameException;
+	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException;
 }

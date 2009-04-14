@@ -17,7 +17,7 @@ public class PacketDecoder implements PacketObserver {
 		this.game = game;
 	}
 	
-	public void packetReceived(byte[] data, SocketAddress sender) {
+	public boolean packetReceived(byte[] data, SocketAddress sender) {
 		byte ptype = data[0];
 		
 		switch (ptype) {
@@ -25,8 +25,9 @@ public class PacketDecoder implements PacketObserver {
 				gadm.leaving(sender);
 				break;
 			default:
-				Logger.getLogger(getClass().getName()).log(Level.WARNING,"Unhandled packet type: " + ptype);
+				return false;
 		}
+		return true;
 	}
 	
 	public void newConnection(byte[] data, SocketAddress sender) {

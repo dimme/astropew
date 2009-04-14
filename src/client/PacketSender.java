@@ -6,13 +6,14 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 
 import common.Util;
+import common.network.PacketReaderThread;
 import common.network.UDPConnection;
 
 public class PacketSender extends common.network.PacketSender {
 	UDPConnection sendPacket;
 	
-	public PacketSender(DatagramSocket sock, SocketAddress saddr) throws SocketException {
-		super(sock);
+	public PacketSender(DatagramSocket sock, SocketAddress saddr, PacketReaderThread reader) throws SocketException {
+		super(sock, reader);
 		setSocketAddress(saddr);
 	}
 	

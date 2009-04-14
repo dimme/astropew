@@ -19,19 +19,19 @@ public class DeliveryService implements PacketObserver {
 	private ExecutorService exec;
 	private Task compareSingleton;
 	
-	private static final long TIMEOUT = 1000; 
+	private static final long TIMEOUT = 500; 
 	
 	public DeliveryService(PacketSender ps) {
 		this.ps = ps;
 		tasks = new PriorityQueue<Task>(91);
 		connections = new HashMap<SocketAddress, UDPConnection>();
-		
 		Thread periodicResend = new Thread() {
 			private long schedule;
 			
 			public void start() {
 				schedule = System.currentTimeMillis();
 				setDaemon(true);
+				super.start();
 			}
 			
 			public void run() {
@@ -75,6 +75,7 @@ public class DeliveryService implements PacketObserver {
 		long timeout;
 		byte seq;
 		UDPConnection udpc;
+		int left = 10;
 		
 		Task(long time, byte seq, UDPConnection udpc) {
 			this.timeout = time;
@@ -129,11 +130,19 @@ public class DeliveryService implements PacketObserver {
 			long curt = System.currentTimeMillis();
 			Task t = tasks.peek();
 			while (t!=null && t.timeout <= curt) {
+				Logger.getLogger(getClass().getName()).log(Level.INFO, "Resending " + t.seq + " to " + t.udpc);
 				tasks.remove(t);
-				ps.send(t.udpc.getData(t.seq), t.udpc);
 				t.timeout = System.currentTimeMillis()+TIMEOUT;
-				tasks.add( t );
-				t = tasks.peek();
+				t.left--;
+				if (t.left >= 0) {
+					ps.send(t.udpc.getData(t.seq), t.udpc);
+					tasks.add( t );
+					t = tasks.peek();
+				} else {
+					Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Maximum number of retries reached");
+					System.exit(1);
+					//TODO: inte exit! :D
+				}
 			}
 		}
 	}
@@ -148,6 +157,7 @@ public class DeliveryService implements PacketObserver {
 		}
 		
 		public void run() {
+			System.out.println("ack");
 			UDPConnection udpc = connections.get(saddr);
 			compareSingleton.seq = seq;
 			compareSingleton.udpc = udpc;
@@ -159,11 +169,13 @@ public class DeliveryService implements PacketObserver {
 		}
 	}
 
-	public void packetReceived(byte[] data, SocketAddress addr)
+	public boolean packetReceived(byte[] data, SocketAddress addr)
 			throws GameException {
 		if (data[OffsetConstants.PACKET_TYPE_OFFSET] == CommonPacketType.ACK) {
 			byte seq = data[OffsetConstants.SEQUENCE_NUMBER_OFFSET];
 			acknowledge(seq, addr);
+			return true;
 		}
+		return false;
 	}
 }

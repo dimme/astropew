@@ -55,4 +55,8 @@ public class UDPConnection {
 	public int getNumPending() {
 		return packets.size();
 	}
+	
+	public String toString() {
+		return dgp.getSocketAddress().toString() + ", " + packets.size() + " pending";
+	}
 }

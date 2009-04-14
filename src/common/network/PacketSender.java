@@ -18,14 +18,15 @@ public class PacketSender {
 	private ExecutorService exec;
 	private DeliveryService dserv;
 	
-	public PacketSender() throws SocketException {
-		this(new DatagramSocket());
+	public PacketSender(PacketReaderThread reader) throws SocketException {
+		this(new DatagramSocket(), reader);
 	}
 	
-	public PacketSender(DatagramSocket sock) {
+	public PacketSender(DatagramSocket sock, PacketReaderThread reader) {
 		exec = Executors.newSingleThreadExecutor();
 		this.sock = sock;
 		dserv = new DeliveryService(this);
+		reader.addPacketObserver(dserv);
 	}
 	
 	public void send(byte[] data, UDPConnection udpc) {
