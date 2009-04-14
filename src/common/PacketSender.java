@@ -25,8 +25,8 @@ public class PacketSender {
 		this.sock = sock;
 	}
 	
-	public void send(byte[] data, DatagramPacket dgp) {
-		addTask( new SendTask(data, dgp) );
+	public void send(byte[] data, UDPPacket udpp) {
+		addTask( new SendTask(data, udpp) );
 	}
 	
 	protected void addTask(Runnable task) {
@@ -73,17 +73,17 @@ public class PacketSender {
 	
 	private class SendTask extends AbstractSendTask {
 		
-		private DatagramPacket dgp;
+		private UDPPacket udpp;
 		
-		public SendTask(byte[] data, DatagramPacket dgp) {
+		public SendTask(byte[] data, UDPPacket udpp) {
 			super(data);
-			this.dgp = dgp;
+			this.udpp = udpp;
 		}
 		
 		public void perform() throws IOException {
-			dgp.setData(data);
-			send(dgp);
-			dgp.setData(nullbytes, 0, 0);
+			udpp.dgp.setData(data);
+			send(udpp.dgp);
+			udpp.dgp.setData(nullbytes, 0, 0);
 		}
 			
 	}

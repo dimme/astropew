@@ -21,7 +21,7 @@ public class PacketSender extends common.PacketSender {
 	}
 	
 	public void send(byte[] data, Client c) {
-		send(data, c.dg);
+		send(data, c.udpp);
 	}
 	
 	public void sendToAll(byte[] data) { 
@@ -38,9 +38,9 @@ public class PacketSender extends common.PacketSender {
 			//TODO: Think about concurrency problems with iterating over cdb... 
 			for ( Client c : cdb )
 			{
-				c.dg.setData(data);
-				send(c.dg);
-				c.dg.setData(nullbytes, 0, 0);
+				c.udpp.dgp.setData(data);
+				send(c.udpp.dgp);
+				c.udpp.dgp.setData(nullbytes, 0, 0);
 			}
 		}
 	}
