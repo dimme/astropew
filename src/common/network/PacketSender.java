@@ -46,8 +46,7 @@ public class PacketSender {
 		try {
 			exec.awaitTermination(10, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Interrupted while waiting for executor service to finish");
 		}
 	}
 

@@ -69,7 +69,6 @@ public class TestBaseGame extends BaseGame {
 		try {
 			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL("file:files/pew.jpeg"));
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		app.start();

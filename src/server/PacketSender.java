@@ -36,12 +36,13 @@ public class PacketSender extends common.network.PacketSender {
 		}
 
 		protected void perform() throws IOException {
-			//TODO: Think about concurrency problems with iterating over cdb... 
-			for ( Client c : cdb )
-			{
-				c.udpc.dgp.setData(data);
-				send(c.udpc.dgp);
-				c.udpc.dgp.setData(nullbytes, 0, 0);
+			synchronized(cdb) {
+				for ( Client c : cdb )
+				{
+					c.udpc.dgp.setData(data);
+					send(c.udpc.dgp);
+					c.udpc.dgp.setData(nullbytes, 0, 0);
+				}
 			}
 		}
 	}

@@ -78,7 +78,6 @@ public class PacketReaderThread extends Thread {
 				exec.submit(new NotifyTask(data, readPacket.getSocketAddress()));
 			} catch (IOException ex) {
 				if (running) {
-					// TODO: throw runtime exception?
 					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 				}
 			} catch (RejectedExecutionException e) {
