@@ -5,6 +5,7 @@ public interface ServerPacketType {
 	/**
 	 * Some kind of message to be shown. <br>
 	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
 	 * MessageType - byte - 1 byte <br>
 	 * Message - String - arbitrary length <br>
 	 */
@@ -13,6 +14,7 @@ public interface ServerPacketType {
 	/**
 	 * Player position, direction and orientation<br>
 	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
 	 * Time - long - 8 byte <br>
 	 * ID - int - 4 byte <br>
 	 * pos - Vector3f - 12 byte <br>
@@ -29,6 +31,7 @@ public interface ServerPacketType {
 	/**
 	 * Sent to joining client to acknowledge their joining <br>
 	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
 	 * Random Seed - long - 8 bytes <br>
 	 * ID - int - 4 byte <br>
 	 * Assigned name - String - arbitrary length <br>
@@ -38,6 +41,7 @@ public interface ServerPacketType {
 	/**
 	 * Sends info about a joining player to other players <br>
 	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
 	 * ID - int - 4 byte <br>
 	 * Name - String - arbitrary length <br>
 	 */
@@ -46,6 +50,7 @@ public interface ServerPacketType {
 	/**
 	 * Informs players that someone left. <br>
 	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
 	 * ID - int - 4 byte <br>
 	 */
 	public static final byte PLAYER_LEFT	 = 37;
