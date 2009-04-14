@@ -1,7 +1,5 @@
 package client;
 
-import com.jme.math.Vector3f;
-
 public abstract class AbstractCommand implements Command {
 
 	protected long tick;

@@ -1,6 +1,5 @@
 package client;
 
-import java.util.List;
 import java.util.PriorityQueue;
 
 import com.jme.app.SimpleGame;
@@ -11,8 +10,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 
-import common.world.NoPlayer;
-import common.world.Ship;
 
 public class Game extends SimpleGame {
 	

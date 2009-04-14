@@ -1,9 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.net.SocketAddress;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,11 +8,9 @@ import server.clientdb.Client;
 
 
 import com.jme.app.SimpleHeadlessApp;
-import com.jme.scene.Spatial;
 import com.jme.system.AbstractGameSettings;
 import com.jme.system.GameSettings;
 
-import common.world.NoPlayer;
 import common.world.Ship;
 
 public class Game extends SimpleHeadlessApp {

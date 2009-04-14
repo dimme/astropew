@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.ClientPacketType;
-import common.GameException;
 import common.PacketObserver;
 
 public class PacketDecoder implements PacketObserver {

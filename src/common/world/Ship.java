@@ -1,12 +1,10 @@
 package common.world;
+import common.Player;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.Pyramid;
-import com.jme.scene.state.MaterialState;
 
-import common.Player;
 
 
 public class Ship extends MobileObject {

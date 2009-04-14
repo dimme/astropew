@@ -22,7 +22,7 @@ public class PacketDataFactory {
 	
 	public static byte[] createInitializer(long worldseed, int id, String name) {
 		byte[] namebytes = name.getBytes();
-		byte[] b = new byte[14+namebytes.length];//1 + 1 + 8 + 4 + l
+		byte[] b = new byte[14 + namebytes.length];//1 + 1 + 8 + 4 + l
 		
 		b[0] = ServerPacketType.INITIALIZER;
 		b[1] = 0; //Seq nbr

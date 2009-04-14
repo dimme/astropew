@@ -1,13 +1,11 @@
 package jmetest;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jmetest.renderer.TestSkybox;
 import com.jme.app.BaseGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -24,16 +22,13 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.*;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
-import com.jme.util.BumpMapColorController;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 

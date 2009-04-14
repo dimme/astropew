@@ -7,8 +7,6 @@ package client;
 
 import java.net.SocketAddress;
 
-import com.jme.math.Vector3f;
-
 import common.PacketObserver;
 import common.ServerPacketType;
 import common.Util;
