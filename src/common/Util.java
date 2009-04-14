@@ -9,6 +9,7 @@ import com.jme.math.Vector3f;
  */
 public class Util {
 
+	public static final byte CONTROLLED_PACKET_MASK = (byte)0x80; 
 	public static final int PACKET_SIZE = 65000;
 	
 	
