@@ -15,7 +15,7 @@ public class ConsoleNetworkObserver extends AbstractPacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress saddr) {
 		byte ptype = packetType(data);
-		System.out.println("Got data: " + Util.hex(data));
+		//System.out.println("Got data: " + Util.hex(data));
 		if (ptype == ServerPacketType.INITIALIZER) {
 			String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
 			int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
@@ -29,6 +29,17 @@ public class ConsoleNetworkObserver extends AbstractPacketObserver {
 			byte[] bt = new byte[data.length - OffsetConstants.PLAYER_JOINED_STRING_OFFSET];
 			System.arraycopy(data, OffsetConstants.PLAYER_JOINED_STRING_OFFSET, bt, 0, bt.length);
 			System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
+		} else if(ptype == ServerPacketType.PLAYERS_INFO) {
+			String s = "";
+			for(int i = 2; i < data.length;){
+				i+=4;
+				byte tmp = data[i];
+				i++;
+				String name = new String(data, i, tmp);
+				i+=tmp;
+				s += name+", ";
+			}
+			System.out.println("Added players: "+s);			
 		} else if (ptype == ServerPacketType.PLAYER_POSITION){
 			/*
 			System.out.println("Recieved a player_position packet");

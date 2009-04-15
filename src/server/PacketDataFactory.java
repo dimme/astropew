@@ -1,5 +1,10 @@
 package server;
 
+import java.util.Collection;
+
+import server.clientdb.Client;
+import server.clientdb.ClientDB;
+import server.clientdb.ClientDatabase;
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
@@ -67,32 +72,41 @@ public class PacketDataFactory {
 		
 		return b;
 	}
-	
-	public static byte[] createPlayersInfo(int[] ids, String[] names){
-		int size = 2;
+
+	public static byte [] createPlayersInfo(ClientDB cdb, Client Player) {
+		int size = 2;                   
+		byte[][] byteNames;
+		int[] ids;
+		int i;
 		
-		byte[][] byteNames = new byte[names.length][];
-		
-		
-		
-		for (int i = 0; i<names.length; i++){
-			byteNames[i]  = names[i].getBytes();
-			size += 5 + byteNames[i].length;
+		synchronized (cdb) {
+			byteNames = new byte[cdb.getClients().size()][];
+			ids = new int[cdb.getClients().size()];
+			i = 0;
+			for(Client c: cdb.getClients()){
+				if(!c.equals(Player)){
+					byteNames[i] = c.getName().getBytes();
+					ids[i] = c.getID();
+					size += 5 + byteNames[i].length;
+					i++;
+				}
+			}
 		}
-		//TODO: if size > vad vi kan skicka i ett packet?
+		
+		int numberOfClients = i;
 		byte b[] = new byte[size];
 		
 		b[0] = ServerPacketType.PLAYERS_INFO;
 		b[1] = 0;
 		
 		int offset = 2;
-		for(int i = 0; i < names.length; i ++){
-			Util.put(ids[i], b, offset);
+		for(int k = 0; k < numberOfClients; k++){
+			Util.put(ids[k], b, offset);
 			offset += 4;
-			b[offset]=(byte)byteNames[i].length;
+			b[offset]=(byte)byteNames[k].length;
 			offset++;
-			Util.put(byteNames[i], b, offset);
-			offset += byteNames[i].length;
+			Util.put(byteNames[k], b, offset);
+			offset += byteNames[k].length;
 		}
 		
 		return b;

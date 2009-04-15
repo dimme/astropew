@@ -32,8 +32,16 @@ public class GameAdministration {
 		}
 		
 		ps.send(PacketDataFactory.createInitializer(12345, c.getID(), name), c);
+		sendPlayersInfo(c);
 	}
 	
+	private void sendPlayersInfo(Client c) {
+		byte[] tmp = PacketDataFactory.createPlayersInfo(cdb,c);
+		if(tmp.length > 2){
+			ps.send(tmp,c);
+		}
+	}
+
 	public void leaving(SocketAddress saddr) {
 		Client removed = cdb.removeClient(saddr);
 		
