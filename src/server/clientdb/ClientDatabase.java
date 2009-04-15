@@ -56,7 +56,9 @@ public class ClientDatabase implements ClientDB{
 		return idmap.get(id);
 	}
 
-	public synchronized Collection<Client> getClients() {
+	public Collection<Client> getClients() {
+		notify(); //To throw IllegalMonitorStateException if we're using this 
+					//without synchronizing on the ClientDatabase.
 		return idmap.values();
 	}
 
