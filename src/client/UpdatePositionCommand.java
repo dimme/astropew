@@ -23,7 +23,7 @@ public class UpdatePositionCommand extends AbstractCommand {
 		final Ship s = logic.getShip(id);
 		if (s != null) {
 			s.setLocalTranslation(pos);
-			s.setMovement(dir);
+			s.setMovement(dir, tick);
 			s.setLocalRotation(ort);
 		}
 	}

@@ -15,7 +15,9 @@ public abstract class MobileObject extends WorldObject {
 		return movement;
 	}
 
-	public void setMovement(Vector3f movement) {
-		this.movement = movement;
+	public void setMovement(Vector3f movement, Long tick) {
+		if ( checkTick(tick) ){
+			this.movement = movement;
+		}
 	}
 }

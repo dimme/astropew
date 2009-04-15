@@ -16,8 +16,7 @@ public class PacketDataFactory {
 
 		final byte[] sb = str.getBytes();
 
-		final byte[] b = new byte[OffsetConstants.MESSAGE_STRING_OFFSET
-				+ sb.length];
+		final byte[] b = new byte[OffsetConstants.MESSAGE_STRING_OFFSET	+ sb.length];
 
 		b[0] = ServerPacketType.MESSAGE;
 		b[1] = 0;
@@ -29,8 +28,7 @@ public class PacketDataFactory {
 
 	public static byte[] createInitializer(long worldseed, int id, String name) {
 		final byte[] namebytes = name.getBytes();
-		final byte[] b = new byte[OffsetConstants.INITIALIZER_STRING_OFFSET
-				+ namebytes.length];
+		final byte[] b = new byte[OffsetConstants.INITIALIZER_STRING_OFFSET	+ namebytes.length];
 
 		b[0] = ServerPacketType.INITIALIZER;
 		b[1] = 0;
