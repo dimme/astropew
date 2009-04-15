@@ -54,9 +54,7 @@ public class Game extends SimpleHeadlessApp {
 			cur = System.currentTimeMillis();
 		}
 		last += 10;
-		for (final Ship s : logic.getShips()) {
-			ps.sendToAll(PacketDataFactory.createPosition(frameTime, s));
-		}
+		ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 	}
 
 	public void simpleUpdate() {

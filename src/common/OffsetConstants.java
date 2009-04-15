@@ -9,12 +9,7 @@ public interface OffsetConstants {
 	public static final byte MESSAGE_MESSAGE_TYPE_OFFSET = 2;
 	public static final byte MESSAGE_STRING_OFFSET = 3;
 
-	public static final byte PLAYER_POSITION_TICK_OFFSET = 2;
-	public static final byte PLAYER_POSITION_ID_OFFSET = 10;
-	public static final byte PLAYER_POSITION_POS_OFFSET = 14;
-	public static final byte PLAYER_POSITION_ORT_OFFSET = 26;
-	public static final byte PLAYER_POSITION_DIR_OFFSET = 42;
-	public static final byte PLAYER_POSITION_SIZE = 54;
+	public static final byte PLAYER_POSITIONS_TICK_OFFSET = 2;
 
 	public static final byte INITIALIZER_RANDOM_SEED_OFFSET = 2;
 	public static final byte INITIALIZER_ID_OFFSET = 10;

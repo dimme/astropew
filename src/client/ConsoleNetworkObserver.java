@@ -49,7 +49,7 @@ public class ConsoleNetworkObserver extends AbstractPacketObserver {
 				s += name + ", ";
 			}
 			System.out.println("Added players: " + s);
-		} else if (ptype == ServerPacketType.PLAYER_POSITION) {
+		} else if (ptype == ServerPacketType.PLAYER_POSITIONS) {
 			/*
 			 * System.out.println("Recieved a player_position packet");
 			 * System.out.println("The time was: "+Util.getLong(data,

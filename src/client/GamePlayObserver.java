@@ -52,13 +52,19 @@ public class GamePlayObserver extends AbstractPacketObserver {
 			final int id = Util.getInt(data,
 					OffsetConstants.PLAYER_LEFT_ID_OFFSET);
 			game.removePlayer(id);
-		} else if (packettype == ServerPacketType.PLAYER_POSITION) {
-			final int id = Util.getInt(data, OffsetConstants.PLAYER_POSITION_ID_OFFSET);
-			final long tick = Util.getLong(data,OffsetConstants.PLAYER_POSITION_TICK_OFFSET);
-			final Vector3f pos = Util.getVector3f(data,OffsetConstants.PLAYER_POSITION_POS_OFFSET, new Vector3f());
-			final Quaternion ort = Util.getQuaternion(data,OffsetConstants.PLAYER_POSITION_ORT_OFFSET, new Quaternion());
-			final Vector3f dir = Util.getVector3f(data,OffsetConstants.PLAYER_POSITION_DIR_OFFSET, new Vector3f());
-			game.updatePosition(pos, ort, dir, id, tick);
+		} else if (packettype == ServerPacketType.PLAYER_POSITIONS) {
+			final long tick = Util.getLong(data, 2);
+			for( int i = 10; i < data.length;){
+				final int id = Util.getInt(data, i);
+				i += 4;
+				final Vector3f pos = Util.getVector3f(data, i, new Vector3f());
+				i += 12;
+				final Quaternion ort = Util.getQuaternion(data, i, new Quaternion());
+				i += 16;
+				final Vector3f dir = Util.getVector3f(data, i, new Vector3f());
+				i += 12;
+				game.updatePosition(pos, ort, dir, id, tick);
+			}
 		} else {
 			return false;
 		}

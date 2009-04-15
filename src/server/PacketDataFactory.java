@@ -1,5 +1,7 @@
 package server;
 
+import java.util.Collection;
+
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
@@ -60,21 +62,27 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createPosition(long time, Ship s) {
-		final byte[] b = new byte[OffsetConstants.PLAYER_POSITION_SIZE];
-
-		b[0] = ServerPacketType.PLAYER_POSITION;
+	public static byte[] createPosition(long time, Collection<Ship> ships) {
+		
+		final byte[] b = new byte[ships.size() * 44  + 10];
+		
+		b[0] = ServerPacketType.PLAYER_POSITIONS;
 		b[1] = 0;
-		Util.put(time, b, OffsetConstants.PLAYER_POSITION_TICK_OFFSET);
-		Util.put(s.getOwner().getID(), b,
-				OffsetConstants.PLAYER_POSITION_ID_OFFSET);
-		Util.put(s.getLocalTranslation(), b,
-				OffsetConstants.PLAYER_POSITION_POS_OFFSET);
-		Util.put(s.getLocalRotation(), b,
-				OffsetConstants.PLAYER_POSITION_ORT_OFFSET);
-		Util.put(s.getMovement(), b,
-				OffsetConstants.PLAYER_POSITION_DIR_OFFSET);
-
+		Util.put(time, b, OffsetConstants.PLAYER_POSITIONS_TICK_OFFSET);
+		
+		int offset = 10;
+		
+		for(final Ship s: ships){
+			Util.put(s.getOwner().getID(), b, offset);
+			offset += 4;
+			Util.put(s.getLocalTranslation(), b, offset);
+			offset += 12;
+			Util.put(s.getLocalRotation(), b, offset);
+			offset += 16;
+			Util.put(s.getMovement(), b, offset);
+			offset += 12;
+		}
+		
 		return b;
 	}
 
