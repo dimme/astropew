@@ -70,6 +70,10 @@ public class Game extends SimpleGame {
 	public void addPlayer(int id, String name) {
 		addCommand(new AddPlayerCommand(id, name));
 	}
+	
+	public void removePlayer(int id) {
+		addCommand(new RemovePlayerCommand(id));
+	}
 
 	public MaterialState createMaterialState() {
 		return display.getRenderer().createMaterialState();
@@ -77,6 +81,10 @@ public class Game extends SimpleGame {
 
 	public void attachToRoot(Spatial s) {
 		rootNode.attachChild(s);
+	}
+	
+	public void removeFromRoot(Spatial s) {
+		rootNode.detachChild(s);
 	}
 
 }

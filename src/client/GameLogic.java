@@ -24,6 +24,12 @@ public class GameLogic extends common.GameLogic
 		players.put(owner.getID(), owner);
 		super.addShip(s);
 	}
+	
+	public void removeShip(Ship s) {
+		Player p = s.getOwner();
+		super.removeShip(p);
+		players.remove(p.getID());
+	}
 
 	public Ship getShip(int id) {
 		return shiptable.get(players.get(id));

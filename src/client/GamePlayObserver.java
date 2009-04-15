@@ -45,7 +45,8 @@ public class GamePlayObserver extends AbstractPacketObserver {
 				game.addPlayer(id, name);
 			}
 		} else if(packettype == ServerPacketType.PLAYER_LEFT) {
-			//TODO: remove player from system.
+			int id = Util.getInt(data, OffsetConstants.PLAYER_LEFT_ID_OFFSET);
+			game.removePlayer(id);
 		} else if (packettype == ServerPacketType.PLAYER_POSITION) {
 			int id = Util.getInt(data, OffsetConstants.PLAYER_POSITION_ID_OFFSET);
 			long tick = Util.getLong(data, OffsetConstants.PLAYER_POSITION_TICK_OFFSET);
