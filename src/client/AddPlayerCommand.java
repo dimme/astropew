@@ -29,7 +29,6 @@ public class AddPlayerCommand extends AbstractCommand {
 		s.setRenderState(ms);
 		game.attachToRoot(s);
 		logic.addShip(s);
-		s.updateRenderState();
 	}
 
 }
