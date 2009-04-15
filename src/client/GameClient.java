@@ -2,6 +2,7 @@ package client;
 
 
 import common.ClientPacketType;
+import common.network.DataOutput;
 import common.network.PacketReaderThread;
 
 import java.net.DatagramSocket;
@@ -19,7 +20,7 @@ public class GameClient {
 	
 	private DatagramSocket socket;
 	
-	public GameClient(SocketAddress address, String playername) {
+	public GameClient(SocketAddress address, String playername, boolean dataoutput) {
 		
 		try {
 			new Vector3f();
@@ -33,6 +34,9 @@ public class GameClient {
 			socket = new DatagramSocket();
 			reader = new PacketReaderThread(socket);
 			sender = new PacketSender(socket, address, reader);
+			if (dataoutput) {
+				reader.addPacketObserver(new DataOutput());
+			}
 			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 			reader.addPacketObserver(new AckingObserver(sender, address));
@@ -54,16 +58,5 @@ public class GameClient {
 		sender.stop();
 		
 		socket.close();
-	}
-
-	public static void main(String[] args) {
-		if(args.length < 3 ) {
-			System.out.println("Usage: host port username");
-			System.exit(1);
-		}
-		int port = Integer.parseInt(args[1]);
-		SocketAddress addr = new InetSocketAddress(args[0], port);
-
-		new GameClient(addr, args[2]);
 	}
 }

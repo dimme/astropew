@@ -182,9 +182,15 @@ public class Util {
 	
 	public static String hex(byte[] b) {
 		StringBuilder sb = new StringBuilder();
+		int i = 0;
 		
 		for (byte bb : b) {
 			hex(bb, sb);
+			i++;
+			if (i == 8) {
+				i=0;
+				sb.append(' ');
+			}
 		}
 		return sb.toString();
 	}
