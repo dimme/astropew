@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.concurrent.Future;
 
 import common.Util;
 import common.network.PacketReaderThread;
@@ -27,7 +28,7 @@ public class PacketSender extends common.network.PacketSender {
 		send(data, sendPacket.dgp);
 	}
 	
-	public void controlledSend(byte[] data) {
-		controlledSend(data, sendPacket);
+	public Future<?> controlledSend(byte[] data) {
+		return controlledSend(data, sendPacket);
 	}
 }

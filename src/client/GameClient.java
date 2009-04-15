@@ -9,6 +9,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,9 +54,9 @@ public class GameClient {
 	}
 	
 	public void stop() {
-		sender.send(new byte[]{ClientPacketType.LEAVING});
+		Future<?> fut = sender.controlledSend(new byte[]{ClientPacketType.LEAVING,0});
+		sender.stopAndFinish(fut);
 		reader.halt();
-		sender.stop();
 		
 		socket.close();
 	}

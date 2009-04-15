@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,17 +37,24 @@ public class PacketSender {
 		addTask( new SendTask(data, dgp) );
 	}
 	
-	public void controlledSend(byte[] data, UDPConnection udpc) {
-		addTask( new ControlledSendTask(data, udpc) );
+	public Future<?> controlledSend(byte[] data, UDPConnection udpc) {
+		return addTask( new ControlledSendTask(data, udpc) );
 	}
 	
-	protected void addTask(Runnable task) {
-		exec.submit(task);
+	protected Future<?> addTask(Runnable task) {
+		return exec.submit(task);
 	}
 	
-	public void stop() {
-		exec.shutdown();
+	public void stopAndFinish(Future<?> guaranteedTask) {
 		try {
+			guaranteedTask.get();
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
+		}
+		
+		try {
+			dserv.waitForAllDelivered();
+			exec.shutdown();
 			exec.awaitTermination(10, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Interrupted while waiting for executor service to finish");

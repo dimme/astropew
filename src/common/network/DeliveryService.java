@@ -172,6 +172,18 @@ public class DeliveryService extends AbstractPacketObserver {
 			}
 		}
 	}
+	
+	private class Notify extends AbstractExecutorTask {
+		public void execute() {
+			if (tasks.isEmpty()) {
+				synchronized(DeliveryService.this) {
+					DeliveryService.this.notifyAll();
+				}
+			} else {
+				ps.exec.submit(this);
+			}
+		}
+	}
 
 	public boolean packetReceived(byte[] data, SocketAddress addr)
 			throws GameException {
@@ -181,5 +193,15 @@ public class DeliveryService extends AbstractPacketObserver {
 			return true;
 		}
 		return false;
+	}
+
+	public synchronized void waitForAllDelivered() {
+		try {
+			ps.exec.submit(new Notify());
+			while (!tasks.isEmpty()) {
+				wait();
+			}
+		} catch (InterruptedException e) {
+		}
 	}
 }
