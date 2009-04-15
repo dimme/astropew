@@ -62,7 +62,7 @@ public class Game extends SimpleHeadlessApp {
 		frameTime = timer.getTime();
 		float delta = ticklength * (frameTime - old);
 		Matrix3f rot = new Matrix3f();
-		rot.fromAngleNormalAxis(delta, Vector3f.UNIT_Y);
+		rot.fromAngleNormalAxis(delta, Vector3f.UNIT_Z);
 		for (final Ship s : logic.getShips()) {
 			s.getLocalRotation().apply(rot);
 			s.getLocalTranslation().addLocal(

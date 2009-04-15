@@ -13,10 +13,6 @@ public abstract class AckingFilter implements PacketFilter {
 	
 	protected Map<SocketAddress, Data> ackdata;
 
-	// TODO: Scheduled executor - efterforska möjlighet - iställt för periodic resend
-	// TODO: ACK-filter
-	// TODO: Gör en TODO-fil. :)
-
 	public AckingFilter(PacketSender ps) {
 		this.ps = ps;
 		ackdata = new HashMap<SocketAddress, Data>();

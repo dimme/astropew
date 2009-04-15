@@ -62,8 +62,7 @@ public class PacketDataFactory {
 
 	public static byte[] createPosition(long time, Collection<Ship> ships) {
 		
-		
-		//TODO: Är detta inom ramen för ett udp paket?
+		//TODO: Check if the array will fit in a UDP Packet.
 		final byte[] b = new byte[ships.size() * 44  + 10];
 		
 		b[0] = ServerPacketType.PLAYER_POSITIONS;
@@ -72,15 +71,12 @@ public class PacketDataFactory {
 		
 		int offset = 10;
 		
-		for(final Ship s: ships){
+		for(final Ship s: ships) {
 			Util.put(s.getOwner().getID(), b, offset);
-			offset += 4;
-			Util.put(s.getLocalTranslation(), b, offset);
-			offset += 12;
-			Util.put(s.getLocalRotation(), b, offset);
-			offset += 16;
-			Util.put(s.getMovement(), b, offset);
-			offset += 12;
+			Util.put(s.getLocalTranslation(), b, offset+4);
+			Util.put(s.getLocalRotation(), b, offset+16);
+			Util.put(s.getMovement(), b, offset+32);
+			offset += 44;
 		}
 		
 		return b;
@@ -115,11 +111,9 @@ public class PacketDataFactory {
 		int offset = 2;
 		for (int k = 0; k < numberOfClients; k++) {
 			Util.put(ids[k], b, offset);
-			offset += 4;
-			b[offset] = (byte) byteNames[k].length;
-			offset++;
-			Util.put(byteNames[k], b, offset);
-			offset += byteNames[k].length;
+			b[offset+4] = (byte) byteNames[k].length;
+			Util.put(byteNames[k], b, offset+5);
+			offset += 5+byteNames[k].length;
 		}
 
 		return b;

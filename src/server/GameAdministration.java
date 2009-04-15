@@ -32,14 +32,14 @@ public class GameAdministration {
 			sendToAll(data);
 		}
 
-		ps.send(PacketDataFactory.createInitializer(12345, c.getID(), name), c);
+		ps.controlledSend(PacketDataFactory.createInitializer(12345, c.getID(), name), c);
 		sendPlayersInfo(c);
 	}
 
 	private void sendPlayersInfo(Client c) {
 		final byte[] tmp = PacketDataFactory.createPlayersInfo(cdb, c);
 		if (tmp.length > 2) {
-			ps.send(tmp, c);
+			ps.controlledSend(tmp, c);
 		}
 	}
 
