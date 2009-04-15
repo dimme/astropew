@@ -29,8 +29,7 @@ public class GameClient {
 		}
 		
 		try {
-			new ClientFrame(this);
-			Game game = new Game();
+			Game game = new Game(this);
 			socket = new DatagramSocket();
 			reader = new PacketReaderThread(socket);
 			sender = new PacketSender(socket, address, reader);

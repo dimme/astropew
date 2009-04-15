@@ -15,10 +15,12 @@ public class Game extends SimpleGame {
 	
 	protected GameLogic logic;
 	private PriorityQueue<Command> commandQueue;
+	private GameClient gc;
 	
-	public Game() {
+	public Game(GameClient gc) {
 		commandQueue = new PriorityQueue<Command>(51);
 		logic = new GameLogic();
+		this.gc = gc;
 		
 		setConfigShowMode(ConfigShowMode.ShowIfNoConfig);
 		Thread t = new Thread() {
@@ -50,6 +52,11 @@ public class Game extends SimpleGame {
 			c = commandQueue.remove();
 			c.perform(logic, this);
 		}
+	}
+	
+	public void finish() {
+		gc.stop();
+		super.finish();
 	}
 
 	public void updatePosition(Vector3f pos, Vector3f dir, Vector3f ort, int id, long tick) {

@@ -65,7 +65,7 @@ public class DeliveryService extends AbstractPacketObserver {
 					schedule += 50;
 				}
 			} catch (RejectedExecutionException e) {
-				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of resend task: This is NOT a problem if you were shutting down.", e);
+				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of resend task: This is NOT a problem if you were shutting down.");
 			} catch (InterruptedException e) {
 				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Periodic resend thread interrupted!", e);
 			}
