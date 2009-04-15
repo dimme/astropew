@@ -18,8 +18,8 @@ public interface ServerPacketType {
 	 * Time - long - 8 byte <br>
 	 * (ID - int - 4 byte <br>
 	 * pos - Vector3f - 12 byte <br>
-	 * dir - Quartinion - 16 byte <br>
-	 * ort - Vector3f - 12 byte) <br>
+	 * ort - Quartinion - 16 byte <br>
+	 * dir - Vector3f - 12 byte) <br>
 	 * - x of these - 44 * x <br>
 	 */
 	public static final byte PLAYER_POSITIONS = 33;

@@ -9,7 +9,7 @@ public class PacketDataFactory {
 
 	public static byte[] createMovement(long time, Ship s) {
 		final byte[] b = new byte[OffsetConstants.PLAYER_MOVEMENT_SIZE];
-		b[0] = ClientPacketType.PLAYER_MOVEMENT;
+		b[0] = ClientPacketType.PLAYER_UPDATE;
 		b[1] = 0;
 		Util.put(time, b, OffsetConstants.PLAYER_MOVEMENT_TICK_OFFSET);
 		Util.put(s.getLocalTranslation(), b,
