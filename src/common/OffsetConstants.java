@@ -23,9 +23,10 @@ public interface OffsetConstants {
 
 	// FROM CLIENT
 
-	public static final byte PLAYER_MOVEMENT_TICK_OFFSET = 2;
-	public static final byte PLAYER_MOVEMENT_DIR_OFFSET = 10;
-	public static final byte PLAYER_MOVEMENT_ORT_OFFSET = 22;
-	public static final byte PLAYER_MOVEMENT_SIZE = 34;
+	public static final byte PLAYER_UPDATE_TIME_OFFSET = 2;
+	public static final byte PLAYER_UPDATE_POS_OFFSET = 10;
+	public static final byte PLAYER_UPDATE_ORT_OFFSET = 22;
+	public static final byte PLAYER_UPDATE_DIR_OFFSET = 38;
+	public static final byte PLAYER_UPDATE_SIZE = 50;
 
 }
