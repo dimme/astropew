@@ -8,6 +8,11 @@ import common.world.Ship;
 public class GameLogic extends common.GameLogic {
 
 	private final HashMap<Integer, Player> players;
+	private Player self;
+
+	public Player getSelf() {
+		return self;
+	}
 
 	public GameLogic() {
 		super();
@@ -20,7 +25,9 @@ public class GameLogic extends common.GameLogic {
 
 	public void addShip(Ship s) {
 		final Player owner = s.getOwner();
-		players.put(owner.getID(), owner);
+		if( self != null && owner.getID() != self.getID() ) {
+			players.put(owner.getID(), owner);
+		}
 		super.addShip(s);
 	}
 
@@ -32,6 +39,10 @@ public class GameLogic extends common.GameLogic {
 
 	public Ship getShip(int id) {
 		return shiptable.get(players.get(id));
+	}
+	
+	public void addSelf(int id, String name) {
+		self = new client.Player(name, id);
 	}
 
 }

@@ -24,18 +24,14 @@ public class GamePlayObserver implements PacketObserver {
 	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
 		final byte packettype = Util.packetType(data);
 		if (packettype == ServerPacketType.INITIALIZER) {
-			final String name = new String(data,
-					OffsetConstants.INITIALIZER_STRING_OFFSET, data.length
-							- OffsetConstants.INITIALIZER_STRING_OFFSET);
-			final int id = Util.getInt(data,
-					OffsetConstants.INITIALIZER_ID_OFFSET);
-			game.addPlayer(id, name);
+			final String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length
+												- OffsetConstants.INITIALIZER_STRING_OFFSET);
+			final int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
+			game.addSelf(id, name);
 		} else if (packettype == ServerPacketType.PLAYER_JOINED) {
-			final String name = new String(data,
-					OffsetConstants.PLAYER_JOINED_STRING_OFFSET, data.length
-							- OffsetConstants.PLAYER_JOINED_STRING_OFFSET);
-			final int id = Util.getInt(data,
-					OffsetConstants.PLAYER_JOINED_ID_OFFSET);
+			final String name = new String(data, OffsetConstants.PLAYER_JOINED_STRING_OFFSET, data.length
+												- OffsetConstants.PLAYER_JOINED_STRING_OFFSET);
+			final int id = Util.getInt(data, OffsetConstants.PLAYER_JOINED_ID_OFFSET);
 			game.addPlayer(id, name);
 		} else if (packettype == ServerPacketType.PLAYERS_INFO) {
 			for (int i = 2; i < data.length;) {
@@ -48,8 +44,7 @@ public class GamePlayObserver implements PacketObserver {
 				game.addPlayer(id, name);
 			}
 		} else if (packettype == ServerPacketType.PLAYER_LEFT) {
-			final int id = Util.getInt(data,
-					OffsetConstants.PLAYER_LEFT_ID_OFFSET);
+			final int id = Util.getInt(data, OffsetConstants.PLAYER_LEFT_ID_OFFSET);
 			game.removePlayer(id);
 		} else if (packettype == ServerPacketType.PLAYER_POSITIONS) {
 			final long tick = Util.getLong(data, 2);

@@ -131,6 +131,6 @@ public class Game extends SimpleHeadlessApp {
 	}
 
 	private synchronized void addCommand(Command cmd) {
-		
+		commandQueue.add(cmd);
 	}
 }

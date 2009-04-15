@@ -14,8 +14,8 @@ import com.jme.scene.state.MaterialState;
 public class Game extends SimpleGame {
 
 	protected GameLogic logic;
-	private final PriorityQueue<Command> commandQueue;
-	private final GameClient gc;
+	protected final PriorityQueue<Command> commandQueue;
+	protected final GameClient gc;
 
 	public Game(GameClient gc) {
 		commandQueue = new PriorityQueue<Command>(51);
@@ -70,6 +70,10 @@ public class Game extends SimpleGame {
 
 	public void addPlayer(int id, String name) {
 		addCommand(new AddPlayerCommand(id, name));
+	}
+	
+	public void addSelf(int id, String name) {
+		addCommand(new AddSelfCommand(id, name));
 	}
 
 	public void removePlayer(int id) {

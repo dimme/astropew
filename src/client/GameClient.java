@@ -13,7 +13,7 @@ import common.network.DataOutput;
 import common.network.PacketReaderThread;
 
 public class GameClient {
-	private PacketSender sender;
+	final PacketSender sender;
 	private PacketReaderThread reader;
 
 	private DatagramSocket socket;
@@ -30,7 +30,8 @@ public class GameClient {
 		}
 
 		try {
-			final Game game = new Game(this);
+			//final Game game = new Game(this);
+			final Game game = new DumbDummySenderGame(this);
 			socket = new DatagramSocket();
 			reader = new PacketReaderThread(socket);
 			sender = new PacketSender(socket, address, reader);
