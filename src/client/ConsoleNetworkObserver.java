@@ -15,6 +15,7 @@ public class ConsoleNetworkObserver extends AbstractPacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress saddr) {
 		byte ptype = packetType(data);
+		System.out.println("Got data: " + Util.hex(data));
 		if (ptype == ServerPacketType.INITIALIZER) {
 			String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
 			int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);

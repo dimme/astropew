@@ -27,7 +27,7 @@ public class PacketDecoder extends AbstractPacketObserver {
 				gadm.leaving(sender);
 				break;
 			case ClientPacketType.JOINING:
-				String name = new String(data);
+				String name = Util.getString(data, 2);
 				gadm.newConnection(name, sender);
 				break;
 			default:

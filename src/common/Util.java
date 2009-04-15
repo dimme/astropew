@@ -60,6 +60,14 @@ public class Util {
 		v.z = getFloat(b, off+8);
 		return v;
 	}
+	
+	public static String getString(byte[] b, int off, int len) {
+		return new String(b, off, len);
+	}
+	
+	public static String getString(byte[] b, int off) {
+		return new String(b, off, b.length - off);
+	}
 
 	/**
 	 * reads 8 bytes from b and composits them 

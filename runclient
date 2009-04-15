@@ -1,5 +1,13 @@
 #!/bin/sh
 
 cd bin;
+echo;
+echo;
+echo;
+echo;
+echo;
+echo;
+echo;
+clear;
 java -Xmx256m -cp ./:../jME_2.0.jar -Djava.library.path=../lib/natives  client.GameClient $1 34567 $2;
 
