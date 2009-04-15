@@ -25,4 +25,12 @@ public class NoPlayer implements Player {
 		return getID();
 	}
 
+	public Ship getShip() {
+		throw new RuntimeException("This method should not be called!");
+	}
+
+	public void setShip(Ship ship) {
+		throw new RuntimeException("This method should not be called!");
+	}
+
 }

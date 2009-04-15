@@ -1,9 +1,12 @@
 package client;
 
+import common.world.Ship;
+
 public class Player implements common.Player {
 
 	private final String name;
 	private final int id;
+	private Ship ship;
 
 	public Player(String name, int id) {
 		this.name = name;
@@ -27,6 +30,14 @@ public class Player implements common.Player {
 
 	public int hashCode() {
 		return id;
+	}
+
+	public Ship getShip() {
+		return ship;
+	}
+
+	public void setShip(Ship ship) {
+		this.ship=ship;
 	}
 
 }

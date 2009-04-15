@@ -17,6 +17,7 @@ public class Ship extends MobileObject {
 		super("Ship");
 
 		this.owner = owner;
+		owner.setShip(this);
 
 		color = ColorRGBA.red;
 

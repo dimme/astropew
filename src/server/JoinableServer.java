@@ -28,11 +28,9 @@ public class JoinableServer extends Thread {
 			final PacketReaderThread pread = new PacketReaderThread(sock);
 			final PacketSender ps = new PacketSender(cdb, sock, pread);
 
-			final Game game = new Game(ps);
-			final GameAdministration gadm = new GameAdministration(cdb, ps,
-					game);
+			final Game game = new Game(ps, cdb);
 
-			final PacketDecoder pd = new PacketDecoder(gadm, game);
+			final PacketDecoder pd = new PacketDecoder(game, cdb);
 
 			pread.addPacketObserver(pd);
 			pread.addPacketFilter(new AckingFilter(ps, cdb));

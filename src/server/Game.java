@@ -1,10 +1,13 @@
 package server;
 
 import java.io.IOException;
+import java.net.SocketAddress;
+import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import server.clientdb.Client;
+import server.clientdb.ClientDB;
 
 import com.jme.app.SimpleHeadlessApp;
 import com.jme.math.Matrix3f;
@@ -18,16 +21,20 @@ public class Game extends SimpleHeadlessApp {
 
 	private long last = 0;
 	private final PacketSender ps;
+	private final ClientDB cdb;
 	private long frameTime = 0;
 	private float ticklength;
 	private final GameLogic logic;
+	private final PriorityQueue<Command> commandQueue;
 	
 	private static final long FRAME_SPACING = 100;
 
-	public Game(PacketSender ps) {
+	public Game(PacketSender ps, ClientDB cdb) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
 		last = System.currentTimeMillis();
 		this.ps = ps;
+		this.cdb = cdb;
+		commandQueue = new PriorityQueue<Command>();
 
 		logic = new GameLogic();
 
@@ -45,6 +52,7 @@ public class Game extends SimpleHeadlessApp {
 
 	public void simpleRender() {
 		long cur = System.currentTimeMillis();
+		ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 		while (last + FRAME_SPACING > cur) {
 			try {
 				Thread.sleep(1);
@@ -56,194 +64,73 @@ public class Game extends SimpleHeadlessApp {
 			cur = System.currentTimeMillis();
 		}
 		last += FRAME_SPACING;
-		ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 	}
 
-	public void simpleUpdate() {
+	public synchronized void simpleUpdate() {
 		final long old = frameTime;
 		frameTime = timer.getTime();
 		float delta = ticklength * (frameTime - old);
-		Matrix3f rot = new Matrix3f();
+		while (!commandQueue.isEmpty()) {
+			final Command c = commandQueue.remove();
+			c.perform(cdb, delta);
+		}
+		/*Matrix3f rot = new Matrix3f();
 		rot.fromAngleNormalAxis(delta, Vector3f.UNIT_Z);
 		for (final Ship s : logic.getShips()) {
 			s.getLocalRotation().apply(rot);
 			s.getLocalTranslation().addLocal(
 					s.getMovement().mult(delta));
+		}*/
+	}
+
+	public void clientJoining(String name, SocketAddress saddr) {
+		//TODO: move to command.
+		Client c = cdb.getClient(saddr);
+
+		if (c == null) {
+			c = cdb.createClient(name, saddr);
+
+			final Ship s = new Ship(c);
+			rootNode.attachChild(s);
+			logic.addShip(s);
+
+			final byte[] data = PacketDataFactory.createPlayerJoined(c.getID(),
+					name);
+
+			ps.sendToAll(data);
+		}
+
+		ps.controlledSend(PacketDataFactory.createInitializer(12345, c.getID(), name), c);
+		sendPlayersInfo(c);
+	}
+	
+	private void sendPlayersInfo(Client c) {
+		final byte[] tmp = PacketDataFactory.createPlayersInfo(cdb, c);
+		if (tmp.length > 2) {
+			ps.controlledSend(tmp, c);
 		}
 	}
 
-	public void newClient(Client c) {
-		final Ship s = new Ship(c);
-		rootNode.attachChild(s);
-		logic.addShip(s);
-	}
+	public void clientLeaving(SocketAddress saddr) {
+		//TODO: move to command
+		final Client removed = cdb.removeClient(saddr);
 
-	public void clientLeaving(Client c) {
-		final Ship s = logic.removeShip(c);
+		final Ship s = logic.removeShip(removed);
 		s.removeFromParent();
+
+		final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
+		ps.sendToAll(data);
 	}
 
 	public GameSettings getNewSettings() {
-		return new AbstractGameSettings() {
-			public void clear() throws IOException {
-			}
+		return new ServerGameSettings();
+	}
 
-			public String get(String name, String defaultValue) {
-				return defaultValue;
-			}
+	public void updatePlayer(int id, Vector3f pos, Quaternion ort, Vector3f dir, long time) {
+		addCommand(new PlayerUpdateCommand(id, pos, ort, dir, time) );
+	}
 
-			public int getAlphaBits() {
-				return 0;
-			}
-
-			public boolean getBoolean(String name, boolean defaultValue) {
-				return defaultValue;
-			}
-
-			public byte[] getByteArray(String name, byte[] bytes) {
-				return null;
-			}
-
-			public int getDepth() {
-				return 0;
-			}
-
-			public int getDepthBits() {
-				return 0;
-			}
-
-			public double getDouble(String name, double defaultValue) {
-				return defaultValue;
-			}
-
-			public float getFloat(String name, float defaultValue) {
-				return defaultValue;
-			}
-
-			public int getFramerate() {
-				return 0;
-			}
-
-			public int getFrequency() {
-				return 0;
-			}
-
-			public int getHeight() {
-				return 0;
-			}
-
-			public int getInt(String name, int defaultValue) {
-				return defaultValue;
-			}
-
-			public long getLong(String name, long defaultValue) {
-				return defaultValue;
-			}
-
-			public Object getObject(String name, Object obj) {
-				return obj;
-			}
-
-			public String getRenderer() {
-				return "";
-			}
-
-			public int getSamples() {
-				return 0;
-			}
-
-			public int getStencilBits() {
-				return 0;
-			}
-
-			public int getWidth() {
-				return 0;
-			}
-
-			public boolean isFullscreen() {
-				return false;
-			}
-
-			public boolean isMusic() {
-				return false;
-			}
-
-			public boolean isSFX() {
-				return false;
-			}
-
-			public boolean isVerticalSync() {
-				return false;
-			}
-
-			public void save() throws IOException {
-			}
-
-			public void set(String name, String value) {
-			}
-
-			public void setAlphaBits(int alphaBits) {
-			}
-
-			public void setBoolean(String name, boolean value) {
-			}
-
-			public void setByteArray(String name, byte[] bytes) {
-			}
-
-			public void setDepth(int depth) {
-			}
-
-			public void setDepthBits(int depthBits) {
-			}
-
-			public void setDouble(String name, double value) {
-			}
-
-			public void setFloat(String name, float value) {
-			}
-
-			public void setFramerate(int framerate) {
-			}
-
-			public void setFrequency(int frequency) {
-			}
-
-			public void setFullscreen(boolean fullscreen) {
-			}
-
-			public void setHeight(int height) {
-			}
-
-			public void setInt(String name, int value) {
-			}
-
-			public void setLong(String name, long value) {
-			}
-
-			public void setMusic(boolean musicEnabled) {
-			}
-
-			public void setObject(String name, Object obj) {
-			}
-
-			public void setRenderer(String renderer) {
-			}
-
-			public void setSFX(boolean sfxEnabled) {
-			}
-
-			public void setSamples(int samples) {
-			}
-
-			public void setStencilBits(int stencilBits) {
-			}
-
-			public void setVerticalSync(boolean vsync) {
-			}
-
-			public void setWidth(int width) {
-			}
-		};
+	private synchronized void addCommand(Command cmd) {
+		
 	}
 }
