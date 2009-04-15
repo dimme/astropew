@@ -1,5 +1,6 @@
 package common;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 /**
@@ -67,6 +68,14 @@ public class Util {
 		v.y = getFloat(b, off + 4);
 		v.z = getFloat(b, off + 8);
 		return v;
+	}
+	
+	public Quaternion getQuaternion(byte[] b, int off, Quaternion q) {
+		q.w = getFloat(b,off);
+		q.x = getFloat(b,off+4);
+		q.y = getFloat(b,off+8);
+		q.z = getFloat(b,off+12);
+		return q;
 	}
 
 	public static String getString(byte[] b, int off, int len) {
@@ -150,6 +159,13 @@ public class Util {
 		put(v.x, dst, offset);
 		put(v.y, dst, offset + 4);
 		put(v.z, dst, offset + 8);
+	}
+	
+	public static void put(Quaternion q, byte[] dst, int offset) {
+		put(q.w, dst, offset);
+		put(q.x, dst, offset + 4);
+		put(q.y, dst, offset + 8);
+		put(q.z, dst, offset + 12);
 	}
 
 	/**
