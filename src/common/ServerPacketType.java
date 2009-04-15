@@ -54,4 +54,16 @@ public interface ServerPacketType {
 	 * ID - int - 4 byte <br>
 	 */
 	public static final byte PLAYER_LEFT	 = 37;
+	
+	/**
+	 * Sends information about the players already on the server
+	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
+	 * (ID - int - 4 byte <br>
+	 * Name Lenght - byte - 1 byte <br>
+	 * Name - String - Name Length) <br>
+ 	 * - x of these - (5 + Name Lenght[i])) * x
+	 */
+	
+	public static final byte PLAYERS_INFO = 38;
 }

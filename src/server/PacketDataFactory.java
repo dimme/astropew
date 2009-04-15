@@ -67,4 +67,34 @@ public class PacketDataFactory {
 		
 		return b;
 	}
+	
+	public static byte[] createPlayersInfo(int[] ids, String[] names){
+		int size = 2;
+		
+		byte[][] byteNames = new byte[names.length][];
+		
+		
+		
+		for (int i = 0; i<names.length; i++){
+			byteNames[i]  = names[i].getBytes();
+			size += 5 + byteNames[i].length;
+		}
+		//TODO: if size > vad vi kan skicka i ett packet?
+		byte b[] = new byte[size];
+		
+		b[0] = ServerPacketType.PLAYERS_INFO;
+		b[1] = 0;
+		
+		int offset = 2;
+		for(int i = 0; i < names.length; i ++){
+			Util.put(ids[i], b, offset);
+			offset += 4;
+			b[offset]=(byte)byteNames[i].length;
+			offset++;
+			Util.put(byteNames[i], b, offset);
+			offset += byteNames[i].length;
+		}
+		
+		return b;
+	}
 }
