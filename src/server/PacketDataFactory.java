@@ -64,6 +64,8 @@ public class PacketDataFactory {
 
 	public static byte[] createPosition(long time, Collection<Ship> ships) {
 		
+		
+		//TODO: Är detta inom ramen för ett udp paket?
 		final byte[] b = new byte[ships.size() * 44  + 10];
 		
 		b[0] = ServerPacketType.PLAYER_POSITIONS;
