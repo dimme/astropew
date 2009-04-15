@@ -33,7 +33,9 @@ public abstract class AckingFilter implements PacketFilter {
 		}
 		byte seq = data[1];
 		
-		return d.received(seq);
+		boolean isNewPacket = d.received(seq);
+		
+		return isNewPacket && (Util.packetType(data) != CommonPacketType.ACK);
 	}
 
 	protected abstract DatagramPacket getDatagramPacket(SocketAddress saddr);
