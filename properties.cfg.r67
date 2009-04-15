@@ -1,0 +1,8 @@
+#Game Settings written by com.jme.app.BaseGame$BaseGameSettings at Tue Apr 07 11:58:32 CEST 2009
+#Tue Apr 07 11:58:32 CEST 2009
+FREQ=60
+WIDTH=1280
+RENDERER=LWJGL
+HEIGHT=1024
+DEPTH=24
+FULLSCREEN=true

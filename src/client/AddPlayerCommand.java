@@ -27,9 +27,9 @@ public class AddPlayerCommand extends AbstractCommand {
 		ms.setEmissive(s.getColor().multLocal(0.2f));
 		ms.setAmbient(s.getColor().multLocal(0.1f));
 		s.setRenderState(ms);
-		
 		game.attachToRoot(s);
 		logic.addShip(s);
+		s.updateRenderState();
 	}
 
 }
