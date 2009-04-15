@@ -5,12 +5,13 @@ import common.world.Ship;
 
 public class UpdatePositionCommand extends AbstractCommand {
 
-	private Vector3f pos;
-	private Vector3f dir;
-	private Vector3f ort;
-	private int id;
-	
-	public UpdatePositionCommand(int id, Vector3f pos, Vector3f dir, Vector3f ort, long tick) {
+	private final Vector3f pos;
+	private final Vector3f dir;
+	private final Vector3f ort;
+	private final int id;
+
+	public UpdatePositionCommand(int id, Vector3f pos, Vector3f dir,
+			Vector3f ort, long tick) {
 		super(tick);
 		this.id = id;
 		this.pos = pos;
@@ -19,11 +20,11 @@ public class UpdatePositionCommand extends AbstractCommand {
 	}
 
 	public void perform(GameLogic logic, Game game) {
-		Ship s = logic.getShip(id);
+		final Ship s = logic.getShip(id);
 		if (s != null) {
 			s.setLocalTranslation(pos);
 			s.setMovement(dir);
-			//TODO: orientation!
+			// TODO: orientation!
 		}
 	}
 }

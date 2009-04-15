@@ -6,5 +6,5 @@ public interface CommonPacketType {
 	 * ClientPacketType - byte - 1 byte <br>
 	 * Sequence Number to ACK - byte - 1 byte <br>
 	 */
-	public static final byte ACK = 96; 
+	public static final byte ACK = 96;
 }

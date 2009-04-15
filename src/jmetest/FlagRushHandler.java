@@ -42,23 +42,27 @@ import com.jme.input.KeyInput;
 /**
  * Input Handler for the Flag Rush game. This controls a supplied spatial
  * allowing us to move it forward, backward and rotate it left and right.
+ * 
  * @author Mark Powell
- *
+ * 
  */
 public class FlagRushHandler extends InputHandler {
-	
+
 	Ship ship;
-	
+
 	public void update(float time) {
-        super.update(time);
-        ship.update(time);
-        //we always want to allow friction to control the drift
-    }
+		super.update(time);
+		ship.update(time);
+		// we always want to allow friction to control the drift
+	}
 
 	/**
 	 * Supply the node to control and the api that will handle input creation.
-	 * @param node the node we wish to move
-	 * @param api the library that will handle creation of the input.
+	 * 
+	 * @param node
+	 *            the node we wish to move
+	 * @param api
+	 *            the library that will handle creation of the input.
 	 */
 	public FlagRushHandler(Ship node, String api) {
 		setKeyBindings(api);
@@ -67,12 +71,15 @@ public class FlagRushHandler extends InputHandler {
 	}
 
 	/**
-	 * creates the keyboard object, allowing us to obtain the values of a keyboard as keys are
-	 * pressed. It then sets the jmetest.actions to be triggered based on if certain keys are pressed (WSAD).
+	 * creates the keyboard object, allowing us to obtain the values of a
+	 * keyboard as keys are pressed. It then sets the jmetest.actions to be
+	 * triggered based on if certain keys are pressed (WSAD).
+	 * 
 	 * @param api
 	 */
-	private void setKeyBindings(String api) {	
-		KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
+	private void setKeyBindings(String api) {
+		final KeyBindingManager keyboard = KeyBindingManager
+				.getKeyBindingManager();
 
 		keyboard.set("forward", KeyInput.KEY_W);
 		keyboard.set("backward", KeyInput.KEY_S);
@@ -85,28 +92,38 @@ public class FlagRushHandler extends InputHandler {
 	}
 
 	/**
-	 * assigns action classes to triggers. These jmetest.actions handle moving the node forward, backward and
-	 * rotating it.
-	 * @param node the node to control.
+	 * assigns action classes to triggers. These jmetest.actions handle moving
+	 * the node forward, backward and rotating it.
+	 * 
+	 * @param node
+	 *            the node to control.
 	 */
 	private void setActions(Ship node) {
-		
-		AccelerateAction forward = new AccelerateAction(node, AccelerateAction.FORWARD);
-        addAction(forward, "forward", true);
-        AccelerateAction back = new AccelerateAction(node, AccelerateAction.BACKWARD);
-        addAction(back, "backward", true);
-        RotateAction rotateRight = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.RIGHT);
-        addAction(rotateRight, "right", true);
-        RotateAction rotateLeft = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.LEFT);
-        addAction(rotateLeft, "left", true);
-        RotateAction rotateRealRight = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.RIGHT);
-        addAction(rotateRealRight, "real_right", true);
-        RotateAction rotateRealLeft = new RotateAction(node, RotateAction.HORIZONTAL, RotateAction.LEFT);
-        addAction(rotateRealLeft, "real_left", true);
-        RotateAction rotateUp = new RotateAction(node, RotateAction.VERTICAL, RotateAction.RIGHT);
-        addAction(rotateUp, "up", true);
-        RotateAction rotateDown = new RotateAction(node, RotateAction.VERTICAL, RotateAction.LEFT);
-        addAction(rotateDown, "down", true);
+
+		final AccelerateAction forward = new AccelerateAction(node,
+				AccelerateAction.FORWARD);
+		addAction(forward, "forward", true);
+		final AccelerateAction back = new AccelerateAction(node,
+				AccelerateAction.BACKWARD);
+		addAction(back, "backward", true);
+		final RotateAction rotateRight = new RotateAction(node,
+				RotateAction.HORIZONTAL, RotateAction.RIGHT);
+		addAction(rotateRight, "right", true);
+		final RotateAction rotateLeft = new RotateAction(node,
+				RotateAction.HORIZONTAL, RotateAction.LEFT);
+		addAction(rotateLeft, "left", true);
+		final RotateAction rotateRealRight = new RotateAction(node,
+				RotateAction.HORIZONTAL, RotateAction.RIGHT);
+		addAction(rotateRealRight, "real_right", true);
+		final RotateAction rotateRealLeft = new RotateAction(node,
+				RotateAction.HORIZONTAL, RotateAction.LEFT);
+		addAction(rotateRealLeft, "real_left", true);
+		final RotateAction rotateUp = new RotateAction(node,
+				RotateAction.VERTICAL, RotateAction.RIGHT);
+		addAction(rotateUp, "up", true);
+		final RotateAction rotateDown = new RotateAction(node,
+				RotateAction.VERTICAL, RotateAction.LEFT);
+		addAction(rotateDown, "down", true);
 
 	}
 }

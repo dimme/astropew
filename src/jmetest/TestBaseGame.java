@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import com.jme.app.BaseGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -22,7 +23,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.shape.*;
+import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -64,12 +66,12 @@ public class TestBaseGame extends BaseGame {
 	 * Main entry point of the application
 	 */
 	public static void main(String[] args) {
-		TestBaseGame app = new TestBaseGame();
+		final TestBaseGame app = new TestBaseGame();
 		// We will load our own "fantastic" AstroPew logo. Yes, I'm an artist.
 		try {
 			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL(
 					"file:files/pew.jpeg"));
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			e.printStackTrace();
 		}
 		app.start();
@@ -134,7 +136,7 @@ public class TestBaseGame extends BaseGame {
 			display.createWindow(width, height, depth, freq, fullscreen);
 
 			cam = display.getRenderer().createCamera(width, height);
-		} catch (JmeException e) {
+		} catch (final JmeException e) {
 			logger.log(Level.SEVERE, "Could not create displaySystem", e);
 			System.exit(1);
 		}
@@ -172,7 +174,7 @@ public class TestBaseGame extends BaseGame {
 		 * Create a ZBuffer to display pixels closest to the camera above
 		 * farther ones.
 		 */
-		ZBufferState buf = display.getRenderer().createZBufferState();
+		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
 		buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
 		scene.setRenderState(buf);
@@ -180,7 +182,7 @@ public class TestBaseGame extends BaseGame {
 		// Time for a little optimization. We don't need to render back face
 		// triangles, so lets
 		// not. This will give us a performance boost for very little effort.
-		CullState cs = display.getRenderer().createCullState();
+		final CullState cs = display.getRenderer().createCullState();
 		cs.setCullFace(CullState.Face.Back);
 		scene.setRenderState(cs);
 
@@ -214,7 +216,7 @@ public class TestBaseGame extends BaseGame {
 	 * 
 	 */
 	private void buildPlayer() {
-		Box b = new Box("box", new Vector3f(), 0.35f, 0.25f, 0.5f);
+		final Box b = new Box("box", new Vector3f(), 0.35f, 0.25f, 0.5f);
 		b.setModelBound(new BoundingBox());
 		b.updateModelBound();
 
@@ -234,29 +236,29 @@ public class TestBaseGame extends BaseGame {
 	}
 
 	private void buildUniverse() {
-		Random rand = new Random();
+		final Random rand = new Random();
 
-		TextureState ts1 = display.getRenderer().createTextureState();
-		Texture texture1 = TextureManager.loadTexture("files/earth.jpg",
+		final TextureState ts1 = display.getRenderer().createTextureState();
+		final Texture texture1 = TextureManager.loadTexture("files/earth.jpg",
 				Texture.MinificationFilter.Trilinear,
 				Texture.MagnificationFilter.Bilinear, 1.0f, true);
 		ts1.setTexture(texture1);
 		ts1.setEnabled(true);
 
-		TextureState ts2 = display.getRenderer().createTextureState();
-		Texture texture2 = TextureManager.loadTexture("files/moon.jpg",
+		final TextureState ts2 = display.getRenderer().createTextureState();
+		final Texture texture2 = TextureManager.loadTexture("files/moon.jpg",
 				Texture.MinificationFilter.Trilinear,
 				Texture.MagnificationFilter.Bilinear, 1.0f, true);
 		ts2.setTexture(texture2);
 		ts2.setEnabled(true);
 
 		for (int i = 0; i < 300; i++) {
-			float x = rand.nextInt(10000) - 5000;
-			float y = rand.nextInt(10000) - 5000;
-			float z = rand.nextInt(10000) - 5000;
+			final float x = rand.nextInt(10000) - 5000;
+			final float y = rand.nextInt(10000) - 5000;
+			final float z = rand.nextInt(10000) - 5000;
 
-			Vector3f location = new Vector3f(x, y, z);
-			int radius = rand.nextInt(200) + 10;
+			final Vector3f location = new Vector3f(x, y, z);
+			final int radius = rand.nextInt(200) + 10;
 
 			// float r = rand.nextFloat();
 			// float g = rand.nextFloat();
@@ -266,12 +268,14 @@ public class TestBaseGame extends BaseGame {
 			// ms.setEmissive(color);
 			// ms.setAmbient(color);
 
-			Sphere s = new Sphere("Planet: " + i, location, 40, 40, radius);
+			final Sphere s = new Sphere("Planet: " + i, location, 40, 40,
+					radius);
 
-			if (i % 2 == 0)
+			if (i % 2 == 0) {
 				s.setRenderState(ts1);
-			else
+			} else {
 				s.setRenderState(ts2);
+			}
 
 			scene.attachChild(s);
 		}
@@ -283,20 +287,20 @@ public class TestBaseGame extends BaseGame {
 	 */
 	private void buildLighting() {
 		/** Set up a basic, default light. */
-		DirectionalLight light1 = new DirectionalLight();
+		final DirectionalLight light1 = new DirectionalLight();
 		light1.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 		light1.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
 		light1.setDirection(new Vector3f(1, -1, 0));
 		light1.setEnabled(true);
 
-		DirectionalLight light2 = new DirectionalLight();
+		final DirectionalLight light2 = new DirectionalLight();
 		light2.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 		light2.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
 		light2.setDirection(new Vector3f(1, 1, 0));
 		light2.setEnabled(true);
 
 		/** Attach the light to a lightState and the lightState to rootNode. */
-		LightState lightState = display.getRenderer().createLightState();
+		final LightState lightState = display.getRenderer().createLightState();
 		lightState.setEnabled(true);
 		lightState.attach(light1);
 		lightState.attach(light2);
@@ -311,7 +315,7 @@ public class TestBaseGame extends BaseGame {
 	private void buildSkyBox() {
 		skybox = new Skybox("skybox", 10, 10, 10);
 
-		Texture tx = TextureManager.loadTexture("files/galaxy.jpg",
+		final Texture tx = TextureManager.loadTexture("files/galaxy.jpg",
 				Texture.MinificationFilter.BilinearNearestMipMap,
 				Texture.MagnificationFilter.Bilinear);
 
@@ -335,9 +339,9 @@ public class TestBaseGame extends BaseGame {
 	 * 
 	 */
 	private void buildChaseCamera() {
-		Vector3f targetOffset = new Vector3f();
+		final Vector3f targetOffset = new Vector3f();
 		targetOffset.y = ((BoundingBox) battleShip.getWorldBound()).yExtent * 1.5f;
-		HashMap<String, Object> props = new HashMap<String, Object>();
+		final HashMap<String, Object> props = new HashMap<String, Object>();
 		props.put(ThirdPersonMouseLook.PROP_MAXROLLOUT, "6");
 		props.put(ThirdPersonMouseLook.PROP_MINROLLOUT, "3");
 		props.put(ThirdPersonMouseLook.PROP_MAXASCENT, "" + 45

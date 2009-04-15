@@ -12,18 +12,19 @@ import common.Util;
 import common.network.PacketSender;
 
 public class AckingObserver extends common.network.AckingObserver {
-	private ClientDB cdb;
-	
+	private final ClientDB cdb;
+
 	public AckingObserver(PacketSender ps, ClientDB cdb) {
 		super(ps);
 		this.cdb = cdb;
 	}
 
 	protected DatagramPacket getDatagramPacket(SocketAddress saddr) {
-		Client c = cdb.getClient(saddr);
+		final Client c = cdb.getClient(saddr);
 		if (c == null) {
-			Logger.getLogger(getClass().getName()).log(Level.INFO, "ACKing packet from nonexistant client");
-			DatagramPacket dgp = new DatagramPacket(Util.nullbytes,0);
+			Logger.getLogger(getClass().getName()).log(Level.INFO,
+					"ACKing packet from nonexistant client");
+			final DatagramPacket dgp = new DatagramPacket(Util.nullbytes, 0);
 			dgp.setSocketAddress(saddr);
 			return dgp;
 		}

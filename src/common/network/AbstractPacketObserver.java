@@ -7,17 +7,17 @@ package common.network;
 
 import common.Util;
 
-public abstract class AbstractPacketObserver implements PacketObserver{
-	
+public abstract class AbstractPacketObserver implements PacketObserver {
+
 	protected boolean isControlledPacket(byte[] data) {
-		int b = data[0] & Util.CONTROLLED_PACKET_MASK;
-		
+		final int b = data[0] & Util.CONTROLLED_PACKET_MASK;
+
 		return b != 0;
 	}
-	
+
 	protected byte packetType(byte[] data) {
-		int b = data[0] & Util.CONTROLLED_PACKET_UNMASK;
-		return (byte)b;
+		final int b = data[0] & Util.CONTROLLED_PACKET_UNMASK;
+		return (byte) b;
 	}
-	
+
 }

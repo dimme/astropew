@@ -5,9 +5,9 @@ import common.world.Ship;
 
 public class AddPlayerCommand extends AbstractCommand {
 
-	private String name;
-	private int id;
-	
+	private final String name;
+	private final int id;
+
 	public AddPlayerCommand(int id, String name) {
 		super(0);
 		this.name = name;
@@ -18,11 +18,11 @@ public class AddPlayerCommand extends AbstractCommand {
 		if (logic.getPlayer(id) != null) {
 			return;
 		}
-		
-		Player p = new Player(name, id);
-		
-		Ship s = new Ship(p);
-		MaterialState ms = game.createMaterialState();
+
+		final Player p = new Player(name, id);
+
+		final Ship s = new Ship(p);
+		final MaterialState ms = game.createMaterialState();
 		ms.setDiffuse(s.getColor());
 		ms.setEmissive(s.getColor().multLocal(0.2f));
 		ms.setAmbient(s.getColor().multLocal(0.1f));

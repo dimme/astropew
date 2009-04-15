@@ -23,15 +23,15 @@ import common.GameException;
 import common.Util;
 
 /**
- *
+ * 
  * @author jonsturk
  */
 public class PacketReaderThread extends Thread {
-	private List<PacketObserver> observers;
-	private DatagramSocket socket;
-	private DatagramPacket readPacket;
+	private final List<PacketObserver> observers;
+	private final DatagramSocket socket;
+	private final DatagramPacket readPacket;
 	private boolean running;
-	private ExecutorService exec;
+	private final ExecutorService exec;
 
 	public void addPacketObserver(PacketObserver po) {
 		observers.add(po);
@@ -41,49 +41,56 @@ public class PacketReaderThread extends Thread {
 		observers.remove(po);
 	}
 
-	private void notifyPacketObservers(byte[] data, SocketAddress addr) throws GameException {
+	private void notifyPacketObservers(byte[] data, SocketAddress addr)
+			throws GameException {
 		boolean handled = false;
-		for( PacketObserver po : observers ) {
+		for (final PacketObserver po : observers) {
 			try {
 				if (po.packetReceived(data, addr)) {
 					handled = true;
 				}
-			}catch (CatastrophicException e) {
+			} catch (final CatastrophicException e) {
 				throw e;
-			}catch (GameException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+			} catch (final GameException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+						e.getMessage(), e);
 			}
 		}
-		
+
 		if (!handled) {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
+			Logger.getLogger(getClass().getName()).log(Level.WARNING,
+					"Unhandled packet type: " + data[0]);
 		}
 	}
 
 	public PacketReaderThread(DatagramSocket socket) {
 		this.socket = socket;
 		observers = new LinkedList<PacketObserver>();
-		byte[] buff = new byte[Util.PACKET_SIZE];
+		final byte[] buff = new byte[Util.PACKET_SIZE];
 		readPacket = new DatagramPacket(buff, Util.PACKET_SIZE);
 		exec = Executors.newSingleThreadExecutor();
 	}
 
 	public void run() {
 		running = true;
-		while(running) {
+		while (running) {
 			try {
 				readPacket.setLength(readPacket.getData().length);
 				socket.receive(readPacket);
-				byte[] data = new byte[readPacket.getLength()];
+				final byte[] data = new byte[readPacket.getLength()];
 				System.arraycopy(readPacket.getData(), 0, data, 0, data.length);
-				exec.submit(new NotifyTask(data, readPacket.getSocketAddress()));
-			} catch (IOException ex) {
+				exec
+						.submit(new NotifyTask(data, readPacket
+								.getSocketAddress()));
+			} catch (final IOException ex) {
 				if (running) {
-					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+					Logger.getLogger(PacketReaderThread.class.getName()).log(
+							Level.SEVERE, ex.getMessage(), ex);
 				}
-			} catch (RejectedExecutionException e) {
+			} catch (final RejectedExecutionException e) {
 				if (running) {
-					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+					Logger.getLogger(PacketReaderThread.class.getName()).log(
+							Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		}
@@ -93,11 +100,11 @@ public class PacketReaderThread extends Thread {
 		running = false;
 		exec.shutdown();
 	}
-	
+
 	private class NotifyTask extends AbstractExecutorTask {
 		byte[] data;
 		SocketAddress addr;
-		
+
 		NotifyTask(byte[] data, SocketAddress addr) {
 			this.data = data;
 			this.addr = addr;
@@ -106,9 +113,9 @@ public class PacketReaderThread extends Thread {
 		public void execute() {
 			try {
 				notifyPacketObservers(data, addr);
-			} catch (GameException e) {
+			} catch (final GameException e) {
 				throw new RuntimeException(e);
 			}
-		}	
+		}
 	}
 }

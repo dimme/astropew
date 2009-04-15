@@ -10,42 +10,41 @@ import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 
-
 public class Game extends SimpleGame {
-	
+
 	protected GameLogic logic;
-	private PriorityQueue<Command> commandQueue;
-	private GameClient gc;
-	
+	private final PriorityQueue<Command> commandQueue;
+	private final GameClient gc;
+
 	public Game(GameClient gc) {
 		commandQueue = new PriorityQueue<Command>(51);
 		logic = new GameLogic();
 		this.gc = gc;
-		
+
 		setConfigShowMode(ConfigShowMode.ShowIfNoConfig);
-		Thread t = new Thread() {
+		final Thread t = new Thread() {
 			public void run() {
 				Game.this.start();
 			}
 		};
 		t.start();
 	}
-	
+
 	protected void simpleInitGame() {
-		LightState ltst = display.getRenderer().createLightState();
+		final LightState ltst = display.getRenderer().createLightState();
 		ltst.setEnabled(true);
-		
-		PointLight lt = new PointLight();
-		lt.setLocation(new Vector3f(4,2,3));
+
+		final PointLight lt = new PointLight();
+		lt.setLocation(new Vector3f(4, 2, 3));
 		lt.setDiffuse(ColorRGBA.white);
 		lt.setAmbient(ColorRGBA.white);
 		lt.setEnabled(true);
-		
+
 		ltst.attach(lt);
-		
+
 		rootNode.setRenderState(ltst);
 	}
-	
+
 	protected synchronized void simpleUpdate() {
 		Command c;
 		while (!commandQueue.isEmpty()) {
@@ -53,16 +52,17 @@ public class Game extends SimpleGame {
 			c.perform(logic, this);
 		}
 	}
-	
+
 	public void finish() {
 		gc.stop();
 		super.finish();
 	}
 
-	public void updatePosition(Vector3f pos, Vector3f dir, Vector3f ort, int id, long tick) {
+	public void updatePosition(Vector3f pos, Vector3f dir, Vector3f ort,
+			int id, long tick) {
 		addCommand(new UpdatePositionCommand(id, pos, dir, ort, tick));
 	}
-	
+
 	protected synchronized void addCommand(Command c) {
 		commandQueue.add(c);
 	}
@@ -70,7 +70,7 @@ public class Game extends SimpleGame {
 	public void addPlayer(int id, String name) {
 		addCommand(new AddPlayerCommand(id, name));
 	}
-	
+
 	public void removePlayer(int id) {
 		addCommand(new RemovePlayerCommand(id));
 	}
@@ -82,7 +82,7 @@ public class Game extends SimpleGame {
 	public void attachToRoot(Spatial s) {
 		rootNode.attachChild(s);
 	}
-	
+
 	public void removeFromRoot(Spatial s) {
 		rootNode.detachChild(s);
 	}

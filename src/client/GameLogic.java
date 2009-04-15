@@ -2,31 +2,30 @@ package client;
 
 import java.util.HashMap;
 
-import common.world.Ship;
 import common.Player;
+import common.world.Ship;
 
-public class GameLogic extends common.GameLogic 
-{
+public class GameLogic extends common.GameLogic {
 
-	private HashMap<Integer, Player> players;
-	
+	private final HashMap<Integer, Player> players;
+
 	public GameLogic() {
 		super();
 		players = new HashMap<Integer, Player>();
 	}
-	
+
 	public Player getPlayer(int id) {
 		return players.get(id);
 	}
-	
+
 	public void addShip(Ship s) {
-		Player owner = s.getOwner();
+		final Player owner = s.getOwner();
 		players.put(owner.getID(), owner);
 		super.addShip(s);
 	}
-	
+
 	public void removeShip(Ship s) {
-		Player p = s.getOwner();
+		final Player p = s.getOwner();
 		super.removeShip(p);
 		players.remove(p.getID());
 	}
@@ -34,5 +33,5 @@ public class GameLogic extends common.GameLogic
 	public Ship getShip(int id) {
 		return shiptable.get(players.get(id));
 	}
-	
+
 }
