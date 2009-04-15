@@ -11,8 +11,9 @@ import java.util.logging.Logger;
 import common.AbstractExecutorTask;
 import common.CommonPacketType;
 import common.GameException;
+import common.Util;
 
-public class DeliveryService extends AbstractPacketObserver {
+public class DeliveryService implements PacketObserver {
 	private final PriorityQueue<Task> tasks;
 	private final Map<SocketAddress, UDPConnection> connections;
 	private final PacketSender ps;
@@ -193,7 +194,7 @@ public class DeliveryService extends AbstractPacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress addr)
 			throws GameException {
-		if (packetType(data) == CommonPacketType.ACK) {
+		if (Util.packetType(data) == CommonPacketType.ACK) {
 			final byte seq = data[1];
 			acknowledge(seq, addr);
 			return true;

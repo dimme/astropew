@@ -24,11 +24,7 @@ public class JoinableServer extends Thread {
 
 			final ClientDB cdb = new ClientDatabase();
 
-			final DatagramSocket sock = new DatagramSocket(34567); // TODO:
-																	// configurable
-																	// port and
-																	// Service
-																	// Announcer
+			final DatagramSocket sock = new DatagramSocket(34567); // TODO: configurable port and Service Announcer
 			final PacketReaderThread pread = new PacketReaderThread(sock);
 			final PacketSender ps = new PacketSender(cdb, sock, pread);
 
@@ -39,7 +35,7 @@ public class JoinableServer extends Thread {
 			final PacketDecoder pd = new PacketDecoder(gadm, game);
 
 			pread.addPacketObserver(pd);
-			pread.addPacketObserver(new AckingObserver(ps, cdb));
+			pread.addPacketFilter(new AckingFilter(ps, cdb));
 
 			// IncomingConnectionServer ics = new
 			// IncomingConnectionServer(34567, pd);

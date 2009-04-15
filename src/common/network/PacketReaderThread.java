@@ -28,11 +28,20 @@ import common.Util;
  */
 public class PacketReaderThread extends Thread {
 	private final List<PacketObserver> observers;
+	private final List<PacketFilter> filters;
 	private final DatagramSocket socket;
 	private final DatagramPacket readPacket;
 	private boolean running;
 	private final ExecutorService exec;
 
+	public void addPacketFilter(PacketFilter pf) {
+		filters.add(pf);
+	}
+	
+	public void removePacketFilter(PacketFilter pf) {
+		filters.remove(pf);
+	}
+	
 	public void addPacketObserver(PacketObserver po) {
 		observers.add(po);
 	}
@@ -41,31 +50,39 @@ public class PacketReaderThread extends Thread {
 		observers.remove(po);
 	}
 
-	private void notifyPacketObservers(byte[] data, SocketAddress addr)
-			throws GameException {
-		boolean handled = false;
-		for (final PacketObserver po : observers) {
-			try {
-				if (po.packetReceived(data, addr)) {
-					handled = true;
-				}
-			} catch (final CatastrophicException e) {
-				throw e;
-			} catch (final GameException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						e.getMessage(), e);
+	private void notifyPacketObservers(byte[] data, SocketAddress addr) throws GameException {
+		boolean allow = true;
+		for (PacketFilter pf : filters) {
+			if (!pf.accept(data, addr)) {
+				allow = false;
 			}
 		}
-
-		if (!handled) {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING,
-					"Unhandled packet type: " + data[0]);
+		if (allow) {
+			boolean handled = false;
+			for (final PacketObserver po : observers) {
+				try {
+					if (po.packetReceived(data, addr)) {
+						handled = true;
+					}
+				} catch (final CatastrophicException e) {
+					throw e;
+				} catch (final GameException e) {
+					Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+							e.getMessage(), e);
+				}
+			}
+	
+			if (!handled) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING,
+						"Unhandled packet type: " + data[0]);
+			}
 		}
 	}
 
 	public PacketReaderThread(DatagramSocket socket) {
 		this.socket = socket;
 		observers = new LinkedList<PacketObserver>();
+		filters = new LinkedList<PacketFilter>();
 		final byte[] buff = new byte[Util.PACKET_SIZE];
 		readPacket = new DatagramPacket(buff, Util.PACKET_SIZE);
 		exec = Executors.newSingleThreadExecutor();

@@ -8,9 +8,9 @@ import common.GameException;
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
-import common.network.AbstractPacketObserver;
+import common.network.PacketObserver;
 
-public class GamePlayObserver extends AbstractPacketObserver {
+public class GamePlayObserver implements PacketObserver {
 
 	private final GameClient client;
 	private final Game game;
@@ -21,9 +21,8 @@ public class GamePlayObserver extends AbstractPacketObserver {
 		this.game = game;
 	}
 
-	public boolean packetReceived(byte[] data, SocketAddress addr)
-			throws GameException {
-		final byte packettype = packetType(data);
+	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
+		final byte packettype = Util.packetType(data);
 		if (packettype == ServerPacketType.INITIALIZER) {
 			final String name = new String(data,
 					OffsetConstants.INITIALIZER_STRING_OFFSET, data.length

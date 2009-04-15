@@ -5,16 +5,16 @@ import java.net.SocketAddress;
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
-import common.network.AbstractPacketObserver;
+import common.network.PacketObserver;
 
 /**
  * 
  * @author jonsturk
  */
-public class ConsoleNetworkObserver extends AbstractPacketObserver {
+public class ConsoleNetworkObserver implements PacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress saddr) {
-		final byte ptype = packetType(data);
+		final byte ptype = Util.packetType(data);
 		if (ptype == ServerPacketType.INITIALIZER) {
 			final String name = new String(data,
 					OffsetConstants.INITIALIZER_STRING_OFFSET, data.length

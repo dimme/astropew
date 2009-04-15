@@ -6,11 +6,11 @@ import java.net.SocketAddress;
 import common.Util;
 import common.network.PacketSender;
 
-public class AckingObserver extends common.network.AckingObserver {
+public class AckingFilter extends common.network.AckingFilter {
 
 	private final DatagramPacket dgp;
 
-	public AckingObserver(PacketSender ps, SocketAddress saddr) {
+	public AckingFilter(PacketSender ps, SocketAddress saddr) {
 		super(ps);
 		dgp = new DatagramPacket(Util.nullbytes, 0);
 		dgp.setSocketAddress(saddr);

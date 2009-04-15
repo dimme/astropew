@@ -4,9 +4,9 @@ import java.net.SocketAddress;
 
 import common.ClientPacketType;
 import common.Util;
-import common.network.AbstractPacketObserver;
+import common.network.PacketObserver;
 
-public class PacketDecoder extends AbstractPacketObserver {
+public class PacketDecoder implements PacketObserver {
 
 	private final GameAdministration gadm;
 	private final Game game;
@@ -17,7 +17,7 @@ public class PacketDecoder extends AbstractPacketObserver {
 	}
 
 	public boolean packetReceived(byte[] data, SocketAddress sender) {
-		final byte ptype = packetType(data);
+		final byte ptype = Util.packetType(data);
 
 		switch (ptype) {
 		case ClientPacketType.LEAVING:

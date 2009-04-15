@@ -11,10 +11,10 @@ import server.clientdb.ClientDB;
 import common.Util;
 import common.network.PacketSender;
 
-public class AckingObserver extends common.network.AckingObserver {
+public class AckingFilter extends common.network.AckingFilter {
 	private final ClientDB cdb;
 
-	public AckingObserver(PacketSender ps, ClientDB cdb) {
+	public AckingFilter(PacketSender ps, ClientDB cdb) {
 		super(ps);
 		this.cdb = cdb;
 	}

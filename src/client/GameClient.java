@@ -39,7 +39,7 @@ public class GameClient {
 			}
 			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
-			reader.addPacketObserver(new AckingObserver(sender, address));
+			reader.addPacketFilter(new AckingFilter(sender, address));
 			reader.start();
 			connect(playername);
 		} catch (final SocketException ex) {
