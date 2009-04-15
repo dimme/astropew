@@ -38,7 +38,6 @@ public class DeliveryService extends AbstractPacketObserver {
 	}
 	
 	public void acknowledge(byte seq, SocketAddress saddr) {
-		System.out.println("ack " + seq + " from " + saddr);
 		ps.exec.submit( new Ack(saddr, seq) );
 	}
 	
@@ -163,7 +162,6 @@ public class DeliveryService extends AbstractPacketObserver {
 		}
 		
 		public void execute() {
-			System.out.println("ack");
 			UDPConnection udpc = connections.get(saddr);
 			compareSingleton.seq = seq;
 			compareSingleton.udpc = udpc;
