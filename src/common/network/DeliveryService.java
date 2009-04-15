@@ -10,6 +10,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import common.AbstractExecutorTask;
 import common.CommonPacketType;
 import common.GameException;
 import common.OffsetConstants;
@@ -115,7 +116,7 @@ public class DeliveryService extends AbstractPacketObserver {
 		}
 	}
 	
-	private class New implements Runnable {
+	private class New extends AbstractExecutorTask {
 		
 		private byte[] data;
 		private UDPConnection udpc;
@@ -125,7 +126,7 @@ public class DeliveryService extends AbstractPacketObserver {
 			this.udpc = udpc;
 		}
 		
-		public void run() {
+		public void execute() {
 			try {
 				byte seq = udpc.addControlledPacket(data);
 				Task t = new Task(System.currentTimeMillis()+TIMEOUT, seq, udpc);
@@ -138,9 +139,9 @@ public class DeliveryService extends AbstractPacketObserver {
 		}
 	}
 	
-	private class ResendTimedOut implements Runnable {
+	private class ResendTimedOut extends AbstractExecutorTask  {
 		
-		public void run() {
+		public void execute() {
 			long curt = System.currentTimeMillis();
 			Task t = tasks.peek();
 			while (t!=null && t.timeout <= curt) {
@@ -152,7 +153,7 @@ public class DeliveryService extends AbstractPacketObserver {
 		}
 	}
 	
-	private class Ack implements Runnable {
+	private class Ack extends AbstractExecutorTask  {
 		private byte seq;
 		private SocketAddress saddr;
 		
@@ -161,7 +162,7 @@ public class DeliveryService extends AbstractPacketObserver {
 			this.seq = seq;
 		}
 		
-		public void run() {
+		public void execute() {
 			System.out.println("ack");
 			UDPConnection udpc = connections.get(saddr);
 			compareSingleton.seq = seq;

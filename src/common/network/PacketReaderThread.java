@@ -17,6 +17,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import common.AbstractExecutorTask;
 import common.CatastrophicException;
 import common.GameException;
 import common.Util;
@@ -93,7 +94,7 @@ public class PacketReaderThread extends Thread {
 		exec.shutdown();
 	}
 	
-	private class NotifyTask implements Runnable {
+	private class NotifyTask extends AbstractExecutorTask {
 		byte[] data;
 		SocketAddress addr;
 		
@@ -102,7 +103,7 @@ public class PacketReaderThread extends Thread {
 			this.addr = addr;
 		}
 
-		public void run() {
+		public void execute() {
 			try {
 				notifyPacketObservers(data, addr);
 			} catch (GameException e) {

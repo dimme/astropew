@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import common.AbstractExecutorTask;
 import common.CatastrophicException;
 import common.Util;
 
@@ -52,22 +53,19 @@ public class PacketSender {
 	}
 
 	
-	protected abstract class AbstractSendTask implements Runnable {
+	protected abstract class AbstractSendTask extends AbstractExecutorTask {
 		protected byte[] data;
 		
 		public AbstractSendTask(byte[] data) {
 			this.data = data;
 		}
 		
-		public final void run() {
+		public final void execute() {
 			try {
 				perform();
 			} catch (IOException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 				throw new RuntimeException(new CatastrophicException(e));
-			} catch (Throwable t) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE, t.getMessage(), t);
-				throw new RuntimeException(t);
 			}
 		}
 		
