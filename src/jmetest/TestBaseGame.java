@@ -39,7 +39,7 @@ public class TestBaseGame extends BaseGame {
 	// fence that will keep us in.
 	private Skybox skybox;
 	// the new player object
-	private Ship player;
+	private Ship battleShip;
 	// private ChaseCamera chaser;
 	protected InputHandler input;
 
@@ -67,7 +67,8 @@ public class TestBaseGame extends BaseGame {
 		TestBaseGame app = new TestBaseGame();
 		// We will load our own "fantastic" AstroPew logo. Yes, I'm an artist.
 		try {
-			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL("file:files/pew.jpeg"));
+			app.setConfigShowMode(ConfigShowMode.AlwaysShow, new URL(
+					"file:files/pew.jpeg"));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -219,17 +220,17 @@ public class TestBaseGame extends BaseGame {
 
 		// set the vehicles attributes (these numbers can be thought
 		// of as Unit/Second).
-		player = new Ship("Player Node", b);
-		player.setAcceleration(50);
-		player.setBraking(100);
-		player.setTurnSpeed(2.5f);
-		player.setMaxSpeed(250);
-		player.setMinSpeed(15);
+		battleShip = new Ship("The Ship", b);
+		battleShip.setAcceleration(50);
+		battleShip.setBraking(100);
+		battleShip.setTurnSpeed(2.5f);
+		battleShip.setMaxSpeed(250);
+		battleShip.setMinSpeed(0);
 
-		player.setLocalTranslation(new Vector3f(100, 0, 100));
-		scene.attachChild(player);
+		battleShip.setLocalTranslation(new Vector3f(100, 0, 100));
+		scene.attachChild(battleShip);
 		scene.updateGeometricState(0, true);
-		player.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		battleShip.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 	}
 
 	private void buildUniverse() {
@@ -335,7 +336,7 @@ public class TestBaseGame extends BaseGame {
 	 */
 	private void buildChaseCamera() {
 		Vector3f targetOffset = new Vector3f();
-		targetOffset.y = ((BoundingBox) player.getWorldBound()).yExtent * 1.5f;
+		targetOffset.y = ((BoundingBox) battleShip.getWorldBound()).yExtent * 1.5f;
 		HashMap<String, Object> props = new HashMap<String, Object>();
 		props.put(ThirdPersonMouseLook.PROP_MAXROLLOUT, "6");
 		props.put(ThirdPersonMouseLook.PROP_MINROLLOUT, "3");
@@ -344,9 +345,7 @@ public class TestBaseGame extends BaseGame {
 		props.put(ChaseCamera.PROP_INITIALSPHERECOORDS, new Vector3f(5, 0,
 				30 * FastMath.DEG_TO_RAD));
 		props.put(ChaseCamera.PROP_TARGETOFFSET, targetOffset);
-		props.put(ChaseCamera.PROP_DAMPINGK, "4");
-		props.put(ChaseCamera.PROP_SPRINGK, "9");
-		chaser = new ChaseCamera(cam, player, props);
+		chaser = new ChaseCamera(cam, battleShip, props);
 		chaser.setMaxDistance(8);
 		chaser.setMinDistance(2);
 	}
@@ -356,7 +355,7 @@ public class TestBaseGame extends BaseGame {
 	 * 
 	 */
 	private void buildInput() {
-		input = new FlagRushHandler(player, settings.getRenderer());
+		input = new FlagRushHandler(battleShip, settings.getRenderer());
 	}
 
 	/**
