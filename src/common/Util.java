@@ -70,7 +70,7 @@ public class Util {
 		return v;
 	}
 	
-	public Quaternion getQuaternion(byte[] b, int off, Quaternion q) {
+	public static Quaternion getQuaternion(byte[] b, int off, Quaternion q) {
 		q.w = getFloat(b,off);
 		q.x = getFloat(b,off+4);
 		q.y = getFloat(b,off+8);

@@ -70,11 +70,10 @@ public class PacketDataFactory {
 				OffsetConstants.PLAYER_POSITION_ID_OFFSET);
 		Util.put(s.getLocalTranslation(), b,
 				OffsetConstants.PLAYER_POSITION_POS_OFFSET);
-		Util.put(s.getLocalRotation().getRotationColumn(2), b,
+		Util.put(s.getLocalRotation(), b,
+				OffsetConstants.PLAYER_POSITION_ORT_OFFSET);
+		Util.put(s.getMovement(), b,
 				OffsetConstants.PLAYER_POSITION_DIR_OFFSET);
-		Util
-				.put(s.getMovement(), b,
-						OffsetConstants.PLAYER_POSITION_ORT_OFFSET);
 
 		return b;
 	}

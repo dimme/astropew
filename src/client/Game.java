@@ -4,6 +4,7 @@ import java.util.PriorityQueue;
 
 import com.jme.app.SimpleGame;
 import com.jme.light.PointLight;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Spatial;
@@ -58,9 +59,9 @@ public class Game extends SimpleGame {
 		super.finish();
 	}
 
-	public void updatePosition(Vector3f pos, Vector3f dir, Vector3f ort,
+	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir,
 			int id, long tick) {
-		addCommand(new UpdatePositionCommand(id, pos, dir, ort, tick));
+		addCommand(new UpdatePositionCommand(id, pos, ort, dir, tick));
 	}
 
 	protected synchronized void addCommand(Command c) {

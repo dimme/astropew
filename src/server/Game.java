@@ -7,6 +7,9 @@ import java.util.logging.Logger;
 import server.clientdb.Client;
 
 import com.jme.app.SimpleHeadlessApp;
+import com.jme.math.Matrix3f;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
 import com.jme.system.AbstractGameSettings;
 import com.jme.system.GameSettings;
 import common.world.Ship;
@@ -59,9 +62,13 @@ public class Game extends SimpleHeadlessApp {
 	public void simpleUpdate() {
 		final long old = frameTime;
 		frameTime = timer.getTime();
+		float delta = ticklength * (frameTime - old);
+		Matrix3f rot = new Matrix3f();
+		rot.fromAngleNormalAxis(delta, Vector3f.UNIT_Y);
 		for (final Ship s : logic.getShips()) {
+			s.getLocalRotation().apply(rot);
 			s.getLocalTranslation().addLocal(
-					s.getMovement().mult(ticklength * (frameTime - old)));
+					s.getMovement().mult(delta));
 		}
 	}
 
