@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import common.Util;
 import common.network.PacketReaderThread;
 
 import server.clientdb.Client;
@@ -18,7 +19,7 @@ public class PacketSender extends common.network.PacketSender {
 	}
 	
 	public void send(byte[] data, Client c) {
-		send(data, c.udpc);
+		send(data, c.udpc.dgp);
 	}
 	
 	public void controlledSend(byte[] data, Client c) {
@@ -41,7 +42,7 @@ public class PacketSender extends common.network.PacketSender {
 				{
 					c.udpc.dgp.setData(data);
 					send(c.udpc.dgp);
-					c.udpc.dgp.setData(nullbytes, 0, 0);
+					c.udpc.dgp.setData(Util.nullbytes, 0, 0);
 				}
 			}
 		}

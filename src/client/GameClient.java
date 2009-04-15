@@ -1,7 +1,6 @@
 package client;
 
 
-import common.CatastrophicException;
 import common.ClientPacketType;
 import common.network.PacketReaderThread;
 
@@ -19,10 +18,8 @@ public class GameClient {
 	private PacketReaderThread reader;
 	
 	private DatagramSocket socket;
-	private boolean isInitialized;
 	
 	public GameClient(SocketAddress address, String playername) {
-		isInitialized = false;
 		
 		try {
 			new Vector3f();
@@ -36,38 +33,20 @@ public class GameClient {
 			Game game = new Game();
 			socket = new DatagramSocket();
 			reader = new PacketReaderThread(socket);
+			sender = new PacketSender(socket, address, reader);
 			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
-			sender = new PacketSender(socket, address, reader);
+			reader.addPacketObserver(new AckingObserver(sender, address));
 			reader.start();
 			connect(playername);
-			reader.addPacketObserver(new AckingObserver(sender, sender.sendPacket));
 		} catch (SocketException ex) {
 			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
 			throw new RuntimeException(ex);
 		}
 	}
-
-	public synchronized void initialized( SocketAddress newAddr) throws CatastrophicException {
-		try {
-			sender.setSocketAddress(newAddr);
-			isInitialized = true;
-			notify();
-		} catch (SocketException e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-			throw new CatastrophicException(e);
-		}
-	}
 	
-	private synchronized void connect(String playername) {
-		while(!isInitialized ) {
-			try {
-				sender.send(playername.getBytes());
-				wait(5000);
-			} catch (InterruptedException e) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
-			}
-		}
+	private void connect(String playername) {
+		sender.controlledSend(PacketDataFactory.createJoin(playername));
 	}
 	
 	public void stop() {

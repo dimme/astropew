@@ -12,6 +12,7 @@ public class Util {
 	public static final byte CONTROLLED_PACKET_MASK = (byte)0x80; 
 	public static final byte CONTROLLED_PACKET_UNMASK = (byte)0x7F; 
 	public static final int PACKET_SIZE = 65000;
+	public static final byte[] nullbytes = new byte[1];
 	
 	
 	/**
@@ -169,5 +170,14 @@ public class Util {
 		
 		sb.append( c[j] );
 		sb.append( c[i - j*16] );
+	}
+	
+	public static String hex(byte[] b) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (byte bb : b) {
+			hex(bb, sb);
+		}
+		return sb.toString();
 	}
 }

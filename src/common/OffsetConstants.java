@@ -1,11 +1,9 @@
-package common.network;
+package common;
 
 public interface OffsetConstants {
 
 	//SHARED
 	
-	public static final byte PACKET_TYPE_OFFSET = 0;
-	public static final byte SEQUENCE_NUMBER_OFFSET = 1;
 	
 	//FROM SERVER
 	

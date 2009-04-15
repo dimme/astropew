@@ -11,12 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.CatastrophicException;
+import common.Util;
 
 public class PacketSender {
 
 	private DatagramSocket sock;
-	private ExecutorService exec;
 	private DeliveryService dserv;
+	ExecutorService exec;
 	
 	public PacketSender(PacketReaderThread reader) throws SocketException {
 		this(new DatagramSocket(), reader);
@@ -29,8 +30,8 @@ public class PacketSender {
 		reader.addPacketObserver(dserv);
 	}
 	
-	public void send(byte[] data, UDPConnection udpc) {
-		addTask( new SendTask(data, udpc) );
+	public void send(byte[] data, DatagramPacket dgp) {
+		addTask( new SendTask(data, dgp) );
 	}
 	
 	public void controlledSend(byte[] data, UDPConnection udpc) {
@@ -52,7 +53,6 @@ public class PacketSender {
 
 	
 	protected abstract class AbstractSendTask implements Runnable {
-		protected final byte[] nullbytes = new byte[1];
 		protected byte[] data;
 		
 		public AbstractSendTask(byte[] data) {
@@ -80,30 +80,32 @@ public class PacketSender {
 	
 	private class SendTask extends AbstractSendTask {
 		
+		protected DatagramPacket dgp;
+		
+		public SendTask(byte[] data, DatagramPacket dgp) {
+			super(data);
+			this.dgp = dgp;
+		}
+		
+		public void perform() throws IOException {
+			dgp.setData(data);
+			send(dgp);
+			dgp.setData(Util.nullbytes, 0, 0);
+		}
+			
+	}
+	
+	private class ControlledSendTask extends AbstractSendTask {
+
 		protected UDPConnection udpc;
 		
-		public SendTask(byte[] data, UDPConnection udpc) {
+		public ControlledSendTask(byte[] data, UDPConnection udpc) {
 			super(data);
 			this.udpc = udpc;
 		}
 		
 		public void perform() throws IOException {
-			udpc.dgp.setData(data);
-			send(udpc.dgp);
-			udpc.dgp.setData(nullbytes, 0, 0);
-		}
-			
-	}
-	
-	private class ControlledSendTask extends SendTask {
-
-		public ControlledSendTask(byte[] data, UDPConnection udpc) {
-			super(data, udpc);
-		}
-		
-		public void perform() throws IOException {
 			dserv.addDelivery(data, udpc);
-			super.perform();
 		}
 	}
 }

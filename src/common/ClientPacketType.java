@@ -22,4 +22,7 @@ public interface ClientPacketType {
 	 */
 	public static final byte PLAYER_MOVEMENT = 65;
 
+
+	public static final byte JOINING = 66;
+
 }

@@ -20,8 +20,10 @@ public class UpdatePositionCommand extends AbstractCommand {
 
 	public void perform(GameLogic logic, Game game) {
 		Ship s = logic.getShip(id);
-		s.setLocalTranslation(pos);
-		s.setMovement(dir);
-		//TODO: orientation!
+		if (s != null) {
+			s.setLocalTranslation(pos);
+			s.setMovement(dir);
+			//TODO: orientation!
+		}
 	}
 }

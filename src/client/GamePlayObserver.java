@@ -7,12 +7,13 @@ import java.util.logging.Logger;
 import com.jme.math.Vector3f;
 
 import common.GameException;
+import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
-import common.network.OffsetConstants;
+import common.network.AbstractPacketObserver;
 import common.network.PacketObserver;
 
-public class GamePlayObserver implements PacketObserver {
+public class GamePlayObserver extends AbstractPacketObserver {
 	
 	private GameClient client;
 	private Game game;
@@ -24,19 +25,18 @@ public class GamePlayObserver implements PacketObserver {
 	}
 	
 	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
-		byte unmaskedData = (byte) (data[OffsetConstants.PACKET_TYPE_OFFSET] & Util.CONTROLLED_PACKET_UNMASK);
-		if(unmaskedData == ServerPacketType.INITIALIZER) {
+		byte packettype = packetType(data);
+		if(packettype == ServerPacketType.INITIALIZER) {
 			String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
 			int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
 			game.addPlayer(id, name);
-			client.initialized(addr);
-		} else if(unmaskedData == ServerPacketType.PLAYER_JOINED) {
+		} else if(packettype == ServerPacketType.PLAYER_JOINED) {
 			String name = new String(data, OffsetConstants.PLAYER_JOINED_STRING_OFFSET, data.length - OffsetConstants.PLAYER_JOINED_STRING_OFFSET);
 			int id = Util.getInt(data, OffsetConstants.PLAYER_JOINED_ID_OFFSET);
 			game.addPlayer(id, name);
-		} else if(unmaskedData == ServerPacketType.PLAYER_LEFT) {
+		} else if(packettype == ServerPacketType.PLAYER_LEFT) {
 			//TODO: remove player from system.
-		} else if (unmaskedData == ServerPacketType.PLAYER_POSITION) {
+		} else if (packettype == ServerPacketType.PLAYER_POSITION) {
 			int id = Util.getInt(data, OffsetConstants.PLAYER_POSITION_ID_OFFSET);
 			long tick = Util.getLong(data, OffsetConstants.PLAYER_POSITION_TICK_OFFSET);
 			Vector3f pos = Util.getVector3f(data, OffsetConstants.PLAYER_POSITION_POS_OFFSET, new Vector3f());

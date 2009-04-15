@@ -1,20 +1,23 @@
 package client;
 
+import java.net.DatagramPacket;
 import java.net.SocketAddress;
 
+import common.Util;
 import common.network.PacketSender;
-import common.network.UDPConnection;
 
 public class AckingObserver extends common.network.AckingObserver {
-	private UDPConnection udpc;
 	
-	public AckingObserver(PacketSender ps, UDPConnection udpc){
+	private DatagramPacket dgp;
+	
+	public AckingObserver(PacketSender ps, SocketAddress saddr) {
 		super(ps);
-		this.udpc = udpc;
+		dgp = new DatagramPacket(Util.nullbytes,0);
+		dgp.setSocketAddress(saddr);
 	}
 
-	protected UDPConnection getUDPConnection(SocketAddress saddr) {
-		return udpc;
+	protected DatagramPacket getDatagramPacket(SocketAddress saddr) {
+		return dgp;
 	}
 
 }

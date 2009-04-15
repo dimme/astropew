@@ -14,15 +14,20 @@ public class PacketSender extends common.network.PacketSender {
 	
 	public PacketSender(DatagramSocket sock, SocketAddress saddr, PacketReaderThread reader) throws SocketException {
 		super(sock, reader);
-		setSocketAddress(saddr);
-	}
-	
-	public void setSocketAddress(SocketAddress addr) throws SocketException {
-		DatagramPacket dgp = new DatagramPacket(new byte[Util.PACKET_SIZE], 0, Util.PACKET_SIZE, addr);
+		DatagramPacket dgp = new DatagramPacket(new byte[Util.PACKET_SIZE], 0, Util.PACKET_SIZE, saddr);
 		sendPacket = new UDPConnection(dgp);
 	}
 	
+	public void setSocketAddress(SocketAddress addr) throws SocketException {
+		sendPacket.dgp.setSocketAddress(addr);
+		
+	}
+	
 	public void send(byte[] data) {
-		send(data, sendPacket);
+		send(data, sendPacket.dgp);
+	}
+	
+	public void controlledSend(byte[] data) {
+		controlledSend(data, sendPacket);
 	}
 }

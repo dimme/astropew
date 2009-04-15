@@ -6,17 +6,18 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.CommonPacketType;
 import common.GameException;
+import common.OffsetConstants;
 
-public class DeliveryService implements PacketObserver {
+public class DeliveryService extends AbstractPacketObserver {
 	private PriorityQueue<Task> tasks;
 	private Map<SocketAddress, UDPConnection> connections;
 	private PacketSender ps;
-	private ExecutorService exec;
 	private Task compareSingleton;
 	
 	private static final long TIMEOUT = 500; 
@@ -25,50 +26,49 @@ public class DeliveryService implements PacketObserver {
 		this.ps = ps;
 		tasks = new PriorityQueue<Task>(91);
 		connections = new HashMap<SocketAddress, UDPConnection>();
-		Thread periodicResend = new Thread() {
-			private long schedule;
-			
-			public void start() {
-				schedule = System.currentTimeMillis();
-				setDaemon(true);
-				super.start();
-			}
-			
-			public void run() {
-				try {
-					while (true) {
-						long curt = System.currentTimeMillis();
-						long diff = schedule-curt;
-						if (diff > 0) {
-							sleep(diff);
-						}
-						
-						exec.submit(new ResendTimedOut());
-						
-						schedule += 50;
-					}
-				} catch (InterruptedException e) {
-					Logger.getLogger(getClass().getName()).log(Level.WARNING, "Periodic resend thread interrupted!", e);
-				}
-			}
-		};
+		Thread periodicResend = new PeriodicResend();
 		periodicResend.start();
 		
-		exec = Executors.newSingleThreadExecutor();
 		compareSingleton = new Task(0, (byte)0, null);
 	}
 	
-	public void stop() {
-		exec.shutdown();
-	}
-	
 	public void addDelivery(byte[] data, UDPConnection udpc) {
-		exec.submit( new New(data, udpc) );
+		ps.exec.submit( new New(data, udpc) );
 	}
 	
 	public void acknowledge(byte seq, SocketAddress saddr) {
 		System.out.println("ack " + seq + " from " + saddr);
-		exec.submit( new Ack(saddr, seq) );
+		ps.exec.submit( new Ack(saddr, seq) );
+	}
+	
+	private class PeriodicResend extends Thread {
+		private long schedule;
+		
+		public void start() {
+			schedule = System.currentTimeMillis();
+			setDaemon(true);
+			super.start();
+		}
+		
+		public void run() {
+			try {
+				while (true) {
+					long curt = System.currentTimeMillis();
+					long diff = schedule-curt;
+					if (diff > 0) {
+						sleep(diff);
+					}
+					
+					ps.exec.submit(new ResendTimedOut());
+					
+					schedule += 50;
+				}
+			} catch (RejectedExecutionException e) {
+				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of resend task: This is NOT a problem if you were shutting down.", e);
+			} catch (InterruptedException e) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Periodic resend thread interrupted!", e);
+			}
+		}
 	}
 	
 	private static class Task implements Comparable<Task> {
@@ -102,6 +102,19 @@ public class DeliveryService implements PacketObserver {
 		}
 	}
 	
+	private void send(Task t) {
+		t.timeout = System.currentTimeMillis()+TIMEOUT;
+		t.left--;
+		if (t.left >= 0) {
+			ps.send(t.udpc.getData(t.seq), t.udpc.dgp);
+			tasks.add( t );
+		} else {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Maximum number of retries reached");
+			System.exit(1);
+			//TODO: inte exit! :D
+		}
+	}
+	
 	private class New implements Runnable {
 		
 		private byte[] data;
@@ -116,8 +129,9 @@ public class DeliveryService implements PacketObserver {
 			try {
 				byte seq = udpc.addControlledPacket(data);
 				Task t = new Task(System.currentTimeMillis()+TIMEOUT, seq, udpc);
-				tasks.add( t );
 				connections.put(udpc.dgp.getSocketAddress(), udpc);
+				
+				send(t);
 			} catch (SendWindowFullException e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 			}
@@ -132,17 +146,8 @@ public class DeliveryService implements PacketObserver {
 			while (t!=null && t.timeout <= curt) {
 				Logger.getLogger(getClass().getName()).log(Level.INFO, "Resending " + t.seq + " to " + t.udpc);
 				tasks.remove(t);
-				t.timeout = System.currentTimeMillis()+TIMEOUT;
-				t.left--;
-				if (t.left >= 0) {
-					ps.send(t.udpc.getData(t.seq), t.udpc);
-					tasks.add( t );
-					t = tasks.peek();
-				} else {
-					Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Maximum number of retries reached");
-					System.exit(1);
-					//TODO: inte exit! :D
-				}
+				send(t);
+				t = tasks.peek();
 			}
 		}
 	}
@@ -171,8 +176,8 @@ public class DeliveryService implements PacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress addr)
 			throws GameException {
-		if (data[OffsetConstants.PACKET_TYPE_OFFSET] == CommonPacketType.ACK) {
-			byte seq = data[OffsetConstants.SEQUENCE_NUMBER_OFFSET];
+		if (packetType(data) == CommonPacketType.ACK) {
+			byte seq = data[1];
 			acknowledge(seq, addr);
 			return true;
 		}

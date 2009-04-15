@@ -1,29 +1,34 @@
 package common.network;
 
+import java.net.DatagramPacket;
 import java.net.SocketAddress;
 
 import common.CommonPacketType;
 import common.GameException;
 import common.Util;
 
-public abstract class AckingObserver implements PacketObserver {
+public abstract class AckingObserver extends AbstractPacketObserver {
 	protected PacketSender ps;
+	
+	//TODO: template method för executors (fånga throwable)
+	//TODO: Scheduled executor - efterforska möjlighet
+	//TODO: Ta bort clientframe
+	//TODO: ACK-filter
+	//TODO: Gör en TODO-fil. :)
 
 	public AckingObserver(PacketSender ps) {
 		this.ps = ps;
 	}
 
 	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
-		if ( ( data[OffsetConstants.PACKET_TYPE_OFFSET] & Util.CONTROLLED_PACKET_MASK ) == Util.CONTROLLED_PACKET_MASK  ) {
+		if ( isControlledPacket(data) ) {
 			byte[] sendData = new byte[2];
 			sendData[0] = CommonPacketType.ACK;
-			sendData[1] = data[OffsetConstants.SEQUENCE_NUMBER_OFFSET];	
-			ps.send(sendData, getUDPConnection(addr));
-			System.out.println("Acking packet...");
+			sendData[1] = data[1];	
+			ps.send(sendData, getDatagramPacket(addr));
 		}
 		return false;
 	}
 	
-	protected abstract UDPConnection getUDPConnection(SocketAddress saddr);
-
+	protected abstract DatagramPacket getDatagramPacket(SocketAddress saddr);
 }
