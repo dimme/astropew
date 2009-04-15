@@ -21,6 +21,8 @@ public class Game extends SimpleHeadlessApp {
 	private long frameTime = 0;
 	private float ticklength;
 	private final GameLogic logic;
+	
+	private static final long FRAME_SPACING = 100;
 
 	public Game(PacketSender ps) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
@@ -43,7 +45,7 @@ public class Game extends SimpleHeadlessApp {
 
 	public void simpleRender() {
 		long cur = System.currentTimeMillis();
-		while (last + 10 > cur) {
+		while (last + FRAME_SPACING > cur) {
 			try {
 				Thread.sleep(1);
 			} catch (final InterruptedException e) {
@@ -53,7 +55,7 @@ public class Game extends SimpleHeadlessApp {
 			}
 			cur = System.currentTimeMillis();
 		}
-		last += 10;
+		last += FRAME_SPACING;
 		ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 	}
 
