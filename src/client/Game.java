@@ -13,4 +13,5 @@ public interface Game {
 
 	public abstract void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick);
 	
+	public abstract void startInThread();
 }

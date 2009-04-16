@@ -1,11 +1,11 @@
-/*package client;
+package client;
 
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.jme.app.BaseGame;
 import com.jme.app.FixedLogicrateGame;
+import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.light.PointLight;
@@ -13,31 +13,59 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Spatial;
+import com.jme.scene.Node;
+import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
+import com.jme.system.PropertiesGameSettings;
 import com.jme.util.Timer;
+
+import common.world.Ship;
 
 public class FlyingGame extends FixedLogicrateGame implements Game {
 
 	protected final PriorityQueue<Command> commandQueue;
 	protected final GameLogic logic;
-	protected GameClient gc;
+	protected final GameClient gc;
 	protected Camera cam;
+	protected final Player self;
+	protected final Node rootnode;
+	protected final int tps = 10;
+	protected final float ticklength = 1f/tps;
+	private InputHandler inputHandler;
 
-	public FlyingGame() {
+	public FlyingGame(int id, String name, GameClient gc) {
+		super();
+		this.gc = gc;
 		commandQueue = new PriorityQueue<Command>(51);
-		logic = new GameLogic();
+		rootnode = new Node("root");
+		self = new Player(name, id);
+		logic = new GameLogic(self);
+		setConfigShowMode(ConfigShowMode.AlwaysShow);
 	}
 
 	protected void cleanup() {
-		// TODO Auto-generated method stub
+		gc.stop();
 	}
 
 	protected void initGame() {
+		setLogicTicksPerSecond(tps);
+		
+		
+		final ZBufferState buf = display.getRenderer().createZBufferState();
+		buf.setEnabled(true);
+		buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
+		rootnode.setRenderState(buf);
+
+		final CullState cs = display.getRenderer().createCullState();
+		cs.setCullFace(CullState.Face.Back);
+		rootnode.setRenderState(cs);
+		
+		// LIGHTS
 		final LightState ltst = display.getRenderer().createLightState();
 		ltst.setEnabled(true);
 
@@ -49,11 +77,16 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 
 		ltst.attach(lt);
 
-		rootNode.setRenderState(ltst);
+		rootnode.setRenderState(ltst);
+		
+		addPlayer(self);
+		inputHandler = new FlyingGameInputHandler(self.getShip());
+		
+		rootnode.updateRenderState();
 	}
 
 	protected void initSystem() {
-		// store the settings information
+		
 		int width = settings.getWidth();
 		int height = settings.getHeight();
 		int depth = settings.getDepth();
@@ -64,6 +97,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 
 		try {
 			display = DisplaySystem.getDisplaySystem(settings.getRenderer());
+			display.setTitle("AstroPew");
 			display.createWindow(width, height, depth, freq, fullscreen);
 
 			cam = display.getRenderer().createCamera(width, height);
@@ -77,7 +111,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 
 		// initialize the camera
 		cam.setFrustumPerspective(45.0f, (float) width / (float) height, 1, 5000);
-		cam.setLocation(new Vector3f(200, 1000, 200));
+		cam.setLocation(new Vector3f(0, 0, 10));
+		cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
 
 		// Signal that we've changed our camera's location/frustum. 
 		cam.update();
@@ -87,78 +122,93 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		KeyBindingManager.getKeyBindingManager().set("exit", KeyInput.KEY_ESCAPE);
 	}
 
-	@Override
 	protected void reinit() {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("I hope this method isn't called... ");
 	}
 
-	@Override
 	protected void render(float percentWithinTick) {
-		// TODO Auto-generated method stub
-		
+		display.getRenderer().clearBuffers();
+		display.getRenderer().draw(rootnode);
+		//System.out.println("render " + percentWithinTick);
 	}
 
-	@Override
 	protected void update(float interpolation) {
-		// TODO Auto-generated method stub
+		Command c;
+		synchronized (this) {
+			while (!commandQueue.isEmpty()) {
+				c = commandQueue.remove();
+				c.perform(this);
+			}
+		}
+		inputHandler.update(ticklength);
+		System.out.println(self.getShip().getMovement());
+		self.getShip().getLocalTranslation().addLocal(self.getShip().getMovement().mult(ticklength));
 		
+		rootnode.updateGeometricState(interpolation, true);
+		
+		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
+			finished = true;
+		}
+		System.out.println("update ");
 	}
 
-	@Override
 	protected GameSettings getNewSettings() {
-		// TODO Auto-generated method stub
-		return null;
+		PropertiesGameSettings gs =  new PropertiesGameSettings("properties.cfg");
+		gs.load();
+		
+		return gs;
 	}
 
-	@Override
+	public synchronized void addCommand(Command cmd) {
+		commandQueue.add(cmd);
+		
+	}
+
 	public void addPlayer(int id, String name) {
-		// TODO Auto-generated method stub
+		addPlayer( new Player(name, id) );
+	}
+	
+	private void addPlayer(Player p) {
+		Ship s = createShip(p);
+		logic.addShip(s);
+	}
+
+	private Ship createShip(Player p) {
+		final Ship s = new Ship(p);
 		
-	}
-
-	@Override
-	public void addSelf(int id, String name) {
-		// TODO Auto-generated method stub
+		final MaterialState ms = display.getRenderer().createMaterialState();
+		ms.setDiffuse(s.getColor());
+		ms.setEmissive(s.getColor().multLocal(0.2f));
+		ms.setAmbient(s.getColor().multLocal(0.1f));
+		s.setRenderState(ms);
+		rootnode.attachChild(s);
 		
+		return s;
 	}
 
-	@Override
-	public void attachToRoot(Spatial s) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public MaterialState createMaterialState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void removeFromRoot(Spatial s) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void removePlayer(int id) {
-		// TODO Auto-generated method stub
-		
+		Ship removed = logic.removeShip(logic.getPlayer(id));
+		removed.removeFromParent();
 	}
 
-	@Override
-	public void setGameClient(GameClient gc) {
-		// TODO Auto-generated method stub
-		
+	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick) {
+		final Ship s = logic.getShip(id);
+		if (s != null) {
+			if (s.shouldUpdate(tick)) {
+				s.setLocalTranslation(pos);
+				s.setMovement(dir);
+				s.setLocalRotation(ort);
+			}
+		}
 	}
 
-	@Override
-	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir,
-			int id, long tick) {
-		// TODO Auto-generated method stub
-		
+	public void startInThread() {
+		final Thread t = new Thread() {
+			public void run() {
+				FlyingGame.this.start();
+			}
+		};
+		t.start();
 	}
 	
-	
-}*/
+}

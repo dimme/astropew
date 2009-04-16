@@ -23,13 +23,13 @@ public class InitializeObserver implements PacketObserver {
 	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException{
 		final byte packettype = Util.packetType(data);
 		if (packettype == ServerPacketType.INITIALIZER) {
-			final String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length
-												- OffsetConstants.INITIALIZER_STRING_OFFSET);
+			final String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
 			final int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
 			try {
-				final Game game = new DumbDummySenderGame(id, name, client);
+				final Game game = new FlyingGame(id, name, client);
 				reader.removePacketObserver(this);
 				reader.addPacketObserver( new GamePlayObserver(client, game) );
+				game.startInThread();
 			} catch (Exception e) {
 				throw new CatastrophicException(e);
 			}

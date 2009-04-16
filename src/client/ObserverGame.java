@@ -26,12 +26,6 @@ public class ObserverGame extends SimpleGame implements Game {
 		logic = new GameLogic(self);
 
 		setConfigShowMode(ConfigShowMode.ShowIfNoConfig);
-		final Thread t = new Thread() {
-			public void run() {
-				ObserverGame.this.start();
-			}
-		};
-		t.start();
 	}
 
 	protected void simpleInitGame() {
@@ -100,10 +94,21 @@ public class ObserverGame extends SimpleGame implements Game {
 	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick) {
 		final Ship s = logic.getShip(id);
 		if (s != null) {
-			s.setLocalTranslation(pos);
-			s.setMovement(dir, tick);
-			s.setLocalRotation(ort);
+			if (s.shouldUpdate(tick)) {
+				s.setLocalTranslation(pos);
+				s.setMovement(dir);
+				s.setLocalRotation(ort);
+			}
 		}
+	}
+
+	public void startInThread() {
+		final Thread t = new Thread() {
+			public void run() {
+				ObserverGame.this.start();
+			}
+		};
+		t.start();
 	}
 
 }

@@ -63,7 +63,7 @@ public class DumbDummySenderGame extends ObserverGame {
 			
 			s.setLocalTranslation(shot.pos);
 			s.setLocalRotation(shot.ort);
-			s.setMovement(shot.dir, Long.MAX_VALUE);
+			s.setMovement(shot.dir);
 		
 			byte[] data = PacketDataFactory.createPlayerUpdate(System.currentTimeMillis(), s);
 			try {

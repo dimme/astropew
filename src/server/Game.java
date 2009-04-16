@@ -49,7 +49,7 @@ public class Game extends SimpleHeadlessApp {
 
 	public void simpleRender() {
 		long cur = System.currentTimeMillis();
-		ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
+		//ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 		while (last + FRAME_SPACING > cur) {
 			try {
 				Thread.sleep(1);

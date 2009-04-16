@@ -16,17 +16,15 @@ public abstract class MobileObject extends WorldObject {
 		return movement;
 	}
 
-	public void setMovement(Vector3f movement, Long pointInTime) {
-		if ( checkTick(pointInTime) ){
-			this.movement = movement;
-		}
+	public void setMovement(Vector3f movement) {
+		this.movement = movement;
 	}
 	
-	public boolean checkTick(long pointInTime){
-		if ( lastUpdate > pointInTime ) {
+	public boolean shouldUpdate(long newPointInTime){
+		if ( lastUpdate > newPointInTime ) {
 			return false;
 		}
-		lastUpdate = pointInTime;
+		lastUpdate = newPointInTime;
 		return true;
 	}
 }

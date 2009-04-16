@@ -18,7 +18,7 @@ public class GameClient {
 
 	private DatagramSocket socket;
 
-	public GameClient(String gameclass, SocketAddress address, String playername, boolean dataoutput) throws ClassNotFoundException {
+	public GameClient(SocketAddress address, String playername, boolean dataoutput) {
 
 		try {
 			new Vector3f();
