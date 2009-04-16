@@ -11,7 +11,7 @@ import com.jme.math.Vector3f;
 
 import common.world.Ship;
 
-public class DumbDummySenderGame extends Game {
+public class DumbDummySenderGame extends ObserverGame {
 
 	private long frameTime = 0;
 	private float ticklength;
