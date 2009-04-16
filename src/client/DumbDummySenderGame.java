@@ -4,6 +4,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
@@ -21,12 +23,22 @@ public class DumbDummySenderGame extends Game {
 		snaps = new Snapshot[100];
 		timediff = 0.2f;
 		double ang;
+		
 		for (int i=0; i<snaps.length; i++) {
 			ang = i * 8 * Math.PI / snaps.length;
-			snaps[i] = new Snapshot(
-					new Vector3f(0, 4*(float)Math.sin(ang), -(float)ang),
-					new Quaternion(),
-					new Vector3f());
+			Vector3f pos = new Vector3f(0, 4*(float)Math.sin(ang), -(float)ang);
+			Quaternion ort;
+			Vector3f dir = new Vector3f(10,0,0);
+			if (i == 0) {
+				//ort = new Quaternion((float)Math.random(),(float)Math.random(),(float)Math.random(),(float)Math.random());
+				ort = new Quaternion(new float[] {0,FastMath.HALF_PI,0});
+			} else {
+				Matrix3f rot = new Matrix3f();
+				ort = new Quaternion(snaps[i-1].ort);
+				rot.fromAngleNormalAxis(0.2f, Vector3f.UNIT_Z);
+				ort.apply(rot);
+			}
+			snaps[i] = new Snapshot(pos,ort,dir);
 		}
 	}
 	
@@ -79,8 +91,10 @@ public class DumbDummySenderGame extends Game {
 		public Snapshot interpolate(Snapshot newshot, float time, float timediff) {
 			time = time % timediff;
 			Vector3f p = pos.add( newshot.pos.subtract(pos).mult(time/timediff) );
+			Quaternion o = ort.add( newshot.ort.subtract(ort).mult(time/timediff) );
+			Vector3f d = dir.add( newshot.dir.subtract(dir).mult(time/timediff) );
 			
-			return new Snapshot(p, ort, dir);
+			return new Snapshot(p, o, d);
 		}
 	}
 	
