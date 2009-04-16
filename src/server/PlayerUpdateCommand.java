@@ -1,5 +1,7 @@
 package server;
 
+import java.net.SocketAddress;
+
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
@@ -13,18 +15,18 @@ public class PlayerUpdateCommand extends AbstractCommand {
 	private Vector3f pos;
 	private Quaternion ort;
 	private Vector3f dir;
-	private int id;
+	private SocketAddress sender;
 	
-	public PlayerUpdateCommand(int id, Vector3f pos, Quaternion ort, Vector3f dir, long time) {
+	public PlayerUpdateCommand(SocketAddress sender, Vector3f pos, Quaternion ort, Vector3f dir, long time) {
 		super(time);
 		this.pos=pos;
 		this.ort=ort;
 		this.dir=dir;
-		this.id=id;
+		this.sender=sender;
 	}
 
 	public void perform(ClientDB cdb, float delta) {
-		Client c = cdb.getClient(id);
+		Client c = cdb.getClient(sender);
 		if (c != null) {
 			Ship s = c.getShip();
 			

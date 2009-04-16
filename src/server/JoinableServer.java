@@ -30,7 +30,7 @@ public class JoinableServer extends Thread {
 
 			final Game game = new Game(ps, cdb);
 
-			final PacketDecoder pd = new PacketDecoder(game, cdb);
+			final PacketDecoder pd = new PacketDecoder(game);
 
 			pread.addPacketObserver(pd);
 			pread.addPacketFilter(new AckingFilter(ps, cdb));

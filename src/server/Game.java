@@ -27,7 +27,7 @@ public class Game extends SimpleHeadlessApp {
 	private final GameLogic logic;
 	private final PriorityQueue<Command> commandQueue;
 	
-	private static final long FRAME_SPACING = 100;
+	private static final long FRAME_SPACING = 10;
 
 	public Game(PacketSender ps, ClientDB cdb) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
@@ -114,20 +114,22 @@ public class Game extends SimpleHeadlessApp {
 	public void clientLeaving(SocketAddress saddr) {
 		//TODO: move to command
 		final Client removed = cdb.removeClient(saddr);
+		
+		if (removed != null) {
+			final Ship s = logic.removeShip(removed);
+			s.removeFromParent();
 
-		final Ship s = logic.removeShip(removed);
-		s.removeFromParent();
-
-		final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
-		ps.sendToAll(data);
+			final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
+			ps.sendToAll(data);
+		}
 	}
 
 	public GameSettings getNewSettings() {
 		return new ServerGameSettings();
 	}
 
-	public void updatePlayer(int id, Vector3f pos, Quaternion ort, Vector3f dir, long time) {
-		addCommand(new PlayerUpdateCommand(id, pos, ort, dir, time) );
+	public void updatePlayer(SocketAddress sender, Vector3f pos, Quaternion ort, Vector3f dir, long time) {
+		addCommand(new PlayerUpdateCommand(sender, pos, ort, dir, time) );
 	}
 
 	private synchronized void addCommand(Command cmd) {
