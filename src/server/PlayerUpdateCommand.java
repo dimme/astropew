@@ -25,11 +25,13 @@ public class PlayerUpdateCommand extends AbstractCommand {
 
 	public void perform(ClientDB cdb, float delta) {
 		Client c = cdb.getClient(id);
-		Ship s = c.getShip();
-		
-		s.setLocalTranslation(pos);
-		s.setLocalRotation(ort);
-		s.setMovement(dir, time);
+		if (c != null) {
+			Ship s = c.getShip();
+			
+			s.setLocalTranslation(pos);
+			s.setLocalRotation(ort);
+			s.setMovement(dir, time);
+		}
 	}
 
 }

@@ -67,14 +67,12 @@ public class PacketReaderThread extends Thread {
 				} catch (final CatastrophicException e) {
 					throw e;
 				} catch (final GameException e) {
-					Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-							e.getMessage(), e);
+					Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 	
 			if (!handled) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING,
-						"Unhandled packet type: " + data[0]);
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
 			}
 		}
 	}
@@ -96,18 +94,14 @@ public class PacketReaderThread extends Thread {
 				socket.receive(readPacket);
 				final byte[] data = new byte[readPacket.getLength()];
 				System.arraycopy(readPacket.getData(), 0, data, 0, data.length);
-				exec
-						.submit(new NotifyTask(data, readPacket
-								.getSocketAddress()));
+				exec.submit(new NotifyTask(data, readPacket.getSocketAddress()));
 			} catch (final IOException ex) {
 				if (running) {
-					Logger.getLogger(PacketReaderThread.class.getName()).log(
-							Level.SEVERE, ex.getMessage(), ex);
+					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 				}
 			} catch (final RejectedExecutionException e) {
 				if (running) {
-					Logger.getLogger(PacketReaderThread.class.getName()).log(
-							Level.SEVERE, e.getMessage(), e);
+					Logger.getLogger(PacketReaderThread.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		}

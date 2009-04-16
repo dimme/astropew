@@ -62,14 +62,9 @@ public class DeliveryService implements PacketObserver {
 					schedule += 50;
 				}
 			} catch (final RejectedExecutionException e) {
-				Logger
-						.getLogger(getClass().getName())
-						.log(
-								Level.INFO,
-								"Rejected execution of resend task: This is NOT a problem if you were shutting down.");
+				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of resend task: This is NOT a problem if you were shutting down.");
 			} catch (final InterruptedException e) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING,
-						"Periodic resend thread interrupted!", e);
+				Logger.getLogger(getClass().getName()).log(Level.WARNING,"Periodic resend thread interrupted!", e);
 			}
 		}
 	}
@@ -192,8 +187,7 @@ public class DeliveryService implements PacketObserver {
 		}
 	}
 
-	public boolean packetReceived(byte[] data, SocketAddress addr)
-			throws GameException {
+	public boolean packetReceived(byte[] data, SocketAddress addr) throws GameException {
 		if (Util.packetType(data) == CommonPacketType.ACK) {
 			final byte seq = data[1];
 			acknowledge(seq, addr);

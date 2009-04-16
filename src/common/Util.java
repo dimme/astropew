@@ -237,7 +237,7 @@ public class Util {
 		for (final byte bb : b) {
 			hex(bb, sb);
 			i++;
-			if (i == 8) {
+			if (i == 4) {
 				i = 0;
 				sb.append(' ');
 			}

@@ -1,5 +1,9 @@
 package client;
 
+import java.util.concurrent.RejectedExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme.math.Vector3f;
 
 import common.world.Ship;
@@ -25,18 +29,19 @@ public class DumbDummySenderGame extends Game {
 		frameTime = timer.getTime();
 		float delta = ticklength * (frameTime - old);
 		
-		Ship s = logic.getSelf().getShip();
-		System.out.println("My player is " + logic.getSelf());
-		System.out.println("My ship is " + s);
-		if(s != null) {
+		common.Player self = logic.getSelf();
+		if(self != null) {
+			Ship s = self.getShip();
 			Vector3f mov = new Vector3f(Vector3f.UNIT_Z);
-			mov = mov.mult(delta);
-			s.getLocalTranslation().add(mov);
-			
-			System.out.println(s.getLocalTranslation());
+			mov = mov.mult(-delta);
+			s.getLocalTranslation().addLocal(mov);
 		
 			byte[] data = PacketDataFactory.createPlayerUpdate(System.currentTimeMillis(), s);
-			this.gc.sender.send(data);
+			try {
+				this.gc.sender.send(data);
+			} catch (RejectedExecutionException e) {
+				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of send task: This is NOT a problem if you were shutting down.");
+			}
 		}
 	}
 

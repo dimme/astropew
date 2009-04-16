@@ -17,13 +17,10 @@ public class ConsoleNetworkObserver implements PacketObserver {
 		final byte ptype = Util.packetType(data);
 		
 		if (ptype == ServerPacketType.INITIALIZER) {
-			final String name = new String(data,  
-					OffsetConstants.INITIALIZER_STRING_OFFSET, data.length
-				   -OffsetConstants.INITIALIZER_STRING_OFFSET);
+			final String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length-OffsetConstants.INITIALIZER_STRING_OFFSET);
 			final int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
 			final long randSeed = Util.getLong(data, OffsetConstants.INITIALIZER_RANDOM_SEED_OFFSET);
-			System.out.println(	"Established contact with server. Got id: " + id +
-								". Got name: " + name + ". Got seed: " + randSeed);
+			System.out.println(	"Established contact with server. Got id: " + id + ". Got name: " + name + ". Got seed: " + randSeed);
 		} else if (ptype == ServerPacketType.PLAYER_LEFT) {
 			final int lid = Util.getInt(data, OffsetConstants.PLAYER_LEFT_ID_OFFSET);
 			System.out.println("Player Left. ID = " + lid);
@@ -44,12 +41,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 		} else if (ptype == ServerPacketType.PLAYER_POSITIONS) {
 			//No need for much here since we see them move
 		} else if (ptype == ServerPacketType.MESSAGE) {
-			System.out.println("Recieved msg: " + new String(data,
-									OffsetConstants.MESSAGE_STRING_OFFSET, data.length
-								   -OffsetConstants.MESSAGE_STRING_OFFSET));
-		} else {
-			 System.out.println("Unhandled packet type: " + ptype +
-			 ", length: " + data.length + ". Data: "+Util.hex(data)); 
+			System.out.println("Recieved msg: " + new String(data,OffsetConstants.MESSAGE_STRING_OFFSET, data.length-OffsetConstants.MESSAGE_STRING_OFFSET));
 		}
 		return false;
 	}

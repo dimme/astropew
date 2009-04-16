@@ -25,9 +25,7 @@ public class GameLogic extends common.GameLogic {
 
 	public void addShip(Ship s) {
 		final Player owner = s.getOwner();
-		if( self != null && owner.getID() != self.getID() ) {
-			players.put(owner.getID(), owner);
-		}
+		players.put(owner.getID(), owner);
 		super.addShip(s);
 	}
 
@@ -41,8 +39,13 @@ public class GameLogic extends common.GameLogic {
 		return shiptable.get(players.get(id));
 	}
 	
-	public void addSelf(int id, String name) {
-		self = new client.Player(name, id);
+	/**
+	 * Don't call this unless you're sure the player exists!
+	 * @param id
+	 * @param name
+	 */
+	public void setSelf(int id) {
+		self = getPlayer(id);
 	}
 
 }
