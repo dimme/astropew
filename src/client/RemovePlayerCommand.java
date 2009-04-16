@@ -1,6 +1,5 @@
 package client;
 
-import common.world.Ship;
 
 public class RemovePlayerCommand extends AbstractCommand {
 	private final int id;

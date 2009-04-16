@@ -3,8 +3,6 @@ package client;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
-import common.world.Ship;
-
 public class UpdatePositionCommand extends AbstractCommand {
 
 	private final Vector3f pos;

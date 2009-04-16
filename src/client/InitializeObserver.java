@@ -2,9 +2,6 @@ package client;
 
 import java.net.SocketAddress;
 
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-
 import common.CatastrophicException;
 import common.GameException;
 import common.OffsetConstants;

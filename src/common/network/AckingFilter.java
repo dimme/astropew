@@ -53,7 +53,7 @@ public abstract class AckingFilter implements PacketFilter {
 		 * @return true if seq was inside the window
 		 */
 		public boolean received(byte seq) {
-			int diff = oldestPending - (int)seq;
+			int diff = oldestPending - seq;
 			if (diff < 0) {
 				diff += 256;
 			}

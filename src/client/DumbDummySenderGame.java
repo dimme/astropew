@@ -8,7 +8,6 @@ import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-
 import common.world.Ship;
 
 public class DumbDummySenderGame extends ObserverGame {
@@ -52,7 +51,6 @@ public class DumbDummySenderGame extends ObserverGame {
 		
 		final long old = frameTime;
 		frameTime = timer.getTime();
-		float delta = ticklength * (frameTime - old);
 		float time = ticklength * frameTime;
 		
 		if(self != null) {

@@ -1,8 +1,5 @@
 package client;
 
-import com.jme.scene.state.MaterialState;
-
-import common.world.Ship;
 
 public class AddPlayerCommand extends AbstractCommand {
 

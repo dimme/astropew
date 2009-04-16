@@ -2,11 +2,8 @@ package server;
 
 import java.net.SocketAddress;
 
-import server.clientdb.ClientDB;
-
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-
 import common.ClientPacketType;
 import common.OffsetConstants;
 import common.Util;

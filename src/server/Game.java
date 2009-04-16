@@ -1,6 +1,5 @@
 package server;
 
-import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
@@ -10,10 +9,8 @@ import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
 import com.jme.app.SimpleHeadlessApp;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.system.AbstractGameSettings;
 import com.jme.system.GameSettings;
 import common.world.Ship;
 
