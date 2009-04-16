@@ -3,5 +3,6 @@ package todo;
 public class Todo {
 	// TODO: Scheduled executor - efterforska möjlighet - iställt för periodic resend
 	// TODO: Spelare ska fråga efter spelarinfo om de får data om en okänd spelare.
-	// TODO: vad händer som servern får paket från en icke-klient?
+	// TODO: Bara commands ska komma åt (vissa) grejor i Game, t.ex. addPlayer()
+	// TODO: ExecutorService som kan prioritera (för att kunna lägga till grejor i PacketReaderThread så snabbt som möjligt)
 }

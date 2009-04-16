@@ -10,11 +10,8 @@ public class RemovePlayerCommand extends AbstractCommand {
 		this.id = id;
 	}
 
-	public void perform(GameLogic logic, Game game) {
-
-		final Ship s = logic.getShip(id);
-		game.removeFromRoot(s);
-		logic.removeShip(s);
+	public void perform(Game game) {
+		game.removePlayer(id);
 	}
 
 }

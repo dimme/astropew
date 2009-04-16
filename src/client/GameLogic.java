@@ -10,13 +10,14 @@ public class GameLogic extends common.GameLogic {
 	private final HashMap<Integer, Player> players;
 	private Player self;
 
-	public Player getSelf() {
-		return self;
-	}
-
-	public GameLogic() {
+	public GameLogic(Player self) {
 		super();
 		players = new HashMap<Integer, Player>();
+		this.self = self;
+	}
+	
+	public Player getSelf() {
+		return self;
 	}
 
 	public Player getPlayer(int id) {
@@ -37,15 +38,6 @@ public class GameLogic extends common.GameLogic {
 
 	public Ship getShip(int id) {
 		return shiptable.get(players.get(id));
-	}
-	
-	/**
-	 * Don't call this unless you're sure the player exists!
-	 * @param id
-	 * @param name
-	 */
-	public void setSelf(int id) {
-		self = getPlayer(id);
 	}
 
 }

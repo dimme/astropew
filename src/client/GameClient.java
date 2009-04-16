@@ -18,7 +18,7 @@ public class GameClient {
 
 	private DatagramSocket socket;
 
-	public GameClient(String gameclass, SocketAddress address, String playername, boolean dataoutput) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public GameClient(String gameclass, SocketAddress address, String playername, boolean dataoutput) throws ClassNotFoundException {
 
 		try {
 			new Vector3f();
@@ -35,10 +35,7 @@ public class GameClient {
 				reader.addPacketObserver(new DataOutput());
 			}
 			
-			final Game game = (Game)(Class.forName(gameclass).newInstance());
-			game.setGameClient(this);
-			
-			reader.addPacketObserver(new GamePlayObserver(this, game));
+			reader.addPacketObserver(new InitializeObserver(reader, this));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 			reader.addPacketFilter(new AckingFilter(sender, address));
 			reader.start();

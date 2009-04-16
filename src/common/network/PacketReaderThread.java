@@ -11,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -27,13 +28,22 @@ import common.Util;
  * @author jonsturk
  */
 public class PacketReaderThread extends Thread {
-	private final List<PacketObserver> observers;
-	private final List<PacketFilter> filters;
+	private final ConcurrentLinkedQueue<PacketObserver> observers;
+	private final ConcurrentLinkedQueue<PacketFilter> filters;
 	private final DatagramSocket socket;
 	private final DatagramPacket readPacket;
 	private boolean running;
 	private final ExecutorService exec;
 
+	public PacketReaderThread(DatagramSocket socket) {
+		this.socket = socket;
+		observers = new ConcurrentLinkedQueue<PacketObserver>();
+		filters = new ConcurrentLinkedQueue<PacketFilter>();
+		final byte[] buff = new byte[Util.PACKET_SIZE];
+		readPacket = new DatagramPacket(buff, Util.PACKET_SIZE);
+		exec = Executors.newSingleThreadExecutor();
+	}
+	
 	public void addPacketFilter(PacketFilter pf) {
 		filters.add(pf);
 	}
@@ -72,18 +82,9 @@ public class PacketReaderThread extends Thread {
 			}
 	
 			if (!handled) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
+				//Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
 			}
 		}
-	}
-
-	public PacketReaderThread(DatagramSocket socket) {
-		this.socket = socket;
-		observers = new LinkedList<PacketObserver>();
-		filters = new LinkedList<PacketFilter>();
-		final byte[] buff = new byte[Util.PACKET_SIZE];
-		readPacket = new DatagramPacket(buff, Util.PACKET_SIZE);
-		exec = Executors.newSingleThreadExecutor();
 	}
 
 	public void run() {

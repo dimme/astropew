@@ -18,8 +18,8 @@ public class DumbDummySenderGame extends ObserverGame {
 	private final Snapshot[] snaps;
 	private final float timediff;
 	
-	public DumbDummySenderGame() {
-		super();
+	public DumbDummySenderGame(int id, String name, GameClient gc) {
+		super(id, name, gc);
 		snaps = new Snapshot[100];
 		timediff = 0.2f;
 		double ang;
@@ -43,6 +43,7 @@ public class DumbDummySenderGame extends ObserverGame {
 	}
 	
 	protected void simpleInitGame() {
+		super.simpleInitGame();
 		ticklength = 1f / timer.getResolution();
 	}
 	
@@ -54,7 +55,6 @@ public class DumbDummySenderGame extends ObserverGame {
 		float delta = ticklength * (frameTime - old);
 		float time = ticklength * frameTime;
 		
-		common.Player self = logic.getSelf();
 		if(self != null) {
 			Ship s = self.getShip();
 			
@@ -69,7 +69,7 @@ public class DumbDummySenderGame extends ObserverGame {
 		
 			byte[] data = PacketDataFactory.createPlayerUpdate(System.currentTimeMillis(), s);
 			try {
-				this.gc.sender.send(data);
+				gc.sender.send(data);
 			} catch (RejectedExecutionException e) {
 				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of send task: This is NOT a problem if you were shutting down.");
 			}

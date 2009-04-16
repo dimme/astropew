@@ -10,16 +10,21 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import common.world.Ship;
 
 public class ObserverGame extends SimpleGame implements Game {
 
 	protected GameLogic logic;
 	protected final PriorityQueue<Command> commandQueue;
-	protected GameClient gc;
+	protected final GameClient gc;
+	protected final Player self;
 
-	public ObserverGame() {
+	public ObserverGame(int id, String name, GameClient gc) {
 		commandQueue = new PriorityQueue<Command>(51);
-		logic = new GameLogic();
+		this.gc = gc;
+		
+		self = new Player(name, id);
+		logic = new GameLogic(self);
 
 		setConfigShowMode(ConfigShowMode.ShowIfNoConfig);
 		final Thread t = new Thread() {
@@ -28,10 +33,6 @@ public class ObserverGame extends SimpleGame implements Game {
 			}
 		};
 		t.start();
-	}
-	
-	public void setGameClient(GameClient gc) {
-		this.gc=gc;
 	}
 
 	protected void simpleInitGame() {
@@ -47,76 +48,63 @@ public class ObserverGame extends SimpleGame implements Game {
 		ltst.attach(lt);
 
 		rootNode.setRenderState(ltst);
+		
+		addPlayer(self);
 	}
 
 	protected synchronized void simpleUpdate() {
 		Command c;
 		while (!commandQueue.isEmpty()) {
 			c = commandQueue.remove();
-			c.perform(logic, this);
+			c.perform(this);
 		}
 	}
 
 	/* (non-Javadoc)
-	 * @see client.Game#finish()
+	 * @see client.Game#cleanup()
 	 */
-	public void finish() {
+	public void cleanup() {
 		gc.stop();
-		super.finish();
 	}
 
-	/* (non-Javadoc)
-	 * @see client.Game#updatePosition(com.jme.math.Vector3f, com.jme.math.Quaternion, com.jme.math.Vector3f, int, long)
-	 */
-	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir,
-			int id, long tick) {
-		addCommand(new UpdatePositionCommand(id, pos, ort, dir, tick));
-	}
-
-	protected synchronized void addCommand(Command c) {
+	public synchronized void addCommand(Command c) {
 		commandQueue.add(c);
 	}
 
-	/* (non-Javadoc)
-	 * @see client.Game#addPlayer(int, java.lang.String)
-	 */
+	private Ship createShip(common.Player p) {
+		final Ship s = new Ship(p);
+		
+		final MaterialState ms = display.getRenderer().createMaterialState();
+		ms.setDiffuse(s.getColor());
+		ms.setEmissive(s.getColor().multLocal(0.2f));
+		ms.setAmbient(s.getColor().multLocal(0.1f));
+		s.setRenderState(ms);
+		rootNode.attachChild(s);
+		
+		return s;
+	}
+
 	public void addPlayer(int id, String name) {
-		addCommand(new AddPlayerCommand(id, name));
+		addPlayer( new Player(name, id) );
 	}
 	
-	/* (non-Javadoc)
-	 * @see client.Game#addSelf(int, java.lang.String)
-	 */
-	public void addSelf(int id, String name) {
-		addCommand(new AddSelfCommand(id, name));
+	private void addPlayer(Player p) {
+		Ship s = createShip(p);
+		logic.addShip(s);
 	}
 
-	/* (non-Javadoc)
-	 * @see client.Game#removePlayer(int)
-	 */
 	public void removePlayer(int id) {
-		addCommand(new RemovePlayerCommand(id));
+		Ship removed = logic.removeShip(logic.getPlayer(id));
+		removed.removeFromParent();
 	}
 
-	/* (non-Javadoc)
-	 * @see client.Game#createMaterialState()
-	 */
-	public MaterialState createMaterialState() {
-		return display.getRenderer().createMaterialState();
-	}
-
-	/* (non-Javadoc)
-	 * @see client.Game#attachToRoot(com.jme.scene.Spatial)
-	 */
-	public void attachToRoot(Spatial s) {
-		rootNode.attachChild(s);
-	}
-
-	/* (non-Javadoc)
-	 * @see client.Game#removeFromRoot(com.jme.scene.Spatial)
-	 */
-	public void removeFromRoot(Spatial s) {
-		rootNode.detachChild(s);
+	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick) {
+		final Ship s = logic.getShip(id);
+		if (s != null) {
+			s.setLocalTranslation(pos);
+			s.setMovement(dir, tick);
+			s.setLocalRotation(ort);
+		}
 	}
 
 }

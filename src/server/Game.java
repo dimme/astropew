@@ -27,7 +27,7 @@ public class Game extends SimpleHeadlessApp {
 	private final GameLogic logic;
 	private final PriorityQueue<Command> commandQueue;
 	
-	private static final long FRAME_SPACING = 10;
+	private static final long FRAME_SPACING = 100;
 
 	public Game(PacketSender ps, ClientDB cdb) {
 		setConfigShowMode(ConfigShowMode.NeverShow);

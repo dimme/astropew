@@ -14,10 +14,6 @@ public class Client {
 
 		try {
 			new GameClient("client.DumbDummySenderGame", addr, args[2], false);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
