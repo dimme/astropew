@@ -12,6 +12,14 @@ public class ClientDebug {
 		final int port = Integer.parseInt(args[1]);
 		final SocketAddress addr = new InetSocketAddress(args[0], port);
 
-		new GameClient(addr, args[2], true);
+		try {
+			new GameClient("client.DumbDummySenderGame", addr, args[2], true);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

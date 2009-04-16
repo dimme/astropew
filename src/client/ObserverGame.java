@@ -15,12 +15,11 @@ public class ObserverGame extends SimpleGame implements Game {
 
 	protected GameLogic logic;
 	protected final PriorityQueue<Command> commandQueue;
-	protected final GameClient gc;
+	protected GameClient gc;
 
-	public ObserverGame(GameClient gc) {
+	public ObserverGame() {
 		commandQueue = new PriorityQueue<Command>(51);
 		logic = new GameLogic();
-		this.gc = gc;
 
 		setConfigShowMode(ConfigShowMode.ShowIfNoConfig);
 		final Thread t = new Thread() {
@@ -29,6 +28,10 @@ public class ObserverGame extends SimpleGame implements Game {
 			}
 		};
 		t.start();
+	}
+	
+	public void setGameClient(GameClient gc) {
+		this.gc=gc;
 	}
 
 	protected void simpleInitGame() {

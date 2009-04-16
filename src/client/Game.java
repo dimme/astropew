@@ -23,4 +23,5 @@ public interface Game {
 
 	public abstract void removeFromRoot(Spatial s);
 
+	public void setGameClient(GameClient gc);
 }

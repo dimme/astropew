@@ -18,8 +18,8 @@ public class DumbDummySenderGame extends ObserverGame {
 	private final Snapshot[] snaps;
 	private final float timediff;
 	
-	public DumbDummySenderGame(GameClient gc) {
-		super(gc);
+	public DumbDummySenderGame() {
+		super();
 		snaps = new Snapshot[100];
 		timediff = 0.2f;
 		double ang;

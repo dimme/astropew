@@ -18,30 +18,31 @@ public class GameClient {
 
 	private DatagramSocket socket;
 
-	public GameClient(SocketAddress address, String playername,
-			boolean dataoutput) {
+	public GameClient(String gameclass, SocketAddress address, String playername, boolean dataoutput) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
 		try {
 			new Vector3f();
 		} catch (final NoClassDefFoundError e) {
-			System.err
-					.println("Couldn't find class Vector3f. Please make sure jME_2.0.jar is included in your classpath.");
+			System.err.println("Couldn't find class Vector3f. Please make sure jME_2.0.jar is included in your classpath.");
 			System.exit(1);
 		}
 
 		try {
-			//final Game game = new Game(this);
-			final Game game = new DumbDummySenderGame(this);
 			socket = new DatagramSocket();
 			reader = new PacketReaderThread(socket);
 			sender = new PacketSender(socket, address, reader);
 			if (dataoutput) {
 				reader.addPacketObserver(new DataOutput());
 			}
+			
+			final Game game = (Game)(Class.forName(gameclass).newInstance());
+			game.setGameClient(this);
+			
 			reader.addPacketObserver(new GamePlayObserver(this, game));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 			reader.addPacketFilter(new AckingFilter(sender, address));
 			reader.start();
+			
 			connect(playername);
 		} catch (final SocketException ex) {
 			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE,
