@@ -13,11 +13,13 @@ public class DumbDummySenderGame extends Game {
 
 	private long frameTime = 0;
 	private float ticklength;
-	private Snapshot[] snaps;
+	private final Snapshot[] snaps;
+	private final long timediff;
 	
 	public DumbDummySenderGame(GameClient gc) {
 		super(gc);
-		snaps = new Snapshot[20];
+		snaps = new Snapshot[100];
+		timediff = 200;
 		double ang;
 		for (int i=0; i<snaps.length; i++) {
 			ang = i * 8 * Math.PI / snaps.length;
@@ -44,10 +46,10 @@ public class DumbDummySenderGame extends Game {
 			Ship s = self.getShip();
 			
 			long time = System.currentTimeMillis();
-			Snapshot oldshot = snaps[(int)(time/1000)%snaps.length];
-			Snapshot newshot = snaps[(int)(time/1000+1)%snaps.length];
+			Snapshot oldshot = snaps[(int)(time/timediff)%snaps.length];
+			Snapshot newshot = snaps[(int)(time/timediff+1)%snaps.length];
 			
-			Snapshot shot = oldshot.interpolate(newshot, time, 1000);
+			Snapshot shot = oldshot.interpolate(newshot, time, timediff);
 			
 			s.setLocalTranslation(shot.pos);
 			s.setLocalRotation(shot.ort);
