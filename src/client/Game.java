@@ -14,4 +14,6 @@ public interface Game {
 	public abstract void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick);
 	
 	public abstract void startInThread();
+
+	public abstract void addMissile(Vector3f pos, Vector3f dir);
 }

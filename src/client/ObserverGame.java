@@ -123,4 +123,10 @@ public class ObserverGame extends SimpleGame implements Game {
 		t.start();
 	}
 
+	@Override
+	public void addMissile(Vector3f pos, Vector3f dir) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

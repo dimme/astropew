@@ -25,8 +25,8 @@ public class PlayerUpdateCommand extends AbstractCommand {
 		this.sender=sender;
 	}
 
-	public void perform(ClientDB cdb, float delta) {
-		Client c = cdb.getClient(sender);
+	public void perform(Game g, float delta) {
+		Client c = g.cdb.getClient(sender);
 		if (c != null) {
 			Ship s = c.getShip();
 			
@@ -39,5 +39,4 @@ public class PlayerUpdateCommand extends AbstractCommand {
 			}
 		}
 	}
-
 }

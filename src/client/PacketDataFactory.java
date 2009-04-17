@@ -28,4 +28,17 @@ public class PacketDataFactory {
 
 		return b;
 	}
+	/**
+	 * ClientPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
+	 * Time - long - 8 byte <br>
+	 */
+
+	public static byte[] createFireMissile(long time, Ship s){
+		final byte[] b = new byte[OffsetConstants.FIRE_MISSILE_SIZE];
+		b[0] = ClientPacketType.FIRE_MISSILE;
+		b[1] = 0;
+		Util.put(time + 200, b, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
+		return b;
+	}
 }

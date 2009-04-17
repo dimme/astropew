@@ -15,13 +15,15 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
+
+import common.world.Missile;
 import common.world.Ship;
 
 public class Game extends BaseHeadlessApp {
 
 	private long last = 0;
 	private final PacketSender ps;
-	private final ClientDB cdb;
+	final ClientDB cdb;
 	private long frameTime = 0;
 	private float delta;
 	private final GameLogic logic;
@@ -79,12 +81,19 @@ public class Game extends BaseHeadlessApp {
 	}
 
 	public synchronized void update(float unused) {
+		boolean future = false;
 		final long old = frameTime;
 		frameTime = System.currentTimeMillis();
 		delta = 0.001f * (frameTime - old);
-		while (!commandQueue.isEmpty()) {
+		
+		while (!future && !commandQueue.isEmpty()) {
 			final Command c = commandQueue.remove();
-			c.perform(cdb, delta);
+			if (c.getTime() > frameTime) {
+				future=true;
+				commandQueue.add(c);
+			} else {
+				c.perform(this, delta);
+			}
 		}
 	}
 
@@ -145,5 +154,18 @@ public class Game extends BaseHeadlessApp {
 	}
 
 	protected void reinit() {
+	}
+
+	public void addFireMissileCommand(SocketAddress sender, long t) {
+		addCommand(new FireMissileCommand(sender, t) );
+	}
+
+	public void fireMissile(SocketAddress sender) {
+		Client c = cdb.getClient(sender);
+		if (c != null) {
+			Missile m = new Missile("Missile", c.getShip());
+			rootnode.attachChild(m);
+			ps.sendToAll(PacketDataFactory.createMissile(System.currentTimeMillis(), m));
+		}
 	}
 }

@@ -25,6 +25,7 @@ import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 
+import common.world.Missile;
 import common.world.Ship;
 import common.world.Universe;
 
@@ -40,6 +41,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	protected final float ticklength = 1f/tps;
 	protected long lastRender = 0;
 	private InputHandler inputHandler;
+	private int missileCount = 0;
+	private final int missileSend = 10;
 
 	public FlyingGame(int id, String name, long seed, GameClient gc) {
 		super();
@@ -166,6 +169,11 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		ship.getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
 		ship.setLastUpdate(time);
 		
+		if(missileCount++ == missileSend ){
+			gc.sender.send(PacketDataFactory.createFireMissile(time, ship));
+			missileCount = 0;
+		}
+		
 		gc.sender.send(PacketDataFactory.createPlayerUpdate(time, ship));
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
@@ -232,6 +240,12 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 			}
 		};
 		t.start();
+	}
+
+	public void addMissile(Vector3f pos, Vector3f dir) {
+		Missile m = new Missile("The Destructor 2009k", pos, dir);
+		rootnode.attachChild(m);
+		//TODO: do this by a command instead.
 	}
 	
 	private class PlanetFactory implements common.world.PlanetFactory {

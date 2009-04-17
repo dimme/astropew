@@ -25,9 +25,14 @@ public interface ServerPacketType {
 	public static final byte PLAYER_POSITIONS = 33;
 
 	/**
-	 * Object position and direction
+	 * Sent to all clients when a missile is created <br>
+	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
+	 * Time of Creation - long - 8 bytes <br>
+	 * pos - Vector3f - 12 byte <br>
+	 * dir - Vector3f - 12 byte <br>
 	 */
-	public static final byte OBJECT_POSITION = 34;
+	public static final byte MISSILE = 34;
 
 	/**
 	 * Sent to joining client to acknowledge their joining <br>

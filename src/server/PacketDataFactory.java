@@ -2,12 +2,15 @@ package server;
 
 import java.util.Collection;
 
+import com.jme.math.Vector3f;
+
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
+import common.world.Missile;
 import common.world.Ship;
 
 public class PacketDataFactory {
@@ -116,6 +119,26 @@ public class PacketDataFactory {
 			offset += 5+byteNames[k].length;
 		}
 
+		return b;
+	}
+	/**
+	 * Sent to all clients when a missile is created <br>
+	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
+	 * Time of Creation - long - 8 bytes <br>
+	 * pos - Vector3f - 12 byte <br>
+	 * dir - Vector3f - 12 byte <br>
+	 */
+	public static byte[] createMissile(long time, Missile m) {
+		
+		final byte[] b = new byte[OffsetConstants.MISSILE_SIZE];
+		
+		b[0] = ServerPacketType.MISSILE;
+		b[1] = 0;
+		Util.put(time, b, OffsetConstants.MISSILE_TIME_OFFSET);
+		Util.put(m.getPosition(), b, OffsetConstants.MISSILE_POS_OFFSET);
+		Util.put(m.getMovement(), b, OffsetConstants.MISSILE_DIR_OFFSET);
+					
 		return b;
 	}
 }

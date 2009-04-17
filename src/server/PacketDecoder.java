@@ -35,6 +35,11 @@ public class PacketDecoder implements PacketObserver {
 			Vector3f dir = Util.getVector3f(data, OffsetConstants.PLAYER_UPDATE_DIR_OFFSET, new Vector3f());
 			game.updatePlayer(sender, pos, ort, dir, time);
 			break;
+		case ClientPacketType.FIRE_MISSILE:
+			long t = Util.getLong(data, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
+			game.addFireMissileCommand(sender, t);
+			
+			break;
 		default:
 			return false;
 		}
