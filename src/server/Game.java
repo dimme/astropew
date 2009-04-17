@@ -8,23 +8,26 @@ import java.util.logging.Logger;
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
-import com.jme.app.SimpleHeadlessApp;
+import com.jme.app.BaseHeadlessApp;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.scene.Node;
+import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import common.world.Ship;
 
-public class Game extends SimpleHeadlessApp {
+public class Game extends BaseHeadlessApp {
 
 	private long last = 0;
 	private final PacketSender ps;
 	private final ClientDB cdb;
 	private long frameTime = 0;
-	private float ticklength;
+	private float delta;
 	private final GameLogic logic;
 	private final PriorityQueue<Command> commandQueue;
+	private Node rootnode;
 	
-	private static final long FRAME_SPACING = 100;
+	private static final long FRAME_SPACING = 1000;
 
 	public Game(PacketSender ps, ClientDB cdb) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
@@ -43,19 +46,26 @@ public class Game extends SimpleHeadlessApp {
 		t.start();
 	}
 
-	protected void simpleInitGame() {
-		ticklength = 1f / timer.getResolution();
+	protected void initGame() {
+		rootnode = new Node("root");
+	}
+	
+	protected void initSystem() {
+		display = DisplaySystem.getDisplaySystem( "dummy" );
 	}
 
-	public void simpleRender() {
+	public void render(float unused) {
 		long cur = System.currentTimeMillis();
-		//ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
+		
+		
+		rootnode.updateGeometricState(delta, true);
+		
+		ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 		while (last + FRAME_SPACING > cur) {
 			try {
 				Thread.sleep(1);
 			} catch (final InterruptedException e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-						"Interrupted while sleeping.");
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Interrupted while sleeping.");
 				throw new RuntimeException(e);
 			}
 			cur = System.currentTimeMillis();
@@ -63,21 +73,14 @@ public class Game extends SimpleHeadlessApp {
 		last += FRAME_SPACING;
 	}
 
-	public synchronized void simpleUpdate() {
+	public synchronized void update(float unused) {
 		final long old = frameTime;
-		frameTime = timer.getTime();
-		float delta = ticklength * (frameTime - old);
+		frameTime = System.currentTimeMillis();
+		delta = 0.001f * (frameTime - old);
 		while (!commandQueue.isEmpty()) {
 			final Command c = commandQueue.remove();
 			c.perform(cdb, delta);
 		}
-		/*Matrix3f rot = new Matrix3f();
-		rot.fromAngleNormalAxis(delta, Vector3f.UNIT_Z);
-		for (final Ship s : logic.getShips()) {
-			s.getLocalRotation().apply(rot);
-			s.getLocalTranslation().addLocal(
-					s.getMovement().mult(delta));
-		}*/
 	}
 
 	public void clientJoining(String name, SocketAddress saddr) {
@@ -88,7 +91,7 @@ public class Game extends SimpleHeadlessApp {
 			c = cdb.createClient(name, saddr);
 
 			final Ship s = new Ship(c);
-			rootNode.attachChild(s);
+			rootnode.attachChild(s);
 			logic.addShip(s);
 
 			final byte[] data = PacketDataFactory.createPlayerJoined(c.getID(),
@@ -131,5 +134,11 @@ public class Game extends SimpleHeadlessApp {
 
 	private synchronized void addCommand(Command cmd) {
 		commandQueue.add(cmd);
+	}
+
+	protected void cleanup() {
+	}
+
+	protected void reinit() {
 	}
 }

@@ -22,11 +22,11 @@ public class Ship extends MobileObject {
 		color = ColorRGBA.red;
 
 		final Pyramid shape = new Pyramid("ShipPyramid", 1, 3);
-
 		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
+		shape.getLocalScale().z = 0.3f;
 		attachChild(shape);
 
-		movement = new Vector3f(0, 0, -1f);
+		movement.set(0, 0, -1f);
 	}
 
 }

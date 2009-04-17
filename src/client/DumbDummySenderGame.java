@@ -13,9 +13,8 @@ import common.world.Ship;
 public class DumbDummySenderGame extends ObserverGame {
 
 	private long frameTime = 0;
-	private float ticklength;
 	private final Snapshot[] snaps;
-	private final float timediff;
+	private final double timediff;
 	
 	public DumbDummySenderGame(int id, String name, GameClient gc) {
 		super(id, name, gc);
@@ -43,34 +42,42 @@ public class DumbDummySenderGame extends ObserverGame {
 	
 	protected void simpleInitGame() {
 		super.simpleInitGame();
-		ticklength = 1f / timer.getResolution();
+	}
+	
+	protected void simpleRender() {
+		super.simpleRender();
+		Ship s = self.getShip();
+		byte[] data = PacketDataFactory.createPlayerUpdate(System.currentTimeMillis(), s);
+		try {
+			gc.sender.send(data);
+		} catch (RejectedExecutionException e) {
+			Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of send task: This is NOT a problem if you were shutting down.");
+		}
 	}
 	
 	protected synchronized void simpleUpdate() {
 		super.simpleUpdate();
 		
-		final long old = frameTime;
-		frameTime = timer.getTime();
-		float time = ticklength * frameTime;
+		frameTime = System.currentTimeMillis();
+		double time = 0.001 * frameTime;
 		
-		if(self != null) {
-			Ship s = self.getShip();
-			
-			Snapshot oldshot = snaps[(int)(time/timediff)%snaps.length];
-			Snapshot newshot = snaps[(int)(time/timediff+1)%snaps.length];
-			
-			Snapshot shot = oldshot.interpolate(newshot, time, timediff);
-			
-			s.setLocalTranslation(shot.pos);
-			s.setLocalRotation(shot.ort);
-			s.setMovement(shot.dir);
+		Ship s = self.getShip();
 		
-			byte[] data = PacketDataFactory.createPlayerUpdate(System.currentTimeMillis(), s);
-			try {
-				gc.sender.send(data);
-			} catch (RejectedExecutionException e) {
-				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of send task: This is NOT a problem if you were shutting down.");
-			}
+		double location = (time / timediff) % snaps.length;
+		int old = (int)location;
+		int next = old==snaps.length-1 ? 0 : old+1;
+		
+		Snapshot oldshot = snaps[old];
+		Snapshot newshot = snaps[next];
+		
+		Snapshot shot = oldshot.interpolate(newshot, (float)(location%1));
+		
+		if (s.shouldUpdate(frameTime)) {
+			s.getPosition().set(shot.pos);
+			s.getOrientation().set(shot.ort);
+			s.getMovement().set(shot.dir);
+			s.resetGeometrics();
+			s.setLastUpdate(frameTime);
 		}
 	}
 
@@ -86,11 +93,10 @@ public class DumbDummySenderGame extends ObserverGame {
 			this.pos = pos;
 		}
 
-		public Snapshot interpolate(Snapshot newshot, float time, float timediff) {
-			time = time % timediff;
-			Vector3f p = pos.add( newshot.pos.subtract(pos).mult(time/timediff) );
-			Quaternion o = ort.add( newshot.ort.subtract(ort).mult(time/timediff) );
-			Vector3f d = dir.add( newshot.dir.subtract(dir).mult(time/timediff) );
+		public Snapshot interpolate(Snapshot newshot, float location) {
+			Vector3f p = pos.add( newshot.pos.subtract(pos).mult(location) );
+			Quaternion o = ort.add( newshot.ort.subtract(ort).mult(location) );
+			Vector3f d = dir.add( newshot.dir.subtract(dir).mult(location) );
 			
 			return new Snapshot(p, o, d);
 		}

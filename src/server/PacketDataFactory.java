@@ -73,8 +73,8 @@ public class PacketDataFactory {
 		
 		for(final Ship s: ships) {
 			Util.put(s.getOwner().getID(), b, offset);
-			Util.put(s.getLocalTranslation(), b, offset+4);
-			Util.put(s.getLocalRotation(), b, offset+16);
+			Util.put(s.getPosition(), b, offset+4);
+			Util.put(s.getOrientation(), b, offset+16);
 			Util.put(s.getMovement(), b, offset+32);
 			offset += 44;
 		}

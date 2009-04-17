@@ -12,8 +12,8 @@ public class PacketDataFactory {
 		b[0] = ClientPacketType.PLAYER_UPDATE;
 		b[1] = 0;
 		Util.put(time, b, OffsetConstants.PLAYER_UPDATE_TIME_OFFSET);
-		Util.put(s.getLocalTranslation(), b, OffsetConstants.PLAYER_UPDATE_POS_OFFSET);
-		Util.put(s.getLocalRotation(), b, OffsetConstants.PLAYER_UPDATE_ORT_OFFSET);
+		Util.put(s.getPosition(), b, OffsetConstants.PLAYER_UPDATE_POS_OFFSET);
+		Util.put(s.getOrientation(), b, OffsetConstants.PLAYER_UPDATE_ORT_OFFSET);
 		Util.put(s.getMovement(), b, OffsetConstants.PLAYER_UPDATE_DIR_OFFSET);
 		return b;
 	}

@@ -95,9 +95,11 @@ public class ObserverGame extends SimpleGame implements Game {
 		final Ship s = logic.getShip(id);
 		if (s != null) {
 			if (s.shouldUpdate(tick)) {
-				s.setLocalTranslation(pos);
-				s.setMovement(dir);
-				s.setLocalRotation(ort);
+				s.getPosition().set(pos);
+				s.getOrientation().set(ort);
+				s.getMovement().set(dir);
+				s.resetGeometrics();
+				s.setLastUpdate(tick);
 			}
 		}
 	}

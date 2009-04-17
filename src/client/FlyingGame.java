@@ -22,7 +22,6 @@ import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
-import com.jme.util.Timer;
 
 import common.world.Ship;
 
@@ -36,6 +35,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	protected final Node rootnode;
 	protected final int tps = 10;
 	protected final float ticklength = 1f/tps;
+	protected long lastRender = 0;
 	private InputHandler inputHandler;
 
 	public FlyingGame(int id, String name, GameClient gc) {
@@ -83,6 +83,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		inputHandler = new FlyingGameInputHandler(self.getShip());
 		
 		rootnode.updateRenderState();
+		
+		lastRender = System.currentTimeMillis();
 	}
 
 	protected void initSystem() {
@@ -111,7 +113,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 
 		// initialize the camera
 		cam.setFrustumPerspective(45.0f, (float) width / (float) height, 1, 5000);
-		cam.setLocation(new Vector3f(0, 0, 10));
+		cam.setLocation(new Vector3f(0, 2, 4));
 		cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
 
 		// Signal that we've changed our camera's location/frustum. 
@@ -127,12 +129,16 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	}
 
 	protected void render(float percentWithinTick) {
+		long old = lastRender;
+		lastRender = System.currentTimeMillis();
+		float delta = 0.001f*(lastRender - old); // s since last render
+		rootnode.updateGeometricState(delta, true);
 		display.getRenderer().clearBuffers();
 		display.getRenderer().draw(rootnode);
-		//System.out.println("render " + percentWithinTick);
+		//System.out.println("render " + delta);
 	}
 
-	protected void update(float interpolation) {
+	protected void update(float unused) {
 		Command c;
 		synchronized (this) {
 			while (!commandQueue.isEmpty()) {
@@ -141,15 +147,13 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 			}
 		}
 		inputHandler.update(ticklength);
-		System.out.println(self.getShip().getMovement());
-		self.getShip().getLocalTranslation().addLocal(self.getShip().getMovement().mult(ticklength));
 		
-		rootnode.updateGeometricState(interpolation, true);
+		self.getShip().getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
 		}
-		System.out.println("update ");
+		//System.out.println("update ");
 	}
 
 	protected GameSettings getNewSettings() {
@@ -161,7 +165,6 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 
 	public synchronized void addCommand(Command cmd) {
 		commandQueue.add(cmd);
-		
 	}
 
 	public void addPlayer(int id, String name) {
@@ -195,9 +198,11 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		final Ship s = logic.getShip(id);
 		if (s != null) {
 			if (s.shouldUpdate(tick)) {
-				s.setLocalTranslation(pos);
-				s.setMovement(dir);
-				s.setLocalRotation(ort);
+				s.getPosition().set(pos);
+				s.getOrientation().set(ort);
+				s.getMovement().set(dir);
+				s.resetGeometrics();
+				s.setLastUpdate(tick);
 			}
 		}
 	}

@@ -31,9 +31,11 @@ public class PlayerUpdateCommand extends AbstractCommand {
 			Ship s = c.getShip();
 			
 			if (s.shouldUpdate(time)) {
-				s.setLocalTranslation(pos);
-				s.setLocalRotation(ort);
-				s.setMovement(dir);
+				s.getPosition().set(pos);
+				s.getOrientation().set(ort);
+				s.getMovement().set(dir);
+				s.resetGeometrics();
+				s.setLastUpdate(time);
 			}
 		}
 	}
