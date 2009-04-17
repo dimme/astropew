@@ -67,10 +67,20 @@ public class ObserverGame extends SimpleGame implements Game {
 	private Ship createShip(common.Player p) {
 		final Ship s = new Ship(p);
 		
+		ColorRGBA c = s.getColor();
+		
+		if ( p == self ) {
+			System.out.println("----------CREATING SELF-SHIP----------");
+			c = ColorRGBA.cyan;
+		} else {
+			System.out.println("----------CREATING SHIP----------");
+		}
+		
+		//TODO: Why don't we get a special color on the mothership?
 		final MaterialState ms = display.getRenderer().createMaterialState();
-		ms.setDiffuse(s.getColor());
-		ms.setEmissive(s.getColor().multLocal(0.2f));
-		ms.setAmbient(s.getColor().multLocal(0.1f));
+		ms.setDiffuse(c);
+		ms.setEmissive(c.multLocal(0.2f));
+		ms.setAmbient(c.multLocal(0.1f));
 		s.setRenderState(ms);
 		rootNode.attachChild(s);
 		

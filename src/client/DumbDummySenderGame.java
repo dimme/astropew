@@ -21,13 +21,24 @@ public class DumbDummySenderGame extends ObserverGame {
 		snaps = new Snapshot[100];
 		timediff = 0.2f;
 		double ang;
+		Vector3f oldDir = new Vector3f();
+		Vector3f oldPos = new Vector3f();
 		
 		for (int i=0; i<snaps.length; i++) {
-			double speed = 2 * Math.PI / snaps.length;
-			ang = i * speed;
+			int periods = 4;
+			ang = i * periods * 2 * Math.PI / snaps.length;
 			Vector3f pos = new Vector3f(0, 4*(float)Math.sin(ang), -(float)ang);
 			Quaternion ort;
-			Vector3f dir = new Vector3f(0, 4*(float)Math.cos(ang), -(float)speed);
+			
+			//dir[i] = (pos[i+1] - pos[i]) / timediff;
+			oldDir.set(pos);
+			oldDir.subtractLocal(oldPos);
+			oldDir.divideLocal((float)timediff);
+			
+			
+			Vector3f dir = new Vector3f();
+			oldDir = dir;
+			oldPos = pos;
 			if (i == 0) {
 				//ort = new Quaternion((float)Math.random(),(float)Math.random(),(float)Math.random(),(float)Math.random());
 				ort = new Quaternion(new float[] {0,FastMath.HALF_PI,0});
@@ -35,7 +46,7 @@ public class DumbDummySenderGame extends ObserverGame {
 				Matrix3f rot = new Matrix3f();
 				ort = new Quaternion(snaps[i-1].ort);
 				rot.fromAngleNormalAxis(0.2f, Vector3f.UNIT_Z);
-				ort.apply(rot);
+				//ort.apply(rot);
 			}
 			snaps[i] = new Snapshot(pos,ort,dir);
 		}
