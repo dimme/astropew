@@ -8,6 +8,8 @@ import com.jme.app.FixedLogicrateGame;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.input.controls.controller.camera.CameraPerspective;
+import com.jme.input.controls.controller.camera.FixedCameraPerspective;
 import com.jme.light.PointLight;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -133,6 +135,15 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		lastRender = System.currentTimeMillis();
 		float delta = 0.001f*(lastRender - old); // s since last render
 		rootnode.updateGeometricState(delta, true);
+		Ship ship = self.getShip();
+		Vector3f z = ship.getLocalRotation().getRotationColumn(2).multLocal(5);
+		Vector3f y = ship.getLocalRotation().getRotationColumn(1).multLocal(2);
+		cam.getLocation().set(ship.getLocalTranslation());
+		cam.getLocation().addLocal(y);
+		cam.getLocation().addLocal(z);
+		cam.lookAt(ship.getLocalTranslation(), z.normalize().multLocal(-1));
+		cam.update();
+		cam.apply();
 		display.getRenderer().clearBuffers();
 		display.getRenderer().draw(rootnode);
 		//System.out.println("render " + delta);
