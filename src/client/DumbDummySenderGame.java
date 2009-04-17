@@ -23,10 +23,11 @@ public class DumbDummySenderGame extends ObserverGame {
 		double ang;
 		
 		for (int i=0; i<snaps.length; i++) {
-			ang = i * 8 * Math.PI / snaps.length;
+			double speed = 2 * Math.PI / snaps.length;
+			ang = i * speed;
 			Vector3f pos = new Vector3f(0, 4*(float)Math.sin(ang), -(float)ang);
 			Quaternion ort;
-			Vector3f dir = new Vector3f(10,0,0);
+			Vector3f dir = new Vector3f(0, 4*(float)Math.cos(ang), -(float)speed);
 			if (i == 0) {
 				//ort = new Quaternion((float)Math.random(),(float)Math.random(),(float)Math.random(),(float)Math.random());
 				ort = new Quaternion(new float[] {0,FastMath.HALF_PI,0});
