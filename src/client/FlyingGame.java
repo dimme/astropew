@@ -148,7 +148,12 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		}
 		inputHandler.update(ticklength);
 		
-		self.getShip().getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
+		long time = System.currentTimeMillis();
+		Ship ship = self.getShip();
+		ship.getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
+		ship.setLastUpdate(time);
+		
+		gc.sender.send(PacketDataFactory.createPlayerUpdate(time, ship));
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;

@@ -27,7 +27,7 @@ public class Game extends BaseHeadlessApp {
 	private final PriorityQueue<Command> commandQueue;
 	private Node rootnode;
 	
-	private static final long FRAME_SPACING = 1000;
+	private static final long FRAME_SPACING = 50;
 
 	public Game(PacketSender ps, ClientDB cdb) {
 		setConfigShowMode(ConfigShowMode.NeverShow);
