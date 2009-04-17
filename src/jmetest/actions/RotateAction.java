@@ -55,9 +55,8 @@ public class RotateAction extends KeyInputAction {
 			incr.fromAngleNormalAxis(direction * node.getTurnSpeed()
 					* evt.getTime(), rotAxis);
 		}
-		node.getLocalRotation().fromRotationMatrix(
-				incr.mult(node.getLocalRotation().toRotationMatrix(tempMa),
-						tempMb));
+		Matrix3f tmp1 = incr.mult(node.getLocalRotation().toRotationMatrix(tempMa),tempMb);
+		node.getLocalRotation().fromRotationMatrix(tmp1);
 
 		node.getLocalRotation().normalize();
 	}

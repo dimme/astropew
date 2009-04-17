@@ -1,5 +1,6 @@
 package common.world;
 
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
@@ -11,6 +12,7 @@ public abstract class MobileObject extends WorldObject {
 	protected final Vector3f position = new Vector3f();
 	protected final Quaternion orientation = new Quaternion();
 	protected final Vector3f movement = new Vector3f();
+	protected final Matrix3f rotationspeed = new Matrix3f();
 	
 	public MobileObject(String name) {
 		super(name);
@@ -28,6 +30,10 @@ public abstract class MobileObject extends WorldObject {
 		return movement;
 	}
 	
+	public Matrix3f getRotationSpeed() {
+		return rotationspeed;
+	}
+	
 	public boolean shouldUpdate(long newPointInTime) {
 		if ( lastUpdate > newPointInTime ) {
 			return false;
@@ -41,10 +47,12 @@ public abstract class MobileObject extends WorldObject {
 	
 	/**
 	 * Interpolates and sets actual positions for rendering
-	 * @param time The point in time to interpolate to.
+	 * @param secondsSinceLast seconds since last interpolation
 	 */
 	protected void interpolate(float secondsSinceLast) {
+		orientation.apply(rotationspeed);
 		localRotation.set(orientation);
+		
 		
 		localTranslation.addLocal(movement.mult(secondsSinceLast));
 	}

@@ -25,8 +25,6 @@ public class Ship extends MobileObject {
 		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
 		shape.getLocalScale().z = 0.3f;
 		attachChild(shape);
-
-		movement.set(0, 0, -1f);
 	}
 
 }

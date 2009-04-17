@@ -11,6 +11,7 @@ import com.jme.input.KeyInput;
 import com.jme.input.controls.controller.camera.CameraPerspective;
 import com.jme.input.controls.controller.camera.FixedCameraPerspective;
 import com.jme.light.PointLight;
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -157,10 +158,11 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 				c.perform(this);
 			}
 		}
+		Ship ship = self.getShip();
+		ship.getRotationSpeed().set(new float[] {1,0,0,  0,1,0,  0,0,1});
 		inputHandler.update(ticklength);
 		
 		long time = System.currentTimeMillis();
-		Ship ship = self.getShip();
 		ship.getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
 		ship.setLastUpdate(time);
 		

@@ -12,8 +12,10 @@ import com.jme.math.Vector3f;
 import common.world.Ship;
 
 public class FlyingGameInputHandler extends InputHandler {
+	protected final Ship ship;
 	
 	public FlyingGameInputHandler(Ship s) {
+		this.ship = s;
 		setKeyBindings();
 		setActions(s);
 	}
@@ -25,25 +27,20 @@ public class FlyingGameInputHandler extends InputHandler {
 		keyboard.set("decelerate", KeyInput.KEY_S);
 		keyboard.set("turn_right", KeyInput.KEY_D);
 		keyboard.set("turn_left", KeyInput.KEY_A);
+		keyboard.set("turn_up", KeyInput.KEY_DOWN);
+		keyboard.set("turn_down", KeyInput.KEY_UP);
 	}
 	
 	private void setActions(Ship s) {
-		addAction(new AccelerateAction(s,AccelerateAction.ACCELERATE), "accelerate", true);
-		addAction(new AccelerateAction(s,AccelerateAction.DECELERATE), "decelerate", true);
-		addAction(new TurnAction(s,TurnAction.RIGHT), "turn_right", true);
-		addAction(new TurnAction(s,TurnAction.LEFT), "turn_left", true);
+		addAction(new AccelerateAction(AccelerateAction.ACCELERATE), "accelerate", true);
+		addAction(new AccelerateAction(AccelerateAction.DECELERATE), "decelerate", true);
+		addAction(new TurnAction(TurnAction.Y, TurnAction.RIGHT), "turn_right", true);
+		addAction(new TurnAction(TurnAction.Y, TurnAction.LEFT), "turn_left", true);
+		addAction(new TurnAction(TurnAction.X, TurnAction.UP), "turn_up", true);
+		addAction(new TurnAction(TurnAction.X, TurnAction.DOWN), "turn_down", true);
 	}
 	
-	private abstract static class AbstractAction implements InputActionInterface {
-
-		protected final Ship ship;
-		public AbstractAction(Ship ship) {
-			this.ship=ship;
-		}
-		
-	}
-	
-	private static class AccelerateAction extends AbstractAction {
+	private class AccelerateAction implements InputActionInterface {
 		
 		public static final float ACCELERATE = 0.1f;
 		public static final float DECELERATE = -0.1f;
@@ -51,8 +48,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		protected final float acceleration;
 		private final Vector3f z;
 
-		public AccelerateAction(Ship s, float acceleration) {
-			super(s);
+		public AccelerateAction(float acceleration) {
 			this.acceleration = acceleration;
 			this.z = new Vector3f();
 		}
@@ -65,28 +61,40 @@ public class FlyingGameInputHandler extends InputHandler {
 		}
 	}
 	
-	private static class TurnAction extends AbstractAction {
+	private class TurnAction implements InputActionInterface {
 
-		public static final float LEFT = 0.1f;
-		public static final float RIGHT = -0.1f;
+		public static final int X = 0;
+		public static final int Y = 1;
+		public static final int Z = 2;
+		
+		public static final float LEFT = 0.003f;
+		public static final float RIGHT = -0.003f;
+		public static final float UP = -0.001f;
+		public static final float DOWN = 0.001f;
 		
 		protected final float angle;
 		private final Matrix3f rotation;
-		private final Vector3f y; 
+		private final Vector3f axis; 
+		private final int axisid;
 
-		public TurnAction(Ship s, float angle) {
-			super(s);
+		public TurnAction(int axisid, float angle) {
 			this.angle=angle;
 			rotation = new Matrix3f();
-			y = new Vector3f();
+			axis = new Vector3f();
+			this.axisid=axisid;
 		}
 
 		public void performAction(InputActionEvent evt) {
-			Quaternion ort = ship.getOrientation();
+			ship.getOrientation().getRotationColumn(axisid, axis);
+			rotation.fromAngleAxis(angle, axis);
+			
+			ship.getRotationSpeed().multLocal(rotation);
+			
+			/*Quaternion ort = ship.getOrientation();
 			ort.getRotationColumn(1, y);
 			rotation.fromAngleNormalAxis(angle, y);
 			ort.apply(rotation);
-			ship.setLastUpdate(System.currentTimeMillis());
+			ship.setLastUpdate(System.currentTimeMillis());*/
 		}
 	}
 }
