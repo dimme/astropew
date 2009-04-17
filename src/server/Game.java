@@ -2,6 +2,7 @@ package server;
 
 import java.net.SocketAddress;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +27,14 @@ public class Game extends BaseHeadlessApp {
 	private final GameLogic logic;
 	private final PriorityQueue<Command> commandQueue;
 	private Node rootnode;
+	private final long worldseed;
 	
 	private static final long FRAME_SPACING = 50;
 
 	public Game(PacketSender ps, ClientDB cdb) {
+		Random rnd = new Random();
+		worldseed = rnd.nextLong();
+		
 		setConfigShowMode(ConfigShowMode.NeverShow);
 		last = System.currentTimeMillis();
 		this.ps = ps;
@@ -100,7 +105,7 @@ public class Game extends BaseHeadlessApp {
 			ps.sendToAll(data);
 		}
 
-		ps.controlledSend(PacketDataFactory.createInitializer(12345, c.getID(), name), c);
+		ps.controlledSend(PacketDataFactory.createInitializer(worldseed, c.getID(), name), c);
 		sendPlayersInfo(c);
 	}
 	

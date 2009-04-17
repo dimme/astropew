@@ -25,8 +25,9 @@ public class InitializeObserver implements PacketObserver {
 		if (packettype == ServerPacketType.INITIALIZER) {
 			final String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length - OffsetConstants.INITIALIZER_STRING_OFFSET);
 			final int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
+			final long seed = Util.getLong(data, OffsetConstants.INITIALIZER_RANDOM_SEED_OFFSET);
 			try {
-				final Game game = new FlyingGame(id, name, client);
+				final Game game = new FlyingGame(id, name, seed, client);
 				//final Game game = new DumbDummySenderGame(id, name, client);
 				reader.removePacketObserver(this);
 				reader.addPacketObserver( new GamePlayObserver(client, game) );

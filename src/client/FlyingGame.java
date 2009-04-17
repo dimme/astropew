@@ -8,15 +8,14 @@ import com.jme.app.FixedLogicrateGame;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.controls.controller.camera.CameraPerspective;
-import com.jme.input.controls.controller.camera.FixedCameraPerspective;
 import com.jme.light.PointLight;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
@@ -27,6 +26,7 @@ import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 
 import common.world.Ship;
+import common.world.Universe;
 
 public class FlyingGame extends FixedLogicrateGame implements Game {
 
@@ -41,11 +41,11 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	protected long lastRender = 0;
 	private InputHandler inputHandler;
 
-	public FlyingGame(int id, String name, GameClient gc) {
+	public FlyingGame(int id, String name, long seed, GameClient gc) {
 		super();
 		this.gc = gc;
 		commandQueue = new PriorityQueue<Command>(51);
-		rootnode = new Node("root");
+		rootnode = new Universe(seed, new PlanetFactory());
 		self = new Player(name, id);
 		logic = new GameLogic(self);
 		setConfigShowMode(ConfigShowMode.AlwaysShow);
@@ -234,4 +234,10 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		t.start();
 	}
 	
+	private class PlanetFactory implements common.world.PlanetFactory {
+
+		public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA color) {
+			return new Sphere(name, center, 20, 20, size);
+		}
+	}
 }

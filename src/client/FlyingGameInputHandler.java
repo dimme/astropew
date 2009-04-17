@@ -42,8 +42,8 @@ public class FlyingGameInputHandler extends InputHandler {
 	
 	private class AccelerateAction implements InputActionInterface {
 		
-		public static final float ACCELERATE = 0.1f;
-		public static final float DECELERATE = -0.1f;
+		public static final float ACCELERATE = 1f;
+		public static final float DECELERATE = -1f;
 		
 		protected final float acceleration;
 		private final Vector3f z;
