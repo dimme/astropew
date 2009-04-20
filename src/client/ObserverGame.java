@@ -123,7 +123,7 @@ public class ObserverGame extends SimpleGame implements Game {
 		t.start();
 	}
 
-	public void addMissile(Vector3f pos, Vector3f dir) {
+	public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, long creationtime) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -131,6 +131,11 @@ public class ObserverGame extends SimpleGame implements Game {
 	public void fireMissile() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public long getLastUpdate() {
+		return System.currentTimeMillis();
 	}
 
 }

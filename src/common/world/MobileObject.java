@@ -3,6 +3,7 @@ package common.world;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import common.Player;
 
 public abstract class MobileObject extends WorldObject {
 	private static final long serialVersionUID = 1L;
@@ -14,8 +15,12 @@ public abstract class MobileObject extends WorldObject {
 	protected final Vector3f movement = new Vector3f();
 	protected final Matrix3f rotationspeed = new Matrix3f();
 	
-	public MobileObject(String name) {
-		super(name);
+	private final Matrix3f tmp1 = new Matrix3f();
+	private final Matrix3f tmp2 = new Matrix3f();
+	
+	public MobileObject(String name, Player owner) {
+		super(name, owner);
+		lastUpdate = System.currentTimeMillis();
 	}
 	
 	public Vector3f getPosition() {
@@ -45,14 +50,15 @@ public abstract class MobileObject extends WorldObject {
 		lastUpdate = newPointInTime;
 	}
 	
+	public long getLastUpdate() {
+		return lastUpdate;
+	}
+	
 	/**
 	 * Interpolates and sets actual positions for rendering
 	 * @param secondsSinceLast seconds since last interpolation
 	 */
 	protected void interpolate(float secondsSinceLast) {
-		Matrix3f tmp1 = new Matrix3f();
-		Matrix3f tmp2 = new Matrix3f();
-		
 		orientation.toRotationMatrix(tmp1);
 		rotationspeed.mult(tmp1, tmp2);
 		orientation.fromRotationMatrix( tmp2 );

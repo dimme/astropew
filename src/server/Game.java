@@ -30,6 +30,7 @@ public class Game extends BaseHeadlessApp {
 	private final PriorityQueue<Command> commandQueue;
 	private Node rootnode;
 	private final long worldseed;
+	private int missile_id = 0;
 	
 	private static final long FRAME_SPACING = 50;
 
@@ -169,9 +170,14 @@ public class Game extends BaseHeadlessApp {
 	public void fireMissile(SocketAddress sender) {
 		Client c = cdb.getClient(sender);
 		if (c != null) {
-			Missile m = new Missile("Missile", c.getShip());
+			Ship s = c.getShip();
+			Vector3f pos = s.getPosition();
+			Vector3f dir = s.getOrientation().getRotationColumn(2);
+			dir.multLocal(-60f);
+			dir.addLocal(s.getMovement());
+			Missile m = new Missile(missile_id++, pos, dir, c, frameTime);
 			rootnode.attachChild(m);
-			ps.sendToAll(PacketDataFactory.createMissile(System.currentTimeMillis(), m));
+			ps.sendToAll(PacketDataFactory.createMissile(m));
 		}
 	}
 }

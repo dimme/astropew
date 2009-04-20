@@ -42,6 +42,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	private InputHandler inputHandler;
 	private int missileCount = 0;
 	private final int missileSend = 10;
+	private long lastUpdateTick;
 
 	public FlyingGame(int id, String name, long seed, GameClient gc) {
 		super();
@@ -155,10 +156,11 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	}
 	
 	public void fireMissile(){
-		gc.sender.send(PacketDataFactory.createFireMissile(System.currentTimeMillis(), self.getShip()));
+		gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTick, self.getShip()));
 	}
 
 	protected void update(float unused) {
+		lastUpdateTick = System.currentTimeMillis();
 		Command c;
 		synchronized (this) {
 			while (!commandQueue.isEmpty()) {
@@ -170,11 +172,10 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		ship.getRotationSpeed().set(new float[] {1,0,0,  0,1,0,  0,0,1});
 		inputHandler.update(ticklength);
 		
-		long time = System.currentTimeMillis();
 		ship.getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
-		ship.setLastUpdate(time);
+		ship.setLastUpdate(lastUpdateTick);
 		
-		gc.sender.send(PacketDataFactory.createPlayerUpdate(time, ship));
+		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTick, ship));
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
@@ -244,8 +245,9 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		t.start();
 	}
 
-	public void addMissile(Vector3f pos, Vector3f dir) {
-		Missile m = new Missile("The Destructor 2009k", pos, dir);
+	public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, long time) {
+		common.Player owner = logic.getPlayer(ownerid);
+		Missile m = new Missile(id, pos, dir, owner, time);
 		rootnode.attachChild(m);
 	}
 	
@@ -261,5 +263,9 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 			
 			return s;
 		}
+	}
+
+	public long getLastUpdate() {
+		return lastUpdateTick;
 	}
 }

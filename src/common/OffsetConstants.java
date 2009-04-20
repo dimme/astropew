@@ -21,10 +21,12 @@ public interface OffsetConstants {
 	public static final byte PLAYER_LEFT_ID_OFFSET = 2;
 	public static final byte PLAYER_LEFT_SIZE = 6;
 	
-	public static final int MISSILE_SIZE = 34;
 	public static final int MISSILE_TIME_OFFSET = 2;
 	public static final int MISSILE_POS_OFFSET = 10;
-	public static final int MISSILE_DIR_OFFSET = 22; 
+	public static final int MISSILE_DIR_OFFSET = 22;
+	public static final int MISSILE_ID_OFFSET = 34;
+	public static final int MISSILE_OWNER_OFFSET = 38;
+	public static final int MISSILE_SIZE = 42;
 
 	// FROM CLIENT
 

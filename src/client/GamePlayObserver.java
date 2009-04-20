@@ -51,10 +51,11 @@ public class GamePlayObserver implements PacketObserver {
 			}
 		} else if (packettype == ServerPacketType.MISSILE) {
 			long t = Util.getLong(data, 2);
+			int ownerid = 0;
 			//TODO: consider time and set creation pos accordingly.
 			Vector3f pos = Util.getVector3f(data, 10, new Vector3f() );
 			Vector3f dir = Util.getVector3f(data, 22, new Vector3f() );
-			game.addCommand(new AddMissileCommand(pos,dir));
+			game.addCommand(new AddMissileCommand(pos,dir,ownerid));
 		} else {
 			return false;
 		}

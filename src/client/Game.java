@@ -15,7 +15,9 @@ public interface Game {
 	
 	public abstract void startInThread();
 
-	public abstract void addMissile(Vector3f pos, Vector3f dir);
+	public abstract void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, long creationtime);
 	
 	public abstract void fireMissile();
+
+	public abstract long getLastUpdate();
 }

@@ -4,15 +4,14 @@ import java.util.Random;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
 public class Universe extends Node {
 	
 	private static final long serialVersionUID = 1L;
-	private static final int MAX_NUM_PLANETS = 1000;
-	private static final int POSITION_RANGE = 3000;
+	private static final int MAX_NUM_PLANETS = 10;
+	private static final int POSITION_RANGE = 90;
 	
 	private final long seed;
 	private final PlanetFactory pf;

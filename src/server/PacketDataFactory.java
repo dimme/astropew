@@ -129,15 +129,17 @@ public class PacketDataFactory {
 	 * pos - Vector3f - 12 byte <br>
 	 * dir - Vector3f - 12 byte <br>
 	 */
-	public static byte[] createMissile(long time, Missile m) {
+	public static byte[] createMissile(Missile m) {
 		
 		final byte[] b = new byte[OffsetConstants.MISSILE_SIZE];
 		
 		b[0] = ServerPacketType.MISSILE;
 		b[1] = 0;
-		Util.put(time, b, OffsetConstants.MISSILE_TIME_OFFSET);
+		Util.put(m.getLastUpdate(), b, OffsetConstants.MISSILE_TIME_OFFSET);
 		Util.put(m.getPosition(), b, OffsetConstants.MISSILE_POS_OFFSET);
 		Util.put(m.getMovement(), b, OffsetConstants.MISSILE_DIR_OFFSET);
+		Util.put(m.getID(), b, OffsetConstants.MISSILE_ID_OFFSET);
+		Util.put(m.getOwner().getID(), b, OffsetConstants.MISSILE_OWNER_OFFSET);
 					
 		return b;
 	}

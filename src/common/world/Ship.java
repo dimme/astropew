@@ -17,9 +17,8 @@ public class Ship extends MobileObject {
 	}
 
 	public Ship(Player owner) {
-		super("Ship" + owner.getID());
-
-		this.owner = owner;
+		super("Ship" + owner.getID(), owner);
+		
 		owner.setShip(this);
 
 		int c = owner.getName().hashCode();
