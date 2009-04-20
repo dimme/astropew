@@ -37,7 +37,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	protected Camera cam;
 	protected final Player self;
 	protected final Node rootnode;
-	protected final int tps = 10;
+	protected final int tps = 20;
 	protected final float ticklength = 1f/tps;
 	protected long lastRender = 0;
 	private InputHandler inputHandler;
