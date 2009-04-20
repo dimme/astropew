@@ -50,6 +50,8 @@ public class FlyingGameInputHandler extends InputHandler {
 		
 		public static final float ACCELERATE = 1f;
 		public static final float DECELERATE = -1f;
+		public static final float MAX_SPEED = 30f;
+		public static final float MAX_SPEED_SQ = MAX_SPEED*MAX_SPEED;
 		
 		protected final float acceleration;
 		private final Vector3f z;
@@ -62,7 +64,12 @@ public class FlyingGameInputHandler extends InputHandler {
 		public void performAction(InputActionEvent evt) {
 			Quaternion ort = ship.getOrientation();
 			ort.getRotationColumn(2, z);
-			ship.getMovement().addLocal(z.multLocal(-acceleration));
+			Vector3f movement = ship.getMovement();
+			movement.addLocal(z.multLocal(-acceleration));
+			if (movement.lengthSquared() > MAX_SPEED_SQ) {
+				movement.normalizeLocal();
+				movement.multLocal(MAX_SPEED);
+			}
 			ship.setLastUpdate(System.currentTimeMillis());
 		}
 	}

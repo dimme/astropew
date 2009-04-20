@@ -54,9 +54,6 @@ public class GamePlayObserver implements PacketObserver {
 			//TODO: consider time and set creation pos accordingly.
 			Vector3f pos = Util.getVector3f(data, 10, new Vector3f() );
 			Vector3f dir = Util.getVector3f(data, 22, new Vector3f() );
-			System.out.println("Missile ---------------");
-			System.out.println("pos: " + pos);
-			System.out.println("dir: " + dir);
 			game.addMissile(pos, dir);
 		} else {
 			return false;
