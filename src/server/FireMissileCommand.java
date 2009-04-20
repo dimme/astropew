@@ -2,8 +2,6 @@ package server;
 
 import java.net.SocketAddress;
 
-import server.clientdb.ClientDB;
-
 public class FireMissileCommand extends AbstractCommand {
 		
 	SocketAddress sender;
