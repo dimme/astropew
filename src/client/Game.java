@@ -16,4 +16,6 @@ public interface Game {
 	public abstract void startInThread();
 
 	public abstract void addMissile(Vector3f pos, Vector3f dir);
+	
+	public abstract void fireMissile();
 }

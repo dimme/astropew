@@ -86,7 +86,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		rootnode.setRenderState(ltst);
 		
 		addPlayer(self);
-		inputHandler = new FlyingGameInputHandler(self.getShip());
+		inputHandler = new FlyingGameInputHandler(self.getShip(), this);
 		
 		rootnode.updateRenderState();
 		
@@ -152,6 +152,10 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		display.getRenderer().draw(rootnode);
 		//System.out.println("render " + delta);
 	}
+	
+	public void fireMissile(){
+		gc.sender.send(PacketDataFactory.createFireMissile(System.currentTimeMillis(), self.getShip()));
+	}
 
 	protected void update(float unused) {
 		Command c;
@@ -168,11 +172,6 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		long time = System.currentTimeMillis();
 		ship.getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
 		ship.setLastUpdate(time);
-		
-		if(missileCount++ == missileSend ){
-			gc.sender.send(PacketDataFactory.createFireMissile(time, ship));
-			missileCount = 0;
-		}
 		
 		gc.sender.send(PacketDataFactory.createPlayerUpdate(time, ship));
 		

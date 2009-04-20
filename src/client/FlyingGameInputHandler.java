@@ -13,9 +13,11 @@ import common.world.Ship;
 
 public class FlyingGameInputHandler extends InputHandler {
 	protected final Ship ship;
+	protected final Game game;
 	
-	public FlyingGameInputHandler(Ship s) {
+	public FlyingGameInputHandler(Ship s, Game game) {
 		this.ship = s;
+		this.game =  game;
 		setKeyBindings();
 		setActions(s);
 	}
@@ -32,6 +34,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		keyboard.set("turn_down", KeyInput.KEY_UP);
 		keyboard.set("turn_ccw", KeyInput.KEY_LEFT);
 		keyboard.set("turn_cw", KeyInput.KEY_RIGHT);
+		keyboard.set("fire_missile", KeyInput.KEY_SPACE);
 	}
 	
 	private void setActions(Ship s) {
@@ -44,6 +47,19 @@ public class FlyingGameInputHandler extends InputHandler {
 		addAction(new TurnAction(TurnAction.X, TurnAction.DOWN), "turn_up", true);
 		addAction(new TurnAction(TurnAction.Z, TurnAction.CW), "turn_cw", true);
 		addAction(new TurnAction(TurnAction.Z, TurnAction.CCW), "turn_ccw", true);
+		addAction(new FireMissileAction(), "fire_missile", true);
+	}
+	
+	private class FireMissileAction implements InputActionInterface {
+		
+		public FireMissileAction(){
+			
+		}
+		
+		public void performAction(InputActionEvent evt) {
+			game.fireMissile();			
+		}
+		
 	}
 	
 	private class AccelerateAction implements InputActionInterface {

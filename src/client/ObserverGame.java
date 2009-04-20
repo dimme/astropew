@@ -128,4 +128,9 @@ public class ObserverGame extends SimpleGame implements Game {
 		
 	}
 
+	public void fireMissile() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
