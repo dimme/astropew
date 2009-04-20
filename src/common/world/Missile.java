@@ -20,7 +20,7 @@ public class Missile extends MobileObject {
 	}
 	
 	public Missile(String name, Ship s) {
-		this(name, s.position, s.orientation.getRotationColumn(2).multLocal(-5));
+		this(name, s.position, s.orientation.getRotationColumn(2).multLocal(-60));
 	}
 
 }

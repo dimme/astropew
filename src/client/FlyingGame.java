@@ -244,7 +244,6 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	public void addMissile(Vector3f pos, Vector3f dir) {
 		Missile m = new Missile("The Destructor 2009k", pos, dir);
 		rootnode.attachChild(m);
-		//TODO: do this by a command instead.
 	}
 	
 	private class PlanetFactory implements common.world.PlanetFactory {

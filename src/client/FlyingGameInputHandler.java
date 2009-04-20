@@ -52,12 +52,17 @@ public class FlyingGameInputHandler extends InputHandler {
 	
 	private class FireMissileAction implements InputActionInterface {
 		
+		private long timeOfLastShoot;
+		
 		public FireMissileAction(){
-			
+			timeOfLastShoot = System.currentTimeMillis();
 		}
 		
 		public void performAction(InputActionEvent evt) {
-			game.fireMissile();			
+			if ( timeOfLastShoot + 500 < System.currentTimeMillis() ) {
+				game.fireMissile();
+				timeOfLastShoot = System.currentTimeMillis();
+			}
 		}
 		
 	}
