@@ -9,7 +9,7 @@ import common.world.Ship;
 public class Client implements Player {
 	protected int id;
 	protected String name;
-	protected Ship ship; //TODO: Är det här snyggt?
+	protected Ship ship;
 	public final UDPConnection udpc;
 
 	public Client(DatagramPacket packet, int id, String name) {

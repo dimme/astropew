@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
@@ -13,12 +14,16 @@ public class Universe extends Node {
 	private static final int MAX_NUM_PLANETS = 1000;
 	private static final int POSITION_RANGE = 3000;
 	
+	private final long seed;
+	private final PlanetFactory pf;
+	
 	public Universe(long seed, PlanetFactory pf) {
 		super("Universe");
-		generate(seed, pf);
+		this.seed = seed;
+		this.pf = pf;
 	}
 
-	private void generate(long seed, PlanetFactory pf) {
+	public void generate() {
 		Random rnd = new Random(seed);
 		
 		final int numPlanets = rnd.nextInt(MAX_NUM_PLANETS);
@@ -32,7 +37,11 @@ public class Universe extends Node {
 			final float z = POSITION_RANGE*(rnd.nextFloat()-0.5f);
 			position.set(x,y,z);
 			size = 1+10*rnd.nextFloat();
-			color.set(rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat(), 0.5f);
+			
+			final float r = 0.8f + 0.2f*rnd.nextFloat();
+			final float g = r;
+			final float b = 1f;
+			color.set(r, g, b, 1);
 			
 			Spatial planet = pf.createPlanet("Planet" + i, position, size, color);
 			

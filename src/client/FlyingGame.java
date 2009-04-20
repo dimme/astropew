@@ -13,7 +13,6 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.CullState;
@@ -36,7 +35,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	protected final GameClient gc;
 	protected Camera cam;
 	protected final Player self;
-	protected final Node rootnode;
+	protected final Universe rootnode;
 	protected final int tps = 20;
 	protected final float ticklength = 1f/tps;
 	protected long lastRender = 0;
@@ -60,6 +59,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 
 	protected void initGame() {
 		setLogicTicksPerSecond(tps);
+		
+		rootnode.generate();
 		
 		
 		final ZBufferState buf = display.getRenderer().createZBufferState();
@@ -205,9 +206,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		final Ship s = new Ship(p);
 		
 		final MaterialState ms = display.getRenderer().createMaterialState();
-		ms.setDiffuse(s.getColor());
-		ms.setEmissive(s.getColor().multLocal(0.2f));
-		ms.setAmbient(s.getColor().multLocal(0.1f));
+		ms.setDiffuse(s.getColor().multLocal(0.7f));
+		ms.setAmbient(s.getColor().multLocal(0.3f));
 		s.setRenderState(ms);
 		rootnode.attachChild(s);
 		
@@ -248,8 +248,15 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	
 	private class PlanetFactory implements common.world.PlanetFactory {
 
-		public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA color) {
-			return new Sphere(name, center, 20, 20, size);
+		public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA c) {
+			Spatial s = new Sphere(name, center, 20, 20, size);
+			
+			final MaterialState ms = display.getRenderer().createMaterialState();
+			ms.setDiffuse(c);
+			ms.setAmbient(c.multLocal(0.3f));
+			s.setRenderState(ms);
+			
+			return s;
 		}
 	}
 }

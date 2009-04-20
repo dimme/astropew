@@ -4,8 +4,8 @@ public abstract class AbstractCommand implements Command {
 
 	protected long time;
 
-	public AbstractCommand(long tick) {
-		this.time = tick;
+	public AbstractCommand(long time) {
+		this.time = time;
 	}
 
 	public long getTime() {

@@ -97,8 +97,11 @@ public class Game extends BaseHeadlessApp {
 		}
 	}
 
+	public void addClientJoiningCommand(String name, SocketAddress saddr) {
+		addCommand( new ClientJoiningCommand(name, saddr) );
+	}
+	
 	public void clientJoining(String name, SocketAddress saddr) {
-		//TODO: move to command.
 		Client c = cdb.getClient(saddr);
 
 		if (c == null) {
@@ -125,8 +128,11 @@ public class Game extends BaseHeadlessApp {
 		}
 	}
 
+	public void addClientLeavingCommand(SocketAddress saddr) {
+		addCommand(new ClientLeavingCommand(saddr));
+	}
+	
 	public void clientLeaving(SocketAddress saddr) {
-		//TODO: move to command
 		final Client removed = cdb.removeClient(saddr);
 		
 		if (removed != null) {

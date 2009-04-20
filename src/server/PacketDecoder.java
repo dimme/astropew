@@ -23,10 +23,10 @@ public class PacketDecoder implements PacketObserver {
 		switch (ptype) {
 		case ClientPacketType.JOINING:
 			final String name = Util.getString(data, 2);
-			game.clientJoining(name, sender);
+			game.addClientJoiningCommand(name, sender);
 			break;
 		case ClientPacketType.LEAVING:
-			game.clientLeaving(sender);
+			game.addClientLeavingCommand(sender);
 			break;
 		case ClientPacketType.PLAYER_UPDATE:
 			long time = Util.getLong(data, OffsetConstants.PLAYER_UPDATE_TIME_OFFSET);

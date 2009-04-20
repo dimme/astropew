@@ -79,8 +79,8 @@ public class ObserverGame extends SimpleGame implements Game {
 		//TODO: Why don't we get a special color on the mothership?
 		final MaterialState ms = display.getRenderer().createMaterialState();
 		ms.setDiffuse(c);
-		ms.setEmissive(c.multLocal(0.2f));
-		ms.setAmbient(c.multLocal(0.1f));
+		ms.setEmissive(c.multLocal(0.5f));
+		ms.setAmbient(c.multLocal(0.5f));
 		s.setRenderState(ms);
 		rootNode.attachChild(s);
 		
