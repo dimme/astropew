@@ -140,6 +140,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		lastRender = System.currentTimeMillis();
 		float delta = 0.001f*(lastRender - old); // s since last render
 		rootnode.updateGeometricState(delta, true);
+		rootnode.updateRenderState();
 		Ship ship = self.getShip();
 		Vector3f z = ship.getLocalRotation().getRotationColumn(2).multLocal(5);
 		Vector3f y = ship.getLocalRotation().getRotationColumn(1).multLocal(2);
@@ -203,9 +204,10 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	}
 
 	private Ship createShip(Player p) {
-		final Ship s = new Ship(p);
+		Ship s = new Ship(p);
 		
-		final MaterialState ms = display.getRenderer().createMaterialState();
+		MaterialState ms = display.getRenderer().createMaterialState();
+		System.out.println(p.getName() + " " + s.getColor());
 		ms.setDiffuse(s.getColor().multLocal(0.7f));
 		ms.setAmbient(s.getColor().multLocal(0.3f));
 		s.setRenderState(ms);
