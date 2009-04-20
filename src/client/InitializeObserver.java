@@ -29,6 +29,7 @@ public class InitializeObserver implements PacketObserver {
 			try {
 				final Game game = new FlyingGame(id, name, seed, client);
 				//final Game game = new DumbDummySenderGame(id, name, client);
+				//final Game game = new ObserverGame(id, name, client);
 				reader.removePacketObserver(this);
 				reader.addPacketObserver( new GamePlayObserver(client, game) );
 				game.startInThread();

@@ -2,6 +2,7 @@ package common.world;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Pyramid;
 import common.Player;
 
@@ -31,7 +32,7 @@ public class Ship extends MobileObject {
 		color.g *= mult;
 		color.b *= mult;
 
-		Pyramid shape = new Pyramid("ShipPyramid" + owner.getID(), 1, 3);
+		TriMesh shape = ShipHull.create();
 		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
 		shape.getLocalScale().z = 0.3f;
 		attachChild(shape);

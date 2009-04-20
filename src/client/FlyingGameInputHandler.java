@@ -113,12 +113,12 @@ public class FlyingGameInputHandler extends InputHandler {
 		public static final int Y = 1;
 		public static final int Z = 2;
 		
-		public static final float LEFT = 0.01f;
-		public static final float RIGHT = -0.01f;
-		public static final float UP = -0.005f;
-		public static final float DOWN = 0.005f;
-		public static final float CW = -0.01f;
-		public static final float CCW = 0.01f;
+		public static final float LEFT = 0.03f;
+		public static final float RIGHT = -0.03f;
+		public static final float UP = -0.02f;
+		public static final float DOWN = 0.02f;
+		public static final float CW = -0.06f;
+		public static final float CCW = 0.06f;
 		
 		protected final float angle;
 		private final Matrix3f rotation;

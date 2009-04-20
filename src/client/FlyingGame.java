@@ -140,9 +140,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		lastRender = System.currentTimeMillis();
 		float delta = 0.001f*(lastRender - old); // s since last render
 		rootnode.updateGeometricState(delta, true);
-		rootnode.updateRenderState();
 		Ship ship = self.getShip();
-		Vector3f z = ship.getLocalRotation().getRotationColumn(2).multLocal(5);
+		Vector3f z = ship.getLocalRotation().getRotationColumn(2).multLocal(10);
 		Vector3f y = ship.getLocalRotation().getRotationColumn(1).multLocal(2);
 		cam.getLocation().set(ship.getLocalTranslation());
 		cam.getLocation().addLocal(y);
@@ -180,6 +179,8 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
 		}
+		
+		rootnode.updateRenderState();
 		//System.out.println("update ");
 	}
 
