@@ -50,9 +50,13 @@ public abstract class MobileObject extends WorldObject {
 	 * @param secondsSinceLast seconds since last interpolation
 	 */
 	protected void interpolate(float secondsSinceLast) {
-		orientation.apply(rotationspeed);
-		localRotation.set(orientation);
+		Matrix3f tmp1 = new Matrix3f();
+		Matrix3f tmp2 = new Matrix3f();
 		
+		orientation.toRotationMatrix(tmp1);
+		rotationspeed.mult(tmp1, tmp2);
+		orientation.fromRotationMatrix( tmp2 );
+		localRotation.set(orientation);
 		
 		localTranslation.addLocal(movement.mult(secondsSinceLast));
 	}
