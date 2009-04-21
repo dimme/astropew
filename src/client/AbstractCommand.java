@@ -2,22 +2,22 @@ package client;
 
 public abstract class AbstractCommand implements Command {
 
-	protected long tick;
+	protected long time;
 
-	public AbstractCommand(long tick) {
-		this.tick = tick;
+	public AbstractCommand(long time) {
+		this.time = time;
 	}
 
-	public long getTick() {
-		return tick;
+	public long getTime() {
+		return time;
 	}
 
 	public int compareTo(Command c) {
-		if (tick == c.getTick()) {
+		if (time == c.getTime()) {
 			return 0;
 		}
 
-		return tick > c.getTick() ? 1 : -1;
+		return time > c.getTime() ? 1 : -1;
 	}
 
 	public boolean equals(Object o) {

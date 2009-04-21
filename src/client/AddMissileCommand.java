@@ -7,17 +7,18 @@ public class AddMissileCommand extends AbstractCommand {
 	private Vector3f pos;
 	private Vector3f dir;
 	private int ownerid;
+	private int id;
 
-	public AddMissileCommand(Vector3f pos, Vector3f dir, int ownerid) {
-		super(0);
+	public AddMissileCommand(long time, int id, Vector3f pos, Vector3f dir, int ownerid) {
+		super(time);
 		this.pos = pos;
 		this.dir = dir;
 		this.ownerid=ownerid;
+		this.id=id;
 	}
 
 	public void perform(Game game, float delta) {
-		game.addMissile(0, pos, dir, ownerid, System.currentTimeMillis());
-		//TODO: FIXA FIXA FIXA ATTRIBUT! (0 och currentmillis)
+		game.addMissile(id, pos, dir, ownerid, time);
 	}
 
 }

@@ -49,12 +49,12 @@ public class GamePlayObserver implements PacketObserver {
 				game.addCommand(new UpdatePositionCommand(id, pos, ort, dir, tick));
 			}
 		} else if (packettype == ServerPacketType.MISSILE) {
-			long t = Util.getLong(data, 2);
-			int ownerid = 0;
-			//TODO: consider time and set creation pos accordingly.
-			Vector3f pos = Util.getVector3f(data, 10, new Vector3f() );
-			Vector3f dir = Util.getVector3f(data, 22, new Vector3f() );
-			game.addCommand(new AddMissileCommand(pos,dir,ownerid));
+			long time = Util.getLong(data, OffsetConstants.MISSILE_TIME_OFFSET);
+			int ownerid = Util.getInt(data, OffsetConstants.MISSILE_OWNER_OFFSET);
+			int id = Util.getInt(data, OffsetConstants.MISSILE_ID_OFFSET);
+			Vector3f pos = Util.getVector3f(data, OffsetConstants.MISSILE_POS_OFFSET, new Vector3f() );
+			Vector3f dir = Util.getVector3f(data, OffsetConstants.MISSILE_DIR_OFFSET, new Vector3f() );
+			game.addCommand(new AddMissileCommand(time, id, pos,dir,ownerid));
 		} else {
 			return false;
 		}

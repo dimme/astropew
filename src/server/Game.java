@@ -174,10 +174,12 @@ public class Game extends BaseHeadlessApp {
 		Client c = cdb.getClient(sender);
 		if (c != null) {
 			Ship s = c.getShip();
-			Vector3f pos = s.getPosition();
-			Vector3f dir = s.getOrientation().getRotationColumn(2);
-			dir.multLocal(-60f);
+			s.interpolate(frameTime);
+			Vector3f pos = s.getLocalTranslation();
+			Vector3f dir = s.getLocalRotation().getRotationColumn(2);
+			dir.multLocal(200f);
 			dir.addLocal(s.getMovement());
+			//pos = pos.add(dir.normalize().multLocal(1.5f));
 			Missile m = new Missile(missile_id++, pos, dir, c, frameTime);
 			rootnode.attachChild(m);
 			ps.sendToAll(PacketDataFactory.createMissile(m));
