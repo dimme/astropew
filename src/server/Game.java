@@ -37,6 +37,7 @@ public class Game extends BaseHeadlessApp {
 	public Game(PacketSender ps, ClientDB cdb) {
 		Random rnd = new Random();
 		worldseed = rnd.nextLong();
+		//worldseed = -584971952647977475l;
 		
 		setConfigShowMode(ConfigShowMode.NeverShow);
 		last = System.currentTimeMillis();

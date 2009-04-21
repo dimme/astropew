@@ -13,10 +13,11 @@ public abstract class MobileObject extends WorldObject {
 	protected final Vector3f position = new Vector3f();
 	protected final Quaternion orientation = new Quaternion();
 	protected final Vector3f movement = new Vector3f();
-	protected final Matrix3f rotationspeed = new Matrix3f();
 	
-	private final Matrix3f tmp1 = new Matrix3f();
-	private final Matrix3f tmp2 = new Matrix3f();
+	protected final Matrix3f tmp1 = new Matrix3f();
+	protected final Matrix3f tmp2 = new Matrix3f();
+	
+	protected final Vector3f tmpv = new Vector3f();
 	
 	public MobileObject(String name, Player owner) {
 		super(name, owner);
@@ -33,10 +34,6 @@ public abstract class MobileObject extends WorldObject {
 
 	public Vector3f getMovement() {
 		return movement;
-	}
-	
-	public Matrix3f getRotationSpeed() {
-		return rotationspeed;
 	}
 	
 	public boolean shouldUpdate(long newPointInTime) {
@@ -56,25 +53,17 @@ public abstract class MobileObject extends WorldObject {
 	
 	/**
 	 * Interpolates and sets actual positions for rendering
-	 * @param secondsSinceLast seconds since last interpolation
 	 */
-	protected void interpolate(float secondsSinceLast) {
-		orientation.toRotationMatrix(tmp1);
-		rotationspeed.mult(tmp1, tmp2);
-		orientation.fromRotationMatrix( tmp2 );
-		localRotation.set(orientation);
+	public void interpolate(long currentTime) {
+		float delta = 0.001f * (currentTime - lastUpdate);
 		
-		localTranslation.addLocal(movement.mult(secondsSinceLast));
-	}
-	
-	public void resetGeometrics() {
-		localTranslation.set(position);
-		localRotation.set(orientation);
-	}
-	
-	
-	public void updateGeometricState(float secondsSinceLast, boolean initiator) {
-		interpolate(secondsSinceLast);
-		super.updateGeometricState(secondsSinceLast, initiator);
+		
+		//We don't interpolate orientation:
+		setLocalRotation(orientation);
+		
+		//position:
+		Vector3f transl = getLocalTranslation();
+		transl.set(position);
+		transl.addLocal(movement.mult(delta, tmpv));
 	}
 }

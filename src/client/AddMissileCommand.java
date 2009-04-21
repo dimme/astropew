@@ -15,7 +15,7 @@ public class AddMissileCommand extends AbstractCommand {
 		this.ownerid=ownerid;
 	}
 
-	public void perform(Game game) {
+	public void perform(Game game, float delta) {
 		game.addMissile(0, pos, dir, ownerid, System.currentTimeMillis());
 		//TODO: FIXA FIXA FIXA ATTRIBUT! (0 och currentmillis)
 	}

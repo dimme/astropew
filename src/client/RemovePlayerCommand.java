@@ -9,7 +9,7 @@ public class RemovePlayerCommand extends AbstractCommand {
 		this.id = id;
 	}
 
-	public void perform(Game game) {
+	public void perform(Game game, float delta) {
 		game.removePlayer(id);
 	}
 

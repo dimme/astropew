@@ -77,7 +77,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		}
 
 		public void performAction(InputActionEvent evt) {
-			Quaternion ort = ship.getOrientation();
+			Quaternion ort = ship.getLocalRotation();
 			ort.getRotationColumn(2, z);
 			Vector3f movement = ship.getMovement();
 			movement.addLocal(z.multLocal(acceleration));
@@ -85,7 +85,6 @@ public class FlyingGameInputHandler extends InputHandler {
 				movement.normalizeLocal();
 				movement.multLocal(MAX_SPEED);
 			}
-			ship.setLastUpdate(game.getLastUpdate());
 		}
 	}
 	
@@ -107,36 +106,35 @@ public class FlyingGameInputHandler extends InputHandler {
 		public static final int Y = 1;
 		public static final int Z = 2;
 		
-		public static final float LEFT = 0.03f;
-		public static final float RIGHT = -0.03f;
-		public static final float UP = -0.02f;
-		public static final float DOWN = 0.02f;
-		public static final float CW = -0.06f;
-		public static final float CCW = 0.06f;
+		public static final float LEFT = 0.3f;
+		public static final float RIGHT = -0.3f;
+		public static final float UP = -0.2f;
+		public static final float DOWN = 0.2f;
+		public static final float CW = -0.6f;
+		public static final float CCW = 0.6f;
 		
 		protected final float angle;
 		private final Matrix3f rotation;
+		private final Matrix3f tmp;
 		private final Vector3f axis; 
 		private final int axisid;
 
 		public TurnAction(int axisid, float angle) {
 			this.angle=angle;
 			rotation = new Matrix3f();
+			tmp = new Matrix3f();
 			axis = new Vector3f();
 			this.axisid=axisid;
 		}
 
 		public void performAction(InputActionEvent evt) {
-			ship.getOrientation().getRotationColumn(axisid, axis);
-			rotation.fromAngleAxis(angle, axis);
+			Quaternion ort = ship.getLocalRotation();
+			ort.getRotationColumn(axisid, axis);
+			rotation.fromAngleAxis(angle*evt.getTime(), axis);
 			
-			ship.getRotationSpeed().multLocal(rotation);
-			
-			/*Quaternion ort = ship.getOrientation();
-			ort.getRotationColumn(1, y);
-			rotation.fromAngleNormalAxis(angle, y);
-			ort.apply(rotation);
-			ship.setLastUpdate(System.currentTimeMillis());*/
+			ort.toRotationMatrix(tmp);
+			rotation.multLocal(tmp);
+			ort.fromRotationMatrix(rotation);
 		}
 	}
 }

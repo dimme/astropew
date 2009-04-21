@@ -34,7 +34,6 @@ public class PlayerUpdateCommand extends AbstractCommand {
 				s.getPosition().set(pos);
 				s.getOrientation().set(ort);
 				s.getMovement().set(dir);
-				s.resetGeometrics();
 				s.setLastUpdate(time);
 			}
 		}

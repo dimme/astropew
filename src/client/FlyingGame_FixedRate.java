@@ -1,18 +1,13 @@
-package client;
+/*package client;
 
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.jme.app.FixedLogicrateGame;
-import com.jme.app.VariableTimestepGame;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.controls.GameControl;
-import com.jme.input.controls.GameControlManager;
-import com.jme.input.controls.binding.KeyboardBinding;
-import com.jme.input.controls.controller.CameraController;
 import com.jme.light.PointLight;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -30,11 +25,10 @@ import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 
 import common.world.Missile;
-import common.world.SelfShip;
 import common.world.Ship;
 import common.world.Universe;
 
-public class FlyingGame extends VariableTimestepGame implements Game {
+public class FlyingGame_FixedRate extends FixedLogicrateGame implements Game {
 
 	protected final PriorityQueue<Command> commandQueue;
 	protected final GameLogic logic;
@@ -42,13 +36,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	protected Camera cam;
 	protected final Player self;
 	protected final Universe rootnode;
+	protected final int tps = 20;
+	protected final float ticklength = 1f/tps;
+	protected long lastRender = 0;
 	private InputHandler inputHandler;
 	private int missileCount = 0;
 	private final int missileSend = 10;
 	private long lastUpdateTick;
-	private CameraController cameraController;
 
-	public FlyingGame(int id, String name, long seed, GameClient gc) {
+	public FlyingGame_FixedRate(int id, String name, long seed, GameClient gc) {
 		super();
 		this.gc = gc;
 		commandQueue = new PriorityQueue<Command>(51);
@@ -63,6 +59,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	protected void initGame() {
+		setLogicTicksPerSecond(tps);
 		
 		rootnode.generate();
 		
@@ -94,17 +91,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		inputHandler = new FlyingGameInputHandler(self.getShip(), this);
 		
 		rootnode.updateRenderState();
-
-		GameControlManager gcm = new GameControlManager();
-        GameControl toggleCameraControl = gcm.addControl("toggleCamera");
-        toggleCameraControl.addBinding(new KeyboardBinding(KeyInput.KEY_M));
-        cameraController = new CameraController(self.getShip(), cam, toggleCameraControl);
-
-        rootnode.addController(cameraController);
-
-        FollowCameraPerspective p1 = new FollowCameraPerspective(new Vector3f(0f,1f,-5f));
-
-        cameraController.addPerspective(p1);
+		
+		lastRender = System.currentTimeMillis();
 	}
 
 	protected void initSystem() {
@@ -148,38 +136,52 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		throw new RuntimeException("I hope this method isn't called... ");
 	}
 
-	protected void render(float interpolation) {
-		cameraController.update(interpolation);
-		
+	protected void render(float percentWithinTick) {
+		long old = lastRender;
+		lastRender = System.currentTimeMillis();
+		float delta = 0.001f*(lastRender - old); // s since last render
+		rootnode.updateGeometricState(delta, true);
+		Ship ship = self.getShip();
+		Vector3f z = ship.getLocalRotation().getRotationColumn(2).multLocal(10);
+		Vector3f y = ship.getLocalRotation().getRotationColumn(1).multLocal(2);
+		cam.getLocation().set(ship.getLocalTranslation());
+		cam.getLocation().addLocal(y);
+		cam.getLocation().addLocal(z);
+		cam.lookAt(ship.getLocalTranslation(), z.normalize().multLocal(-1));
+		cam.update();
+		cam.apply();
 		display.getRenderer().clearBuffers();
 		display.getRenderer().draw(rootnode);
-		//System.out.println("render " + interpolation);
-
+		//System.out.println("render " + delta);
+	}
+	
+	public void fireMissile(){
+		gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTick, self.getShip()));
 	}
 
-	protected void update(float interpolation) {
+	protected void update(float unused) {
 		lastUpdateTick = System.currentTimeMillis();
+		System.out.println(lastUpdateTick);
 		Command c;
 		synchronized (this) {
 			while (!commandQueue.isEmpty()) {
 				c = commandQueue.remove();
-				c.perform(this, interpolation);
+				c.perform(this);
 			}
 		}
 		Ship ship = self.getShip();
-
-		inputHandler.update(interpolation);
+		ship.getRotationSpeed().set(new float[] {1,0,0,  0,1,0,  0,0,1});
+		inputHandler.update(ticklength);
 		
-		rootnode.interpolate(lastUpdateTick);
+		ship.getPosition().addLocal(self.getShip().getMovement().mult(ticklength));
+		ship.setLastUpdate(lastUpdateTick);
 		
 		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTick, ship));
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
-			//TODO: I input handler istället
 		}
 		
-		rootnode.updateGeometricState(interpolation, true);
 		rootnode.updateRenderState();
 		//System.out.println("update ");
 	}
@@ -205,13 +207,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	private Ship createShip(Player p) {
-		Ship s;
-		
-		if (p == self) {
-			s = new SelfShip(p);
-		} else {
-			s = new Ship(p);
-		}
+		Ship s = new Ship(p);
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
 		System.out.println(p.getName() + " " + s.getColor());
@@ -235,6 +231,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				s.getPosition().set(pos);
 				s.getOrientation().set(ort);
 				s.getMovement().set(dir);
+				s.resetGeometrics();
 				s.setLastUpdate(tick);
 			}
 		}
@@ -243,7 +240,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	public void startInThread() {
 		final Thread t = new Thread() {
 			public void run() {
-				FlyingGame.this.start();
+				FlyingGame_FixedRate.this.start();
 			}
 		};
 		t.start();
@@ -253,10 +250,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		common.Player owner = logic.getPlayer(ownerid);
 		Missile m = new Missile(id, pos, dir, owner, time);
 		rootnode.attachChild(m);
-	}
-	
-	public void fireMissile(){
-		gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTick, self.getShip()));
 	}
 	
 	private class PlanetFactory implements common.world.PlanetFactory {
@@ -277,3 +270,4 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		return lastUpdateTick;
 	}
 }
+*/

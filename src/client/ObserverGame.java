@@ -17,14 +17,17 @@ public class ObserverGame extends SimpleGame implements Game {
 	protected final PriorityQueue<Command> commandQueue;
 	protected final GameClient gc;
 	protected final Player self;
+	private long lastUpdate;
 
 	public ObserverGame(int id, String name, GameClient gc) {
 		commandQueue = new PriorityQueue<Command>(51);
 		this.gc = gc;
 		
+		lastUpdate = System.currentTimeMillis();
+		
 		self = new Player(name, id);
 		logic = new GameLogic(self);
-
+		
 		setConfigShowMode(ConfigShowMode.ShowIfNoConfig);
 	}
 
@@ -47,9 +50,12 @@ public class ObserverGame extends SimpleGame implements Game {
 
 	protected synchronized void simpleUpdate() {
 		Command c;
+		long cur = System.currentTimeMillis();
+		float delta = 0.001f * (cur - lastUpdate);
+		lastUpdate = cur;
 		while (!commandQueue.isEmpty()) {
 			c = commandQueue.remove();
-			c.perform(this);
+			c.perform(this, delta);
 		}
 	}
 
@@ -108,7 +114,6 @@ public class ObserverGame extends SimpleGame implements Game {
 				s.getPosition().set(pos);
 				s.getOrientation().set(ort);
 				s.getMovement().set(dir);
-				s.resetGeometrics();
 				s.setLastUpdate(tick);
 			}
 		}

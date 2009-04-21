@@ -1,5 +1,6 @@
 package common.world;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 import com.jme.math.Vector3f;
@@ -10,8 +11,10 @@ import com.jme.scene.Spatial;
 public class Universe extends Node {
 	
 	private static final long serialVersionUID = 1L;
-	private static final int MAX_NUM_PLANETS = 10;
-	private static final int POSITION_RANGE = 90;
+	private static final int MAX_NUM_PLANETS = 1000;
+	private static final int POSITION_RANGE = 3000;
+	
+	private final LinkedList<WorldObject> wobjs = new LinkedList<WorldObject>();
 	
 	private final long seed;
 	private final PlanetFactory pf;
@@ -48,4 +51,14 @@ public class Universe extends Node {
 		}
 	}
 	
+	public int attachChild(WorldObject wobj) {
+		wobjs.addLast(wobj);
+		return super.attachChild(wobj);
+	}
+	
+	public void interpolate(long currentTime) {
+		for (WorldObject wobj : wobjs) {
+			wobj.interpolate(currentTime);
+		}
+	}
 }

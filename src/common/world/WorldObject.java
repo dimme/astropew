@@ -16,4 +16,6 @@ public abstract class WorldObject extends Node {
 		return owner;
 	}
 
+	public void interpolate(long currentTime) {
+	}
 }

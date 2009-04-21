@@ -88,7 +88,6 @@ public class DumbDummySenderGame extends ObserverGame {
 			s.getPosition().set(shot.pos);
 			s.getOrientation().set(shot.ort);
 			s.getMovement().set(shot.dir);
-			s.resetGeometrics();
 			s.setLastUpdate(frameTime);
 		}
 	}

@@ -20,7 +20,6 @@ public class Missile extends MobileObject {
 		//orientation.lookAt(dir, Vector3f.ZERO);
 		movement.set(dir);
 		position.set(pos);
-		resetGeometrics();
 		setLastUpdate(time); //TODO: this should be missile firing time
 	}
 
