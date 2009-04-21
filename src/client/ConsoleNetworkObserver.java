@@ -2,6 +2,9 @@ package client;
 
 import java.net.SocketAddress;
 
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
+
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
@@ -39,7 +42,10 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			}
 			System.out.println("Added players: " + s);
 		} else if (ptype == ServerPacketType.PLAYER_POSITIONS) {
-			//No need for much here since we see them move
+			for( int i = 10; i < data.length;){
+				//System.out.println(Util.getVector3f(data, i+4, new Vector3f()));
+				i += 44;
+			}
 		} else if (ptype == ServerPacketType.MESSAGE) {
 			System.out.println("Recieved msg: " + new String(data,OffsetConstants.MESSAGE_STRING_OFFSET, data.length-OffsetConstants.MESSAGE_STRING_OFFSET));
 		}

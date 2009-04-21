@@ -18,6 +18,7 @@ import com.jme.system.GameSettings;
 
 import common.world.Missile;
 import common.world.Ship;
+import common.world.Universe;
 
 public class Game extends BaseHeadlessApp {
 
@@ -28,7 +29,7 @@ public class Game extends BaseHeadlessApp {
 	private float delta;
 	private final GameLogic logic;
 	private final PriorityQueue<Command> commandQueue;
-	private Node rootnode;
+	private Universe rootnode;
 	private final long worldseed;
 	private int missile_id = 0;
 	
@@ -37,7 +38,6 @@ public class Game extends BaseHeadlessApp {
 	public Game(PacketSender ps, ClientDB cdb) {
 		Random rnd = new Random();
 		worldseed = rnd.nextLong();
-		//worldseed = -584971952647977475l;
 		
 		setConfigShowMode(ConfigShowMode.NeverShow);
 		last = System.currentTimeMillis();
@@ -56,7 +56,8 @@ public class Game extends BaseHeadlessApp {
 	}
 
 	protected void initGame() {
-		rootnode = new Node("root");
+		rootnode = new Universe(worldseed, null);
+		//rootnode.generate();
 	}
 	
 	protected void initSystem() {
@@ -97,6 +98,8 @@ public class Game extends BaseHeadlessApp {
 				c.perform(this, delta);
 			}
 		}
+		
+		rootnode.interpolate(frameTime);
 	}
 
 	public void addClientJoiningCommand(String name, SocketAddress saddr) {
@@ -139,7 +142,7 @@ public class Game extends BaseHeadlessApp {
 		
 		if (removed != null) {
 			final Ship s = logic.removeShip(removed);
-			s.removeFromParent();
+			rootnode.remove(s);
 
 			final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
 			ps.sendToAll(data);

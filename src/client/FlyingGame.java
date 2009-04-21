@@ -225,7 +225,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	public void removePlayer(int id) {
 		Ship removed = logic.removeShip(logic.getPlayer(id));
-		removed.removeFromParent();
+		rootnode.remove(removed);
 	}
 
 	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick) {

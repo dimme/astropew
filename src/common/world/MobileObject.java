@@ -65,7 +65,5 @@ public abstract class MobileObject extends WorldObject {
 		Vector3f transl = getLocalTranslation();
 		transl.set(position);
 		transl.addLocal(movement.mult(delta, tmpv));
-		
-		System.out.println(position);
 	}
 }

@@ -1,6 +1,6 @@
 package common.world;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Random;
 
 import com.jme.math.Vector3f;
@@ -14,7 +14,7 @@ public class Universe extends Node {
 	private static final int MAX_NUM_PLANETS = 1000;
 	private static final int POSITION_RANGE = 3000;
 	
-	private final LinkedList<WorldObject> wobjs = new LinkedList<WorldObject>();
+	private final HashSet<WorldObject> wobjs = new HashSet<WorldObject>();
 	
 	private final long seed;
 	private final PlanetFactory pf;
@@ -52,7 +52,7 @@ public class Universe extends Node {
 	}
 	
 	public int attachChild(WorldObject wobj) {
-		wobjs.addLast(wobj);
+		wobjs.add(wobj);
 		return super.attachChild(wobj);
 	}
 	
@@ -60,5 +60,10 @@ public class Universe extends Node {
 		for (WorldObject wobj : wobjs) {
 			wobj.interpolate(currentTime);
 		}
+	}
+
+	public void remove(WorldObject wobj) {
+		wobjs.remove(wobj);
+		wobj.removeFromParent();
 	}
 }
