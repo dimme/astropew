@@ -3,7 +3,6 @@ package server;
 import java.net.SocketAddress;
 
 import server.clientdb.Client;
-import server.clientdb.ClientDB;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;

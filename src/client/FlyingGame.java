@@ -4,7 +4,6 @@ import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.jme.app.FixedLogicrateGame;
 import com.jme.app.VariableTimestepGame;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
@@ -43,8 +42,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	protected final Player self;
 	protected final Universe rootnode;
 	private InputHandler inputHandler;
-	private int missileCount = 0;
-	private final int missileSend = 10;
 	private long lastUpdateTick;
 	private CameraController cameraController;
 

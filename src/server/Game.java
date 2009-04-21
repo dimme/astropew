@@ -12,7 +12,6 @@ import server.clientdb.ClientDB;
 import com.jme.app.BaseHeadlessApp;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 

@@ -1,19 +1,11 @@
 package client;
 
 import java.net.SocketAddress;
-
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
 import common.network.PacketObserver;
 
-/**
- * 
- * @author jonsturk
- */
 public class ConsoleNetworkObserver implements PacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress saddr) {

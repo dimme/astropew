@@ -9,7 +9,6 @@ import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
 import common.network.PacketObserver;
-import common.world.Missile;
 
 public class GamePlayObserver implements PacketObserver {
 

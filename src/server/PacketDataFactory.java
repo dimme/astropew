@@ -2,8 +2,6 @@ package server;
 
 import java.util.Collection;
 
-import com.jme.math.Vector3f;
-
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
