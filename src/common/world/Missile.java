@@ -11,7 +11,7 @@ public class Missile extends MobileObject {
 	private final int id;
 
 	public Missile(int id, Vector3f pos, Vector3f dir, Player owner, long time) {
-		super("Missile" + id, owner);
+		super("Missile", owner);
 		
 		this.id = id;
 		

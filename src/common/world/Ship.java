@@ -12,13 +12,16 @@ public class Ship extends MobileObject {
 	private static final long serialVersionUID = 1L;
 	
 	protected ColorRGBA color;
+	
+	private static final long FIRE_INTERVAL = 300;
+	private long lastFire = 0;
 
 	public ColorRGBA getColor() {
 		return color;
 	}
 
 	public Ship(Player owner) {
-		super("Ship" + owner.getID(), owner);
+		super("Ship", owner);
 		
 		owner.setShip(this);
 
@@ -47,5 +50,12 @@ public class Ship extends MobileObject {
         shape.getLocalRotation().normalize();
 		attachChild(shape);
 	}
+	
+	public boolean canFire(long currentTime) {
+		return lastFire+FIRE_INTERVAL <= currentTime;
+	}
 
+	public void setLastFireTime(long time) {
+		lastFire = time;
+	}
 }

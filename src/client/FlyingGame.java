@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.jme.app.VariableTimestepGame;
+import com.jme.image.Texture;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
@@ -17,16 +18,19 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Skybox;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
+import com.jme.scene.state.ZBufferState.TestFunction;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
+import com.jme.util.TextureManager;
 
 import common.world.Missile;
 import common.world.SelfShip;
@@ -42,14 +46,16 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	protected final Player self;
 	protected final Universe rootnode;
 	private InputHandler inputHandler;
-	private long lastUpdateTick;
+	private long lastUpdateTime;
 	private CameraController cameraController;
+	
+	private Skybox skybox;
 
 	public FlyingGame(int id, String name, long seed, GameClient gc) {
 		super();
 		this.gc = gc;
 		commandQueue = new PriorityQueue<Command>(51);
-		rootnode = new Universe(seed, new PlanetFactory());
+		rootnode = new Universe(seed);
 		self = new Player(name, id);
 		logic = new GameLogic(self);
 		setConfigShowMode(ConfigShowMode.AlwaysShow);
@@ -61,7 +67,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	protected void initGame() {
 		
-		rootnode.generate();
+		skybox = buildSkyBox();
+		rootnode.attachChild(skybox);
+		
+		rootnode.generate(new PlanetFactory());
 		
 		
 		final ZBufferState buf = display.getRenderer().createZBufferState();
@@ -155,7 +164,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	protected void update(float interpolation) {
-		lastUpdateTick = System.currentTimeMillis();
+		lastUpdateTime = System.currentTimeMillis();
 		Command c;
 		synchronized (this) {
 			while (!commandQueue.isEmpty()) {
@@ -167,7 +176,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		inputHandler.update(interpolation);
 		
-		rootnode.interpolate(lastUpdateTick);
+		rootnode.interpolate(lastUpdateTime);
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
@@ -177,7 +186,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		rootnode.updateGeometricState(interpolation, true);
 		rootnode.updateRenderState();
 		
-		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTick, ship));
+		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 		//System.out.println("update ");
 	}
 
@@ -206,18 +215,37 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		if (p == self) {
 			s = new SelfShip(p);
+			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
 			s = new Ship(p);
 		}
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
-		System.out.println(p.getName() + " " + s.getColor());
+		
 		ms.setDiffuse(s.getColor().multLocal(0.7f));
 		ms.setAmbient(s.getColor().multLocal(0.3f));
 		s.setRenderState(ms);
 		rootnode.attachChild(s);
 		
 		return s;
+	}
+	
+	private Skybox buildSkyBox() {
+		Skybox skybox = new Skybox("skybox", 10, 10, 10);
+
+		final Texture tx = TextureManager.loadTexture("../files/galaxy.jpg",
+				Texture.MinificationFilter.BilinearNearestMipMap,
+				Texture.MagnificationFilter.Bilinear);
+
+		skybox.setTexture(Skybox.Face.North, tx);
+		skybox.setTexture(Skybox.Face.West, tx);
+		skybox.setTexture(Skybox.Face.South, tx);
+		skybox.setTexture(Skybox.Face.East, tx);
+		skybox.setTexture(Skybox.Face.Up, tx);
+		skybox.setTexture(Skybox.Face.Down, tx);
+		skybox.preloadTextures();
+		
+		return skybox;
 	}
 
 	public void removePlayer(int id) {
@@ -253,7 +281,11 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 	
 	public void fireMissile(){
-		gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTick, self.getShip()));
+		Ship s = self.getShip();
+		if (s.canFire(lastUpdateTime)) {
+			s.setLastFireTime(lastUpdateTime);
+			gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTime, self.getShip()));
+		}
 	}
 	
 	private class PlanetFactory implements common.world.PlanetFactory {
@@ -271,6 +303,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	public long getLastUpdate() {
-		return lastUpdateTick;
+		return lastUpdateTime;
 	}
 }

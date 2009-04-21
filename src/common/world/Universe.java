@@ -17,15 +17,13 @@ public class Universe extends Node {
 	private final HashSet<WorldObject> wobjs = new HashSet<WorldObject>();
 	
 	private final long seed;
-	private final PlanetFactory pf;
 	
-	public Universe(long seed, PlanetFactory pf) {
+	public Universe(long seed) {
 		super("Universe");
 		this.seed = seed;
-		this.pf = pf;
 	}
 
-	public void generate() {
+	public void generate(PlanetFactory pf) {
 		Random rnd = new Random(seed);
 		
 		final int numPlanets = rnd.nextInt(MAX_NUM_PLANETS);
@@ -45,7 +43,7 @@ public class Universe extends Node {
 			final float b = 1f;
 			color.set(r, g, b, 1);
 			
-			Spatial planet = pf.createPlanet("Planet" + i, position, size, color);
+			Spatial planet = pf.createPlanet("Planet", position, size, color);
 			
 			attachChild(planet);
 		}

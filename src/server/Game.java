@@ -12,6 +12,10 @@ import server.clientdb.ClientDB;
 import com.jme.app.BaseHeadlessApp;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Spatial;
+import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.MaterialState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 
@@ -55,8 +59,8 @@ public class Game extends BaseHeadlessApp {
 	}
 
 	protected void initGame() {
-		rootnode = new Universe(worldseed, null);
-		//rootnode.generate();
+		rootnode = new Universe(worldseed);
+		rootnode.generate(new PlanetFactory());
 	}
 	
 	protected void initSystem() {
@@ -170,19 +174,31 @@ public class Game extends BaseHeadlessApp {
 		addCommand(new FireMissileCommand(sender, t) );
 	}
 
-	public void fireMissile(SocketAddress sender) {
+	public void fireMissile(SocketAddress sender, long time) {
 		Client c = cdb.getClient(sender);
 		if (c != null) {
 			Ship s = c.getShip();
-			s.interpolate(frameTime);
-			Vector3f pos = s.getLocalTranslation();
-			Vector3f dir = s.getLocalRotation().getRotationColumn(2);
-			dir.multLocal(200f);
-			dir.addLocal(s.getMovement());
-			//pos = pos.add(dir.normalize().multLocal(1.5f));
-			Missile m = new Missile(missile_id++, pos, dir, c, frameTime);
-			rootnode.attachChild(m);
-			ps.sendToAll(PacketDataFactory.createMissile(m));
+			if (s.canFire(time) || true) {
+				s.setLastFireTime(time);
+				s.interpolate(time);
+				Vector3f pos = s.getLocalTranslation();
+				Vector3f dir = s.getLocalRotation().getRotationColumn(2);
+				dir.multLocal(200f);
+				dir.addLocal(s.getMovement());
+				//pos = pos.add(dir.normalize().multLocal(1.5f));
+				Missile m = new Missile(missile_id++, pos, dir, c, time);
+				rootnode.attachChild(m);
+				ps.sendToAll(PacketDataFactory.createMissile(m));
+			}
+		}
+	}
+	
+	private class PlanetFactory implements common.world.PlanetFactory {
+
+		public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA c) {
+			Spatial s = new Sphere(name, center, 3, 3, size);
+			
+			return s;
 		}
 	}
 }

@@ -9,6 +9,7 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
+import common.world.SelfShip;
 import common.world.Ship;
 
 public class FlyingGameInputHandler extends InputHandler {
@@ -26,8 +27,8 @@ public class FlyingGameInputHandler extends InputHandler {
 		final KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 
 		keyboard.set("accelerate", KeyInput.KEY_W);
-		//keyboard.set("decelerate", KeyInput.KEY_S);
-		keyboard.set("brake", KeyInput.KEY_S);
+		keyboard.set("decelerate", KeyInput.KEY_S);
+		keyboard.set("brake", KeyInput.KEY_LSHIFT);
 		keyboard.set("turn_right", KeyInput.KEY_D);
 		keyboard.set("turn_left", KeyInput.KEY_A);
 		keyboard.set("turn_up", KeyInput.KEY_DOWN);
@@ -63,8 +64,8 @@ public class FlyingGameInputHandler extends InputHandler {
 	
 	private class AccelerateAction implements InputActionInterface {
 		
-		public static final float ACCELERATE = 0.5f;
-		public static final float DECELERATE = -0.5f;
+		public static final float ACCELERATE = 1f;
+		public static final float DECELERATE = -1f;
 		public static final float MAX_SPEED = 100f;
 		public static final float MAX_SPEED_SQ = MAX_SPEED*MAX_SPEED;
 		
@@ -90,7 +91,7 @@ public class FlyingGameInputHandler extends InputHandler {
 	
 	private class BrakeAction implements InputActionInterface {
 
-		private static final float BRAKE_COEFFICIENT = 0.9f;
+		private static final float BRAKE_COEFFICIENT = 0.97f;
 		
 		public BrakeAction() {
 		}
@@ -106,12 +107,12 @@ public class FlyingGameInputHandler extends InputHandler {
 		public static final int Y = 1;
 		public static final int Z = 2;
 		
-		public static final float LEFT = 0.3f;
-		public static final float RIGHT = -0.3f;
-		public static final float UP = -0.2f;
-		public static final float DOWN = 0.2f;
-		public static final float CW = -0.6f;
-		public static final float CCW = 0.6f;
+		public static final float LEFT = 1f;
+		public static final float RIGHT = -1f;
+		public static final float UP = 1f;
+		public static final float DOWN = -1f;
+		public static final float CW = -1f;
+		public static final float CCW = 1f;
 		
 		protected final float angle;
 		private final Matrix3f rotation;

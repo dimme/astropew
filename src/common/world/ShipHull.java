@@ -20,7 +20,7 @@ public class ShipHull {
 		Vector3f[] positions = {
 			new Vector3f(-0.6f, 0f, 0f),
 			new Vector3f( 0.6f, 0f, 0f),
-			new Vector3f(  0f, 0.5f, root2*0.8f),
+			new Vector3f(  0f, 0.5f, root2*0.5f),
 			new Vector3f(  0f, topy, topz)
 		};
 
