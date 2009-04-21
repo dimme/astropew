@@ -1,6 +1,9 @@
 package common.world;
 
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
+
 import common.Player;
 
 public abstract class WorldObject extends Node {
@@ -16,6 +19,6 @@ public abstract class WorldObject extends Node {
 		return owner;
 	}
 
-	public void interpolate(long currentTime) {
+	public void interpolate(float delta, long currentTime) {
 	}
 }

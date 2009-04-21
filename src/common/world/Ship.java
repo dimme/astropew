@@ -1,5 +1,6 @@
 package common.world;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -49,6 +50,9 @@ public class Ship extends MobileObject {
                         tempMb));
         shape.getLocalRotation().normalize();
 		attachChild(shape);
+		
+		updateGeometricState(0, true);
+		updateModelBound();
 	}
 	
 	public boolean canFire(long currentTime) {

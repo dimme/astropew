@@ -33,6 +33,7 @@ import com.jme.system.PropertiesGameSettings;
 import com.jme.util.TextureManager;
 
 import common.world.Missile;
+import common.world.Planet;
 import common.world.SelfShip;
 import common.world.Ship;
 import common.world.Universe;
@@ -176,7 +177,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		inputHandler.update(interpolation);
 		
-		rootnode.interpolate(lastUpdateTime);
+		rootnode.interpolate(interpolation, lastUpdateTime);
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
@@ -222,8 +223,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
 		
-		ms.setDiffuse(s.getColor().multLocal(0.7f));
-		ms.setAmbient(s.getColor().multLocal(0.3f));
+		ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
+		ms.setAmbient(s.getColor().clone().multLocal(0.3f));
 		s.setRenderState(ms);
 		rootnode.attachChild(s);
 		
@@ -250,7 +251,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	public void removePlayer(int id) {
 		Ship removed = logic.removeShip(logic.getPlayer(id));
-		rootnode.remove(removed);
+		rootnode.removeChild(removed);
 	}
 
 	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick) {
@@ -276,7 +277,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, long time) {
 		common.Player owner = logic.getPlayer(ownerid);
+		Ship s = owner.getShip();
 		Missile m = new Missile(id, pos, dir, owner, time);
+		
+		MaterialState ms = display.getRenderer().createMaterialState();
+		
+		ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
+		ms.setAmbient(s.getColor());
+		m.setRenderState(ms);
+		
 		rootnode.attachChild(m);
 	}
 	
@@ -290,15 +299,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	
 	private class PlanetFactory implements common.world.PlanetFactory {
 
-		public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA c) {
-			Spatial s = new Sphere(name, center, 20, 20, size);
+		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
+			Planet p = new Planet(center, 20, 20, size);
 			
 			final MaterialState ms = display.getRenderer().createMaterialState();
 			ms.setDiffuse(c);
-			ms.setAmbient(c.multLocal(0.3f));
-			s.setRenderState(ms);
+			ms.setAmbient(c.clone().multLocal(0.3f));
+			p.setRenderState(ms);
 			
-			return s;
+			return p;
 		}
 	}
 

@@ -54,9 +54,8 @@ public abstract class MobileObject extends WorldObject {
 	/**
 	 * Interpolates and sets actual positions for rendering
 	 */
-	public void interpolate(long currentTime) {
-		float delta = 0.001f * (currentTime - lastUpdate);
-		
+	public void interpolate(float delta, long currentTime) {
+		float deltafromupdate = 0.001f * (currentTime - lastUpdate);
 		
 		//We don't interpolate orientation:
 		setLocalRotation(orientation);
@@ -64,6 +63,6 @@ public abstract class MobileObject extends WorldObject {
 		//position:
 		Vector3f transl = getLocalTranslation();
 		transl.set(position);
-		transl.addLocal(movement.mult(delta, tmpv));
+		transl.addLocal(movement.mult(deltafromupdate, tmpv));
 	}
 }

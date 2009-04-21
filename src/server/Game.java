@@ -1,6 +1,8 @@
 package server;
 
 import java.net.SocketAddress;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.logging.Level;
@@ -10,6 +12,7 @@ import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
 import com.jme.app.BaseHeadlessApp;
+import com.jme.bounding.BoundingSphere;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -20,8 +23,10 @@ import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 
 import common.world.Missile;
+import common.world.Planet;
 import common.world.Ship;
 import common.world.Universe;
+import common.world.WorldObject;
 
 public class Game extends BaseHeadlessApp {
 
@@ -102,7 +107,16 @@ public class Game extends BaseHeadlessApp {
 			}
 		}
 		
-		rootnode.interpolate(frameTime);
+		rootnode.interpolate(delta, frameTime);
+		
+		for (Ship s : logic.getShips()) {
+			Collection<WorldObject> collisions = new LinkedList<WorldObject>();
+			rootnode.findCollisions(s, collisions);
+			
+			for (WorldObject wobj : collisions) {
+				System.out.println(s.getOwner().getName() + " collided with " + wobj);
+			}
+		}
 	}
 
 	public void addClientJoiningCommand(String name, SocketAddress saddr) {
@@ -145,7 +159,7 @@ public class Game extends BaseHeadlessApp {
 		
 		if (removed != null) {
 			final Ship s = logic.removeShip(removed);
-			rootnode.remove(s);
+			rootnode.removeChild(s);
 
 			final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
 			ps.sendToAll(data);
@@ -180,7 +194,7 @@ public class Game extends BaseHeadlessApp {
 			Ship s = c.getShip();
 			if (s.canFire(time) || true) {
 				s.setLastFireTime(time);
-				s.interpolate(time);
+				s.interpolate(-1f,time);
 				Vector3f pos = s.getLocalTranslation();
 				Vector3f dir = s.getLocalRotation().getRotationColumn(2);
 				dir.multLocal(200f);
@@ -195,10 +209,8 @@ public class Game extends BaseHeadlessApp {
 	
 	private class PlanetFactory implements common.world.PlanetFactory {
 
-		public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA c) {
-			Spatial s = new Sphere(name, center, 3, 3, size);
-			
-			return s;
+		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
+			return new Planet(center, 3, 3, size);
 		}
 	}
 }

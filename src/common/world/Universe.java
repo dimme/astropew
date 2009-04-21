@@ -3,12 +3,14 @@ package common.world;
 import java.util.HashSet;
 import java.util.Random;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingVolume;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
-public class Universe extends Node {
+public class Universe extends OctTreeNode {
 	
 	private static final long serialVersionUID = 1L;
 	private static final int MAX_NUM_PLANETS = 1000;
@@ -17,10 +19,17 @@ public class Universe extends Node {
 	private final HashSet<WorldObject> wobjs = new HashSet<WorldObject>();
 	
 	private final long seed;
+	private final BoundingBox worldbound;
 	
 	public Universe(long seed) {
 		super("Universe");
 		this.seed = seed;
+		
+		worldbound = new BoundingBox(Vector3f.ZERO,POSITION_RANGE,POSITION_RANGE,POSITION_RANGE);
+	}
+	
+	public BoundingVolume getWorldBound() {
+		return worldbound;
 	}
 
 	public void generate(PlanetFactory pf) {
@@ -43,7 +52,7 @@ public class Universe extends Node {
 			final float b = 1f;
 			color.set(r, g, b, 1);
 			
-			Spatial planet = pf.createPlanet("Planet", position, size, color);
+			Planet planet = pf.createPlanet(position, size, color);
 			
 			attachChild(planet);
 		}
@@ -54,13 +63,13 @@ public class Universe extends Node {
 		return super.attachChild(wobj);
 	}
 	
-	public void interpolate(long currentTime) {
+	public void interpolate(float delta, long currentTime) {
 		for (WorldObject wobj : wobjs) {
-			wobj.interpolate(currentTime);
+			wobj.interpolate(delta, currentTime);
 		}
 	}
 
-	public void remove(WorldObject wobj) {
+	public void removeChild(WorldObject wobj) {
 		wobjs.remove(wobj);
 		wobj.removeFromParent();
 	}

@@ -5,5 +5,5 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Spatial;
 
 public interface PlanetFactory {
-	public Spatial createPlanet(String name, Vector3f center, float size, ColorRGBA color);
+	public Planet createPlanet(Vector3f center, float size, ColorRGBA color);
 }
