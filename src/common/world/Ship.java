@@ -1,9 +1,10 @@
 package common.world;
 
+import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.TriMesh;
-import com.jme.scene.shape.Pyramid;
 import common.Player;
 
 public class Ship extends MobileObject {
@@ -34,6 +35,16 @@ public class Ship extends MobileObject {
 		TriMesh shape = ShipHull.create();
 		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
 		shape.getLocalScale().z = 0.3f;
+
+		Matrix3f incr = new Matrix3f();
+		Matrix3f tempMa = new Matrix3f();
+		Matrix3f tempMb = new Matrix3f();
+        incr.fromAngleNormalAxis(FastMath.PI, Vector3f.UNIT_Y);
+
+        shape.getLocalRotation().fromRotationMatrix(
+                incr.mult(shape.getLocalRotation().toRotationMatrix(tempMa),
+                        tempMb));
+        shape.getLocalRotation().normalize();
 		attachChild(shape);
 	}
 

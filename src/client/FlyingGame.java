@@ -8,6 +8,10 @@ import com.jme.app.FixedLogicrateGame;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.input.controls.GameControl;
+import com.jme.input.controls.GameControlManager;
+import com.jme.input.controls.binding.KeyboardBinding;
+import com.jme.input.controls.controller.CameraController;
 import com.jme.light.PointLight;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -43,6 +47,7 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	private int missileCount = 0;
 	private final int missileSend = 10;
 	private long lastUpdateTick;
+	private CameraController cameraController;
 
 	public FlyingGame(int id, String name, long seed, GameClient gc) {
 		super();
@@ -91,6 +96,18 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 		inputHandler = new FlyingGameInputHandler(self.getShip(), this);
 		
 		rootnode.updateRenderState();
+
+		GameControlManager gcm = new GameControlManager();
+        GameControl toggleCameraControl = gcm.addControl("toggleCamera");
+        toggleCameraControl.addBinding(new KeyboardBinding(KeyInput.KEY_M));
+        cameraController = new CameraController(self.getShip(), cam, toggleCameraControl);
+
+        rootnode.addController(cameraController);
+
+        FollowCameraPerspective p1 = new FollowCameraPerspective(new Vector3f(0f,1f,-5f));
+
+        cameraController.addPerspective(p1);
+
 		
 		lastRender = System.currentTimeMillis();
 	}
@@ -137,22 +154,16 @@ public class FlyingGame extends FixedLogicrateGame implements Game {
 	}
 
 	protected void render(float percentWithinTick) {
+		cameraController.update(percentWithinTick);
 		long old = lastRender;
 		lastRender = System.currentTimeMillis();
 		float delta = 0.001f*(lastRender - old); // s since last render
 		rootnode.updateGeometricState(delta, true);
-		Ship ship = self.getShip();
-		Vector3f z = ship.getLocalRotation().getRotationColumn(2).multLocal(10);
-		Vector3f y = ship.getLocalRotation().getRotationColumn(1).multLocal(2);
-		cam.getLocation().set(ship.getLocalTranslation());
-		cam.getLocation().addLocal(y);
-		cam.getLocation().addLocal(z);
-		cam.lookAt(ship.getLocalTranslation(), z.normalize().multLocal(-1));
-		cam.update();
-		cam.apply();
+
 		display.getRenderer().clearBuffers();
 		display.getRenderer().draw(rootnode);
 		//System.out.println("render " + delta);
+
 	}
 	
 	public void fireMissile(){

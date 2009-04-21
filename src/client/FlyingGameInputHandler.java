@@ -80,7 +80,7 @@ public class FlyingGameInputHandler extends InputHandler {
 			Quaternion ort = ship.getOrientation();
 			ort.getRotationColumn(2, z);
 			Vector3f movement = ship.getMovement();
-			movement.addLocal(z.multLocal(-acceleration));
+			movement.addLocal(z.multLocal(acceleration));
 			if (movement.lengthSquared() > MAX_SPEED_SQ) {
 				movement.normalizeLocal();
 				movement.multLocal(MAX_SPEED);
