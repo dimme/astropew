@@ -172,8 +172,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		rootnode.interpolate(lastUpdateTick);
 		
-		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTick, ship));
-		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
 			//TODO: I input handler istället
@@ -181,6 +179,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		rootnode.updateGeometricState(interpolation, true);
 		rootnode.updateRenderState();
+		
+		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTick, ship));
 		//System.out.println("update ");
 	}
 
