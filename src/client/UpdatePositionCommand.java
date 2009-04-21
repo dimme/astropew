@@ -19,6 +19,6 @@ public class UpdatePositionCommand extends AbstractCommand {
 	}
 
 	public void perform(Game game, float delta) {
-		game.updatePosition(pos, ort, dir, id, id);
+		game.updatePosition(pos, ort, dir, id, tick);
 	}
 }
