@@ -27,7 +27,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createInitializer(long worldseed, int id, String name) {
+	public static byte[] createInitializer(long worldseed, int id, int shipid, String name) {
 		final byte[] namebytes = name.getBytes();
 		final byte[] b = new byte[OffsetConstants.INITIALIZER_STRING_OFFSET	+ namebytes.length];
 
@@ -35,12 +35,13 @@ public class PacketDataFactory {
 		b[1] = 0;
 		Util.put(worldseed, b, OffsetConstants.INITIALIZER_RANDOM_SEED_OFFSET);
 		Util.put(id, b, OffsetConstants.INITIALIZER_ID_OFFSET);
+		Util.put(shipid, b, OffsetConstants.INITIALIZER_SHIPID_OFFSET);
 		Util.put(namebytes, b, OffsetConstants.INITIALIZER_STRING_OFFSET);
 
 		return b;
 	}
 
-	public static byte[] createPlayerJoined(int id, String name) {
+	public static byte[] createPlayerJoined(int id, String name, int shipid) {
 		final byte[] sb = name.getBytes();
 		final byte[] b = new byte[OffsetConstants.PLAYER_JOINED_STRING_OFFSET
 				+ sb.length];
@@ -48,6 +49,7 @@ public class PacketDataFactory {
 		b[0] = ServerPacketType.PLAYER_JOINED;
 		b[1] = 0;
 		Util.put(id, b, OffsetConstants.PLAYER_JOINED_ID_OFFSET);
+		Util.put(shipid, b, OffsetConstants.PLAYER_JOINED_SHIPID_OFFSET);
 		Util.put(sb, b, OffsetConstants.PLAYER_JOINED_STRING_OFFSET);
 
 		return b;
@@ -87,16 +89,20 @@ public class PacketDataFactory {
 		int size = 2;
 		byte[][] byteNames;
 		int[] ids;
+		int[] shipids;
 		int i;
 
 		synchronized (cdb) {
-			byteNames = new byte[cdb.getClients().size()][];
-			ids = new int[cdb.getClients().size()];
+			Collection<Client> clients = cdb.getClients();
+			byteNames = new byte[clients.size()][];
+			ids = new int[clients.size()];
+			shipids = new int[clients.size()];
 			i = 0;
-			for (final Client c : cdb.getClients()) {
+			for (final Client c : clients) {
 				if (!c.equals(Player)) {
 					byteNames[i] = c.getName().getBytes();
 					ids[i] = c.getID();
+					shipids[i] = c.getShip().getID();
 					size += 5 + byteNames[i].length;
 					i++;
 				}
@@ -112,9 +118,10 @@ public class PacketDataFactory {
 		int offset = 2;
 		for (int k = 0; k < numberOfClients; k++) {
 			Util.put(ids[k], b, offset);
-			b[offset+4] = (byte) byteNames[k].length;
-			Util.put(byteNames[k], b, offset+5);
-			offset += 5+byteNames[k].length;
+			Util.put(shipids[k], b, offset+4);
+			b[offset+8] = (byte) byteNames[k].length;
+			Util.put(byteNames[k], b, offset+9);
+			offset += 9+byteNames[k].length;
 		}
 
 		return b;

@@ -11,7 +11,7 @@ public class ClientLeavingCommand extends AbstractCommand {
 		this.saddr=saddr;
 	}
 	
-	public void perform(Game g, float delta) {
-		g.clientLeaving(saddr);
+	public void perform(GameCommandInterface gci) {
+		gci.clientLeaving(saddr);
 	}
 }

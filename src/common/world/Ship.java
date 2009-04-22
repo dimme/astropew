@@ -1,6 +1,5 @@
 package common.world;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -21,8 +20,8 @@ public class Ship extends MobileObject {
 		return color;
 	}
 
-	public Ship(Player owner) {
-		super("Ship", owner);
+	public Ship(int id, Player owner) {
+		super(id, "Ship", owner);
 		
 		owner.setShip(this);
 

@@ -26,14 +26,16 @@ public class GamePlayObserver implements PacketObserver {
 		if (packettype == ServerPacketType.PLAYER_JOINED) {
 			final String name = new String(data, OffsetConstants.PLAYER_JOINED_STRING_OFFSET, data.length- OffsetConstants.PLAYER_JOINED_STRING_OFFSET);
 			final int id = Util.getInt(data, OffsetConstants.PLAYER_JOINED_ID_OFFSET);
-			game.addCommand(new AddPlayerCommand(id, name));
+			final int shipid = Util.getInt(data, OffsetConstants.PLAYER_JOINED_SHIPID_OFFSET);
+			game.addCommand(new AddPlayerCommand(id, name, shipid));
 		} else if (packettype == ServerPacketType.PLAYERS_INFO) {
 			for (int i = 2; i < data.length;) {
 				final int id = Util.getInt(data, i);
-				final byte tmp = data[i + 4];
-				final String name = new String(data, i + 5, tmp);
-				i += 5 + tmp;
-				game.addCommand(new AddPlayerCommand(id, name));
+				final int shipid = Util.getInt(data, i+4);
+				final byte namelen = data[i + 8];
+				final String name = new String(data, i + 9, namelen);
+				i += 9 + namelen;
+				game.addCommand(new AddPlayerCommand(id, name, shipid));
 			}
 		} else if (packettype == ServerPacketType.PLAYER_LEFT) {
 			final int id = Util.getInt(data, OffsetConstants.PLAYER_LEFT_ID_OFFSET);

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import common.CatastrophicException;
 
 public class OctTreeNode extends Node {
 
@@ -39,7 +38,7 @@ public class OctTreeNode extends Node {
 		return addIfColliding(wobj);
 	}
 	
-	private void remove(WorldObject wobj) {
+	protected void remove(WorldObject wobj) {
 		data.remove(wobj);
 	}
 
@@ -59,6 +58,7 @@ public class OctTreeNode extends Node {
 	private static boolean isColliding(Spatial s1, Spatial s2) {
 		//System.out.println(s1 + " worldbound is " + s1.getWorldBound());
 		//System.out.println(s2 + " worldbound is " + s2.getWorldBound());
+		//System.out.println("\t" + s1.getName() + " against " + s2.getName());
 		return (s1!=s2 && s1.isCollidable() && s2.isCollidable() && s1.getWorldBound().intersects(s2.getWorldBound()));
 	}
 	

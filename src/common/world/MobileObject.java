@@ -19,8 +19,8 @@ public abstract class MobileObject extends WorldObject {
 	
 	protected final Vector3f tmpv = new Vector3f();
 	
-	public MobileObject(String name, Player owner) {
-		super(name, owner);
+	public MobileObject(int id, String name, Player owner) {
+		super(id, name, owner);
 		lastUpdate = System.currentTimeMillis();
 	}
 	

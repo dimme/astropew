@@ -7,7 +7,7 @@ public interface Game {
 
 	public abstract void addCommand(Command cmd);
 	
-	public abstract void addPlayer(int id, String name);
+	public abstract void addPlayer(int id, String name, int shipid);
 
 	public abstract void removePlayer(int id);
 

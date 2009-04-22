@@ -23,21 +23,21 @@ public class PacketDecoder implements PacketObserver {
 		switch (ptype) {
 		case ClientPacketType.JOINING:
 			final String name = Util.getString(data, 2);
-			game.addClientJoiningCommand(name, sender);
+			game.addCommand( new ClientJoiningCommand(name, sender) );
 			break;
 		case ClientPacketType.LEAVING:
-			game.addClientLeavingCommand(sender);
+			game.addCommand(new ClientLeavingCommand(sender));
 			break;
 		case ClientPacketType.PLAYER_UPDATE:
 			long time = Util.getLong(data, OffsetConstants.PLAYER_UPDATE_TIME_OFFSET);
 			Vector3f pos = Util.getVector3f(data, OffsetConstants.PLAYER_UPDATE_POS_OFFSET, new Vector3f());
 			Quaternion ort = Util.getQuaternion(data, OffsetConstants.PLAYER_UPDATE_ORT_OFFSET, new Quaternion());
 			Vector3f dir = Util.getVector3f(data, OffsetConstants.PLAYER_UPDATE_DIR_OFFSET, new Vector3f());
-			game.updatePlayer(sender, pos, ort, dir, time);
+			game.addCommand(new PlayerUpdateCommand(sender, pos, ort, dir, time) );
 			break;
 		case ClientPacketType.FIRE_MISSILE:
 			long t = Util.getLong(data, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
-			game.addFireMissileCommand(sender, t);
+			game.addCommand(new FireMissileCommand(sender, t) );
 			
 			break;
 		default:

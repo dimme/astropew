@@ -11,7 +11,7 @@ public class FireMissileCommand extends AbstractCommand {
 		this.sender = sender;
 	}
 
-	public void perform(Game g, float delta) {
-		g.fireMissile(sender, time);
+	public void perform(GameCommandInterface gci) {
+		gci.fireMissile(sender, time);
 	}
 }

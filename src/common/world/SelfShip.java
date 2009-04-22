@@ -8,8 +8,8 @@ public class SelfShip extends Ship {
 
 	private static final long serialVersionUID = 1L;
 
-	public SelfShip(Player owner) {
-		super(owner);
+	public SelfShip(int id, Player owner) {
+		super(id, owner);
 	}
 
 	public void interpolate(float delta, long currentTime) {

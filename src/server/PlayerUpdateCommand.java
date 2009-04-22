@@ -24,17 +24,7 @@ public class PlayerUpdateCommand extends AbstractCommand {
 		this.sender=sender;
 	}
 
-	public void perform(Game g, float delta) {
-		Client c = g.cdb.getClient(sender);
-		if (c != null) {
-			Ship s = c.getShip();
-			
-			if (s.shouldUpdate(time)) {
-				s.getPosition().set(pos);
-				s.getOrientation().set(ort);
-				s.getMovement().set(dir);
-				s.setLastUpdate(time);
-			}
-		}
+	public void perform(GameCommandInterface gci) {
+		gci.playerUpdate(pos, ort, dir, time, sender);
 	}
 }

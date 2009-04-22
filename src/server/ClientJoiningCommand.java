@@ -13,8 +13,8 @@ public class ClientJoiningCommand extends AbstractCommand {
 		this.saddr = saddr;
 	}
 
-	public void perform(Game g, float delta) {
-		g.clientJoining(name, saddr);
+	public void perform(GameCommandInterface gci) {
+		gci.clientJoining(name, saddr);
 	}
 
 

@@ -1,6 +1,6 @@
 package common.world;
 
-import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
@@ -31,7 +31,7 @@ public class ShipHull {
 		NormalGenerator ng = new NormalGenerator();
 		ng.generateNormals(m, 0);
 
-		m.setModelBound(new BoundingBox());
+		m.setModelBound(new BoundingSphere());
 		m.updateModelBound();
 
 		return m;
