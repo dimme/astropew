@@ -16,7 +16,7 @@ public class PlayerUpdateCommand extends AbstractCommand {
 	private Vector3f dir;
 	private SocketAddress sender;
 	
-	public PlayerUpdateCommand(SocketAddress sender, Vector3f pos, Quaternion ort, Vector3f dir, long time) {
+	public PlayerUpdateCommand(SocketAddress sender, Vector3f pos, Quaternion ort, Vector3f dir, float time) {
 		super(time);
 		this.pos=pos;
 		this.ort=ort;

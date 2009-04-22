@@ -27,7 +27,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createInitializer(long worldseed, int id, int shipid, String name) {
+	public static byte[] createInitializer(long worldseed, int id, int shipid, String name, long ltime, float ftime) {
 		final byte[] namebytes = name.getBytes();
 		final byte[] b = new byte[OffsetConstants.INITIALIZER_STRING_OFFSET	+ namebytes.length];
 
@@ -36,6 +36,9 @@ public class PacketDataFactory {
 		Util.put(worldseed, b, OffsetConstants.INITIALIZER_RANDOM_SEED_OFFSET);
 		Util.put(id, b, OffsetConstants.INITIALIZER_ID_OFFSET);
 		Util.put(shipid, b, OffsetConstants.INITIALIZER_SHIPID_OFFSET);
+		Util.put(ltime, b, OffsetConstants.INITIALIZER_CURRENT_TIME_MILLIS_OFFSET);
+		Util.put(ftime, b, OffsetConstants.INITIALIZER_CURRENT_TIME_FLOAT_OFFSET);
+		System.out.println("sending ftime " + ftime);
 		Util.put(namebytes, b, OffsetConstants.INITIALIZER_STRING_OFFSET);
 
 		return b;
@@ -63,7 +66,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createPosition(long time, Collection<Ship> ships) {
+	public static byte[] createPosition(float time, Collection<Ship> ships) {
 		
 		//TODO: Check if the array will fit in a UDP Packet.
 		final byte[] b = new byte[ships.size() * 44  + 10];

@@ -11,13 +11,13 @@ public interface Game {
 
 	public abstract void removePlayer(int id);
 
-	public abstract void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick);
+	public abstract void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float tick);
 	
 	public abstract void startInThread();
 
-	public abstract void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, long creationtime);
+	public abstract void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float creationtime);
 	
 	public abstract void fireMissile();
 
-	public abstract long getLastUpdate();
+	public abstract float getLastUpdate();
 }

@@ -9,8 +9,8 @@ public class Missile extends MobileObject {
 
 	private static final long serialVersionUID = 1L;
 
-	public Missile(int id, Vector3f pos, Vector3f dir, Player owner, long time) {
-		super(id, "Missile", owner);
+	public Missile(int id, Vector3f pos, Vector3f dir, Player owner, float time) {
+		super(id, "Missile", owner, time);
 		
 		final Sphere shape = new Sphere("MissileSphere", 10, 10, 0.1f );
 		shape.setModelBound(new BoundingSphere(0.1f, Vector3f.ZERO));

@@ -41,17 +41,17 @@ public class GamePlayObserver implements PacketObserver {
 			final int id = Util.getInt(data, OffsetConstants.PLAYER_LEFT_ID_OFFSET);
 			game.addCommand(new RemovePlayerCommand(id));
 		} else if (packettype == ServerPacketType.PLAYER_POSITIONS) {
-			final long tick = Util.getLong(data, 2);
+			final float time = Util.getFloat(data, 2);
 			for( int i = 10; i < data.length;){
 				final int id = Util.getInt(data, i);
 				final Vector3f pos = Util.getVector3f(data, i + 4, new Vector3f());
 				final Quaternion ort = Util.getQuaternion(data, i + 16, new Quaternion());
 				final Vector3f dir = Util.getVector3f(data, i + 32, new Vector3f());
 				i += 44;
-				game.addCommand(new UpdatePositionCommand(id, pos, ort, dir, tick));
+				game.addCommand(new UpdatePositionCommand(id, pos, ort, dir, time));
 			}
 		} else if (packettype == ServerPacketType.MISSILE) {
-			long time = Util.getLong(data, OffsetConstants.MISSILE_TIME_OFFSET);
+			float time = Util.getFloat(data, OffsetConstants.MISSILE_TIME_OFFSET);
 			int ownerid = Util.getInt(data, OffsetConstants.MISSILE_OWNER_OFFSET);
 			int id = Util.getInt(data, OffsetConstants.MISSILE_ID_OFFSET);
 			Vector3f pos = Util.getVector3f(data, OffsetConstants.MISSILE_POS_OFFSET, new Vector3f() );

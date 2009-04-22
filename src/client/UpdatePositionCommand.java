@@ -10,8 +10,8 @@ public class UpdatePositionCommand extends AbstractCommand {
 	private final Vector3f dir;
 	private final int id;
 
-	public UpdatePositionCommand(int id, Vector3f pos, Quaternion ort, Vector3f dir, long tick) {
-		super(tick);
+	public UpdatePositionCommand(int id, Vector3f pos, Quaternion ort, Vector3f dir, float time) {
+		super(time);
 		this.id = id;
 		this.pos = pos;
 		this.dir = dir;

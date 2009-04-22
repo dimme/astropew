@@ -13,15 +13,15 @@ public class Ship extends MobileObject {
 	
 	protected ColorRGBA color;
 	
-	private static final long FIRE_INTERVAL = 300;
-	private long lastFire = 0;
+	private static final float FIRE_INTERVAL = 0.3f;
+	private float lastFire = 0;
 
 	public ColorRGBA getColor() {
 		return color;
 	}
 
-	public Ship(int id, Player owner) {
-		super(id, "Ship", owner);
+	public Ship(int id, Player owner, float creationtime) {
+		super(id, "Ship", owner, creationtime);
 		
 		owner.setShip(this);
 
@@ -54,11 +54,11 @@ public class Ship extends MobileObject {
 		updateModelBound();
 	}
 	
-	public boolean canFire(long currentTime) {
+	public boolean canFire(float currentTime) {
 		return lastFire+FIRE_INTERVAL <= currentTime;
 	}
 
-	public void setLastFireTime(long time) {
+	public void setLastFireTime(float time) {
 		lastFire = time;
 	}
 }

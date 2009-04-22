@@ -2,13 +2,13 @@ package client;
 
 public abstract class AbstractCommand implements Command {
 
-	protected long time;
+	protected float time;
 
-	public AbstractCommand(long time) {
+	public AbstractCommand(float time) {
 		this.time = time;
 	}
 
-	public long getTime() {
+	public float getTime() {
 		return time;
 	}
 

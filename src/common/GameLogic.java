@@ -41,7 +41,7 @@ public abstract class GameLogic {
 		return shiptable.values();
 	}
 	
-	public void interpolate(float delta, long currentTime) {
+	public void interpolate(float delta, float currentTime) {
 		for (MobileObject mobj : mobjs) {
 			mobj.interpolate(delta, currentTime);
 		}

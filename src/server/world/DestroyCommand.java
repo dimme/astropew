@@ -10,7 +10,7 @@ public class DestroyCommand extends AbstractCommand {
 
 	private final WorldObject obj;
 	
-	public DestroyCommand(WorldObject obj, long time) {
+	public DestroyCommand(WorldObject obj, float time) {
 		super(time);
 		this.obj=obj;
 	}

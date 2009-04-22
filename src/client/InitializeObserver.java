@@ -27,8 +27,11 @@ public class InitializeObserver implements PacketObserver {
 			final int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
 			final int shipid = Util.getInt(data, OffsetConstants.INITIALIZER_SHIPID_OFFSET);
 			final long seed = Util.getLong(data, OffsetConstants.INITIALIZER_RANDOM_SEED_OFFSET);
+			final long ltime = Util.getLong(data, OffsetConstants.INITIALIZER_CURRENT_TIME_MILLIS_OFFSET);
+			final float ftime = Util.getFloat(data, OffsetConstants.INITIALIZER_CURRENT_TIME_FLOAT_OFFSET);
+			System.out.println("got ftime " + ftime);
 			try {
-				final Game game = new FlyingGame(id, name, shipid, seed, client);
+				final Game game = new FlyingGame(id, name, shipid, seed, client, ltime, ftime);
 				//final Game game = new DumbDummySenderGame(id, name, client);
 				//final Game game = new ObserverGame(id, name, client);
 				reader.removePacketObserver(this);

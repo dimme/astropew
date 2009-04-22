@@ -21,6 +21,7 @@ import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.MaterialState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
+import com.jme.util.Timer;
 
 import server.world.Missile;
 import common.world.MobileObject;
@@ -34,14 +35,15 @@ public class Game extends BaseHeadlessApp {
 	private long last = 0;
 	private final PacketSender ps;
 	final ClientDB cdb;
-	private long frameTime = 0;
-	private float delta;
+	private float frameTime = 0;
+	private long frameTimeL = 0;
 	private final GameLogic logic;
 	private final PriorityQueue<Command> commandQueue;
 	private Universe universe;
 	private final long worldseed;
 	private int object_id = 0;
 	private final GameCommandInterface gci = new CommandInterface();
+	private Timer timer;
 	
 	private int frame_counter = 0;
 	
@@ -74,6 +76,7 @@ public class Game extends BaseHeadlessApp {
 	
 	protected void initSystem() {
 		display = DisplaySystem.getDisplaySystem( "dummy" );
+		timer = Timer.getTimer();
 	}
 
 	public void render(float unused) {
@@ -86,7 +89,7 @@ public class Game extends BaseHeadlessApp {
 			ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
 			while (last + FRAME_SPACING > cur) {
 				try {
-					Thread.sleep(1);
+					Thread.sleep(last+FRAME_SPACING - cur);
 				} catch (final InterruptedException e) {
 					Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Interrupted while sleeping.");
 					throw new RuntimeException(e);
@@ -97,15 +100,16 @@ public class Game extends BaseHeadlessApp {
 		}
 	}
 
-	public long getFrameTime() {
+	public float getFrameTime() {
 		return frameTime;
 	}
 	
 	public synchronized void update(float unused) {
 		boolean future = false;
-		final long old = frameTime;
-		frameTime = System.currentTimeMillis();
-		delta = 0.001f * (frameTime - old);
+		timer.update();
+		frameTimeL = System.currentTimeMillis();
+		frameTime = timer.getTimeInSeconds();
+		final float delta = timer.getTimePerFrame();
 		
 		while (!future && !commandQueue.isEmpty()) {
 			final Command c = commandQueue.remove();
@@ -153,7 +157,7 @@ public class Game extends BaseHeadlessApp {
 			if (c == null) {
 				c = cdb.createClient(name, saddr);
 
-				s = new Ship(object_id++,c);
+				s = new Ship(object_id++,c, frameTime);
 				universe.attachChild(s);
 				logic.add(s);
 
@@ -164,7 +168,7 @@ public class Game extends BaseHeadlessApp {
 				s = c.getShip();
 			}
 
-			ps.controlledSend(PacketDataFactory.createInitializer(worldseed, c.getID(), s.getID(), name), c);
+			ps.controlledSend(PacketDataFactory.createInitializer(worldseed, c.getID(), s.getID(), name, frameTimeL, frameTime), c);
 			sendPlayersInfo(c);
 		}
 		
@@ -180,7 +184,7 @@ public class Game extends BaseHeadlessApp {
 			}
 		}
 		
-		public void fireMissile(SocketAddress sender, long time) {
+		public void fireMissile(SocketAddress sender, float time) {
 			Client c = cdb.getClient(sender);
 			if (c != null) {
 				Ship s = c.getShip();
@@ -192,7 +196,7 @@ public class Game extends BaseHeadlessApp {
 					dir.multLocal(200f);
 					dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
-					Missile m = new Missile(Game.this, object_id++, pos, dir, c, time);
+					Missile m = new Missile(Game.this, object_id++, pos, dir, c, frameTime);
 					universe.attachChild(m);
 					logic.add(m);
 					ps.sendToAll(PacketDataFactory.createMissile(m));
@@ -200,7 +204,7 @@ public class Game extends BaseHeadlessApp {
 			}
 		}
 
-		public void playerUpdate(Vector3f pos, Quaternion ort, Vector3f dir, long time, SocketAddress sender) {
+		public void playerUpdate(Vector3f pos, Quaternion ort, Vector3f dir, float time, SocketAddress sender) {
 			Client c = cdb.getClient(sender);
 			if (c != null) {
 				Ship s = c.getShip();

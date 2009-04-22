@@ -9,7 +9,7 @@ public class AddMissileCommand extends AbstractCommand {
 	private int ownerid;
 	private int id;
 
-	public AddMissileCommand(long time, int id, Vector3f pos, Vector3f dir, int ownerid) {
+	public AddMissileCommand(float time, int id, Vector3f pos, Vector3f dir, int ownerid) {
 		super(time);
 		this.pos = pos;
 		this.dir = dir;

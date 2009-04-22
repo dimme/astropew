@@ -7,7 +7,7 @@ import common.world.Ship;
 
 public class PacketDataFactory {
 
-	public static byte[] createPlayerUpdate(long time, Ship s) {
+	public static byte[] createPlayerUpdate(float time, Ship s) {
 		final byte[] b = new byte[OffsetConstants.PLAYER_UPDATE_SIZE];
 		b[0] = ClientPacketType.PLAYER_UPDATE;
 		b[1] = 0;
@@ -34,11 +34,11 @@ public class PacketDataFactory {
 	 * Time - long - 8 byte <br>
 	 */
 
-	public static byte[] createFireMissile(long time, Ship s){
+	public static byte[] createFireMissile(float time){
 		final byte[] b = new byte[OffsetConstants.FIRE_MISSILE_SIZE];
 		b[0] = ClientPacketType.FIRE_MISSILE;
 		b[1] = 0;
-		Util.put(time + 200, b, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
+		Util.put(time, b, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
 		return b;
 	}
 }

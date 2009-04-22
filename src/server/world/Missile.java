@@ -11,7 +11,7 @@ public class Missile extends common.world.Missile {
 	
 	private final Game game;
 	
-	public Missile(Game game, int id, Vector3f pos, Vector3f dir, Player owner, long time) {
+	public Missile(Game game, int id, Vector3f pos, Vector3f dir, Player owner, float time) {
 		super(id, pos, dir, owner, time);
 		this.game = game;
 	}

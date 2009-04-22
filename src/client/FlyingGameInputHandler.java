@@ -67,7 +67,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		
 		public static final float ACCELERATE = 1f;
 		public static final float DECELERATE = -1f;
-		public static final float MAX_SPEED = 30f;
+		public static final float MAX_SPEED = 100f;
 		public static final float MAX_SPEED_SQ = MAX_SPEED*MAX_SPEED;
 		
 		protected final float acceleration;

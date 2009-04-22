@@ -50,13 +50,20 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	protected final int selfShipId;
 	protected final Universe universe;
 	private InputHandler inputHandler;
-	private long lastUpdateTime;
+	private float lastUpdateTime;
 	private CameraController cameraController;
+	private Timer timer;
 	
 	private Skybox skybox;
+	
+	private final long serverltime;
+	private final float serverftime;
+	private float timediff;
 
-	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc) {
+	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
+		this.serverltime = serverltime;
+		this.serverftime = serverftime;
 		this.selfShipId = selfshipid;
 		this.gc = gc;
 		commandQueue = new PriorityQueue<Command>(51);
@@ -71,6 +78,16 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	protected void initGame() {
+		timer = Timer.getTimer();
+		timer.update();
+		long curt = System.currentTimeMillis();
+		timediff = 0.001f * (curt - serverltime) + serverftime - timer.getTimeInSeconds();
+		
+		System.out.println("sl: " + serverltime);
+		System.out.println("sf: " + serverftime);
+		System.out.println("cl: " + curt);
+		System.out.println("cf: " + timer.getTimeInSeconds());
+		System.out.println("timediff: " + timediff);
 		
 		skybox = buildSkyBox();
 		universe.attachChild(skybox);
@@ -169,8 +186,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	protected void update(float interpolation) {
-		//Timer.getTimer().
-		lastUpdateTime = System.currentTimeMillis();
+		lastUpdateTime = timer.getTimeInSeconds() + timediff;
 		Command c;
 		synchronized (this) {
 			while (!commandQueue.isEmpty()) {
@@ -220,10 +236,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		Ship s;
 		
 		if (p == self) {
-			s = new SelfShip(id, p);
+			s = new SelfShip(id, p, lastUpdateTime);
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
-			s = new Ship(id, p);
+			s = new Ship(id, p, lastUpdateTime);
 		}
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
@@ -259,14 +275,14 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		universe.removeChild(removed);
 	}
 
-	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, long tick) {
+	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time) {
 		final Ship s = logic.getShip(id);
 		if (s != null) {
-			if (s.shouldUpdate(tick)) {
+			if (s.shouldUpdate(time)) {
 				s.getPosition().set(pos);
 				s.getOrientation().set(ort);
 				s.getMovement().set(dir);
-				s.setLastUpdate(tick);
+				s.setLastUpdate(time);
 			}
 		}
 	}
@@ -280,7 +296,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		t.start();
 	}
 
-	public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, long time) {
+	public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float time) {
 		common.Player owner = logic.getPlayer(ownerid);
 		Ship s = owner.getShip();
 		Missile m = new Missile(id, pos, dir, owner, time);
@@ -299,7 +315,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		Ship s = self.getShip();
 		if (s.canFire(lastUpdateTime)) {
 			s.setLastFireTime(lastUpdateTime);
-			gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTime, self.getShip()));
+			gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTime+0.2f));
 		}
 	}
 	
@@ -318,7 +334,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 	}
 
-	public long getLastUpdate() {
+	public float getLastUpdate() {
 		return lastUpdateTime;
 	}
 }

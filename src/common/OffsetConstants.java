@@ -13,8 +13,10 @@ public interface OffsetConstants {
 
 	public static final byte INITIALIZER_RANDOM_SEED_OFFSET = 2;
 	public static final byte INITIALIZER_ID_OFFSET = 10;
-	public static final int INITIALIZER_SHIPID_OFFSET = 14;
-	public static final byte INITIALIZER_STRING_OFFSET = 18;
+	public static final byte INITIALIZER_SHIPID_OFFSET = 14;
+	public static final byte INITIALIZER_CURRENT_TIME_MILLIS_OFFSET = 18;
+	public static final byte INITIALIZER_CURRENT_TIME_FLOAT_OFFSET = 26;
+	public static final byte INITIALIZER_STRING_OFFSET = 30;
 
 	public static final byte PLAYER_JOINED_ID_OFFSET = 2;
 	public static final byte PLAYER_JOINED_SHIPID_OFFSET = 6;

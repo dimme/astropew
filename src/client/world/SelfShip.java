@@ -8,12 +8,14 @@ import common.world.Ship;
 public class SelfShip extends Ship {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Vector3f tmpv = new Vector3f();
 
-	public SelfShip(int id, Player owner) {
-		super(id, owner);
+	public SelfShip(int id, Player owner, float creationtime) {
+		super(id, owner, creationtime);
 	}
 
-	public void interpolate(float delta, long currentTime) {
+	public void interpolate(float delta, float currentTime) {
 		
 		//position:
 		Vector3f transl = getLocalTranslation();

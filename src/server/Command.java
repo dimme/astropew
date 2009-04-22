@@ -4,6 +4,6 @@ public interface Command extends Comparable<Command> {
 
 	public void perform(GameCommandInterface gci);
 
-	public long getTime();
+	public float getTime();
 
 }

@@ -29,14 +29,14 @@ public class PacketDecoder implements PacketObserver {
 			game.addCommand(new ClientLeavingCommand(sender));
 			break;
 		case ClientPacketType.PLAYER_UPDATE:
-			long time = Util.getLong(data, OffsetConstants.PLAYER_UPDATE_TIME_OFFSET);
+			float time = Util.getFloat(data, OffsetConstants.PLAYER_UPDATE_TIME_OFFSET);
 			Vector3f pos = Util.getVector3f(data, OffsetConstants.PLAYER_UPDATE_POS_OFFSET, new Vector3f());
 			Quaternion ort = Util.getQuaternion(data, OffsetConstants.PLAYER_UPDATE_ORT_OFFSET, new Quaternion());
 			Vector3f dir = Util.getVector3f(data, OffsetConstants.PLAYER_UPDATE_DIR_OFFSET, new Vector3f());
 			game.addCommand(new PlayerUpdateCommand(sender, pos, ort, dir, time) );
 			break;
 		case ClientPacketType.FIRE_MISSILE:
-			long t = Util.getLong(data, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
+			float t = Util.getFloat(data, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
 			game.addCommand(new FireMissileCommand(sender, t) );
 			
 			break;
