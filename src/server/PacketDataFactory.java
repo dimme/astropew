@@ -103,7 +103,7 @@ public class PacketDataFactory {
 					byteNames[i] = c.getName().getBytes();
 					ids[i] = c.getID();
 					shipids[i] = c.getShip().getID();
-					size += 5 + byteNames[i].length;
+					size += 9 + byteNames[i].length;
 					i++;
 				}
 			}

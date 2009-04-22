@@ -27,9 +27,9 @@ public class ConsoleNetworkObserver implements PacketObserver {
 		} else if (ptype == ServerPacketType.PLAYERS_INFO) {
 			String s = "";
 			for (int i = 2; i < data.length;) {
-				final byte tmp = data[i+4];
-				final String name = new String(data, i+5, tmp);
-				i += tmp + 5;
+				final byte namelen = data[i+8];
+				final String name = new String(data, i+9, namelen);
+				i += namelen + 9;
 				s += name + ", ";
 			}
 			System.out.println("Added players: " + s);
