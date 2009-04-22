@@ -13,7 +13,7 @@ public class Universe extends OctTreeNode {
 	
 	private static final long serialVersionUID = 1L;
 	private static final int MAX_NUM_PLANETS = 1000;
-	private static final int POSITION_RANGE = 3000;
+	private static final int POSITION_RANGE = 100;
 	
 	private final long seed;
 	private final BoundingBox worldbound;

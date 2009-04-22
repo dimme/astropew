@@ -33,6 +33,7 @@ import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 import com.jme.util.TextureManager;
+import com.jme.util.Timer;
 
 import common.world.Missile;
 import common.world.Planet;
@@ -168,6 +169,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	protected void update(float interpolation) {
+		//Timer.getTimer().
 		lastUpdateTime = System.currentTimeMillis();
 		Command c;
 		synchronized (this) {
