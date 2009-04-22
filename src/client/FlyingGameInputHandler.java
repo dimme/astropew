@@ -1,5 +1,7 @@
 package client;
 
+import client.world.SelfShip;
+
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
@@ -9,7 +11,6 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
-import common.world.SelfShip;
 import common.world.Ship;
 
 public class FlyingGameInputHandler extends InputHandler {
@@ -80,11 +81,11 @@ public class FlyingGameInputHandler extends InputHandler {
 		public void performAction(InputActionEvent evt) {
 			Quaternion ort = ship.getLocalRotation();
 			ort.getRotationColumn(2, z);
-			Vector3f movement = ship.getMovement();
-			movement.addLocal(z.multLocal(acceleration));
-			if (movement.lengthSquared() > MAX_SPEED_SQ) {
-				movement.normalizeLocal();
-				movement.multLocal(MAX_SPEED);
+			Vector3f velocity = ship.getMovement();
+			velocity.addLocal(z.multLocal(acceleration));
+			if (velocity.lengthSquared() > MAX_SPEED_SQ) {
+				velocity.normalizeLocal();
+				velocity.multLocal(MAX_SPEED);
 			}
 		}
 	}

@@ -32,7 +32,7 @@ public class Universe extends OctTreeNode {
 	public void generate(PlanetFactory pf) {
 		Random rnd = new Random(seed);
 		
-		final int numPlanets = 1;//rnd.nextInt(MAX_NUM_PLANETS);
+		final int numPlanets = rnd.nextInt(MAX_NUM_PLANETS);
 		final Vector3f position = new Vector3f();
 		final ColorRGBA color = new ColorRGBA();
 		float size;
@@ -41,7 +41,7 @@ public class Universe extends OctTreeNode {
 			float x = POSITION_RANGE*(rnd.nextFloat()-0.5f);
 			float y = POSITION_RANGE*(rnd.nextFloat()-0.5f);
 			float z = POSITION_RANGE*(rnd.nextFloat()-0.5f);
-			x=y=z=0;
+			
 			position.set(x,y,z);
 			size = 1+10*rnd.nextFloat();
 			

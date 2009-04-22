@@ -4,6 +4,8 @@ import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import client.world.SelfShip;
+
 import com.jme.app.VariableTimestepGame;
 import com.jme.image.Texture;
 import com.jme.input.InputHandler;
@@ -34,7 +36,6 @@ import com.jme.util.TextureManager;
 
 import common.world.Missile;
 import common.world.Planet;
-import common.world.SelfShip;
 import common.world.Ship;
 import common.world.Universe;
 

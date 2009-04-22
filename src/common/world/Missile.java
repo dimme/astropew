@@ -23,4 +23,9 @@ public class Missile extends MobileObject {
 		updateGeometricState(0, true);
 		updateModelBound();
 	}
+	
+	public void interpolate(float f, long l) {
+		super.interpolate(f, l);
+		//System.out.println(getLocalTranslation());
+	}
 }

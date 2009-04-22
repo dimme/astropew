@@ -1,8 +1,9 @@
-package common.world;
+package client.world;
 
 import com.jme.math.Vector3f;
 
 import common.Player;
+import common.world.Ship;
 
 public class SelfShip extends Ship {
 
@@ -20,5 +21,9 @@ public class SelfShip extends Ship {
 		transl.addLocal(tmpv);
 		
 		//TODO: Maybe do something with data from server
+	}
+	
+	public boolean shouldUpdate(long newPointInTime) {
+		return false;
 	}
 }
