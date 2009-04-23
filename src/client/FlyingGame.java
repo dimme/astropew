@@ -4,6 +4,8 @@ import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import client.command.Command;
+import client.command.GameCommandInterface;
 import client.world.SelfShip;
 
 import com.jme.app.VariableTimestepGame;
@@ -54,6 +56,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private float lastUpdateTime;
 	private CameraController cameraController;
 	private Timer timer;
+	private final GameCommandInterface gci;
 	
 	private Skybox skybox;
 	
@@ -63,6 +66,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
+		this.gci = new CommandInterface();
 		this.serverltime = serverltime;
 		this.serverftime = serverftime;
 		this.selfShipId = selfshipid;
@@ -192,7 +196,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		synchronized (this) {
 			while (!commandQueue.isEmpty()) {
 				c = commandQueue.remove();
-				c.perform(this, interpolation);
+				c.perform(gci);
 			}
 		}
 		Ship ship = self.getShip();
@@ -222,15 +226,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	public synchronized void addCommand(Command cmd) {
 		commandQueue.add(cmd);
-	}
-
-	public void addPlayer(int id, String name, int shipid) {
-		addPlayer( shipid, new Player(name, id) );
-	}
-	
-	private void addPlayer(int shipid, Player p) {
-		Ship s = createShip(shipid, p);
-		logic.add(s);
 	}
 
 	private Ship createShip(int id, Player p) {
@@ -271,23 +266,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		return skybox;
 	}
 
-	public void removePlayer(int id) {
-		Ship removed = logic.remove(logic.getPlayer(id));
-		universe.removeChild(removed);
-	}
-
-	public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time) {
-		final Ship s = logic.getShip(id);
-		if (s != null) {
-			if (s.shouldUpdate(time)) {
-				s.getPosition().set(pos);
-				s.getOrientation().set(ort);
-				s.getMovement().set(dir);
-				s.setLastUpdate(time);
-			}
-		}
-	}
-
 	public void startInThread() {
 		final Thread t = new Thread() {
 			public void run() {
@@ -296,20 +274,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		};
 		t.start();
 	}
-
-	public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float time) {
-		common.Player owner = logic.getPlayer(ownerid);
-		Ship s = owner.getShip();
-		Missile m = new Missile(id, pos, dir, owner, time);
-		
-		MaterialState ms = display.getRenderer().createMaterialState();
-		
-		ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
-		ms.setAmbient(s.getColor());
-		m.setRenderState(ms);
-		
-		universe.attachChild(m);
-		logic.add(m);
+	
+	private void addPlayer(int shipid, Player p) {
+		Ship s = createShip(shipid, p);
+		logic.add(s);
 	}
 	
 	public void fireMissile(){
@@ -336,13 +304,48 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			return p;
 		}
 	}
+	
+	private class CommandInterface implements GameCommandInterface {
+		public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float time) {
+			common.Player owner = logic.getPlayer(ownerid);
+			Ship s = owner.getShip();
+			Missile m = new Missile(id, pos, dir, owner, time);
+			
+			MaterialState ms = display.getRenderer().createMaterialState();
+			
+			ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
+			ms.setAmbient(s.getColor());
+			m.setRenderState(ms);
+			
+			universe.attachChild(m);
+			logic.add(m);
+		}
+		
+		public void removePlayer(int id) {
+			Ship removed = logic.remove(logic.getPlayer(id));
+			universe.removeChild(removed);
+		}
 
-	public float getLastUpdate() {
-		return lastUpdateTime;
+		public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time) {
+			final Ship s = logic.getShip(id);
+			if (s != null) {
+				if (s.shouldUpdate(time)) {
+					s.getPosition().set(pos);
+					s.getOrientation().set(ort);
+					s.getMovement().set(dir);
+					s.setLastUpdate(time);
+				}
+			}
+		}
+		
+		public void addPlayer(int id, String name, int shipid) {
+			FlyingGame.this.addPlayer( shipid, new Player(name, id) );
+		}
+		
+		public void destroyObject(int objid) {
+			WorldObject wobj = logic.remove(objid);
+			universe.removeChild(wobj);
+		}
 	}
 
-	public void destroyObject(int objid) {
-		WorldObject wobj = logic.remove(objid);
-		universe.removeChild(wobj);
-	}
 }

@@ -1,4 +1,5 @@
-package client;
+package client.command;
+
 
 import com.jme.math.Vector3f;
 
@@ -17,8 +18,8 @@ public class AddMissileCommand extends AbstractCommand {
 		this.id=id;
 	}
 
-	public void perform(Game game, float delta) {
-		game.addMissile(id, pos, dir, ownerid, time);
+	public void perform(GameCommandInterface gci) {
+		gci.addMissile(id, pos, dir, ownerid, time);
 	}
 
 }

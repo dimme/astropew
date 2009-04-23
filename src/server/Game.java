@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
+import server.command.Command;
+import server.command.GameCommandInterface;
 
 import com.jme.app.BaseHeadlessApp;
 import com.jme.bounding.BoundingSphere;
@@ -194,7 +196,7 @@ public class Game extends BaseHeadlessApp {
 					Vector3f pos = s.getLocalTranslation();
 					Vector3f dir = s.getLocalRotation().getRotationColumn(2);
 					dir.multLocal(200f);
-					dir.addLocal(s.getMovement());
+					//dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
 					Missile m = new Missile(Game.this, object_id++, pos, dir, c, frameTime);
 					universe.attachChild(m);

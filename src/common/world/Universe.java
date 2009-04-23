@@ -32,7 +32,7 @@ public class Universe extends OctTreeNode {
 	public void generate(PlanetFactory pf) {
 		Random rnd = new Random(seed);
 		
-		final int numPlanets = rnd.nextInt(MAX_NUM_PLANETS);
+		final int numPlanets = (int)(MAX_NUM_PLANETS* ( 0.3f + 0.7f*rnd.nextFloat() ));
 		final Vector3f position = new Vector3f();
 		final ColorRGBA color = new ColorRGBA();
 		float size;
@@ -57,7 +57,9 @@ public class Universe extends OctTreeNode {
 	}
 	
 	public void removeChild(WorldObject wobj) {
-		remove(wobj);
-		wobj.removeFromParent();
+		if (wobj != null) {
+			remove(wobj);
+			wobj.removeFromParent();
+		}
 	}
 }

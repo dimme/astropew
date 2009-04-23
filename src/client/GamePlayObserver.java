@@ -2,6 +2,12 @@ package client;
 
 import java.net.SocketAddress;
 
+import client.command.AddMissileCommand;
+import client.command.AddPlayerCommand;
+import client.command.DestroyObjectCommand;
+import client.command.RemovePlayerCommand;
+import client.command.UpdatePositionCommand;
+
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import common.GameException;

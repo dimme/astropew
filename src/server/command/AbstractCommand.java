@@ -1,4 +1,4 @@
-package server;
+package server.command;
 
 public abstract class AbstractCommand implements Command {
 

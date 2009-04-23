@@ -1,4 +1,5 @@
-package client;
+package client.command;
+
 
 
 public class RemovePlayerCommand extends AbstractCommand {
@@ -9,8 +10,8 @@ public class RemovePlayerCommand extends AbstractCommand {
 		this.id = id;
 	}
 
-	public void perform(Game game, float delta) {
-		game.removePlayer(id);
+	public void perform(GameCommandInterface gci) {
+		gci.removePlayer(id);
 	}
 
 }

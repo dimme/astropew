@@ -1,6 +1,7 @@
-package server;
+package server.command;
 
 import java.net.SocketAddress;
+
 
 public class ClientJoiningCommand extends AbstractCommand {
 

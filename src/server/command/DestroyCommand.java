@@ -1,4 +1,4 @@
-package server;
+package server.command;
 
 import common.world.WorldObject;
 

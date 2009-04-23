@@ -1,4 +1,5 @@
-package client;
+package client.command;
+
 
 
 public class AddPlayerCommand extends AbstractCommand {
@@ -14,8 +15,8 @@ public class AddPlayerCommand extends AbstractCommand {
 		this.shipid = shipid;
 	}
 
-	public void perform(Game game, float delta) {
-		game.addPlayer(id,name, shipid);
+	public void perform(GameCommandInterface gci) {
+		gci.addPlayer(id,name, shipid);
 	}
 
 }

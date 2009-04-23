@@ -1,4 +1,6 @@
-package server;
+package client.command;
+
+
 
 public interface Command extends Comparable<Command> {
 

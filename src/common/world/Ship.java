@@ -13,7 +13,7 @@ public class Ship extends MobileObject {
 	
 	protected ColorRGBA color;
 	
-	private static final float FIRE_INTERVAL = 0.3f;
+	private static final float FIRE_INTERVAL = 0.1f;
 	private float lastFire = 0;
 
 	public ColorRGBA getColor() {

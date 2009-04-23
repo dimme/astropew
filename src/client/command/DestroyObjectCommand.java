@@ -1,4 +1,5 @@
-package client;
+package client.command;
+
 
 public class DestroyObjectCommand extends AbstractCommand {
 
@@ -9,8 +10,8 @@ public class DestroyObjectCommand extends AbstractCommand {
 		this.objid = objid;
 	}
 
-	public void perform(Game game, float interpolation) {
-		game.destroyObject(objid);
+	public void perform(GameCommandInterface gci) {
+		gci.destroyObject(objid);
 	}
 
 }

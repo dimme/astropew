@@ -1,4 +1,5 @@
-package client;
+package client.command;
+
 
 public abstract class AbstractCommand implements Command {
 

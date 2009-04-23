@@ -1,9 +1,9 @@
-package client;
+package server.command;
 
 
 public interface Command extends Comparable<Command> {
 
-	public void perform(Game game, float interpolation);
+	public void perform(GameCommandInterface gci);
 
 	public float getTime();
 

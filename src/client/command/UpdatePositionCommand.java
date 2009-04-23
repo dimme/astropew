@@ -1,4 +1,5 @@
-package client;
+package client.command;
+
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -18,7 +19,7 @@ public class UpdatePositionCommand extends AbstractCommand {
 		this.ort = ort;
 	}
 
-	public void perform(Game game, float delta) {
-		game.updatePosition(pos, ort, dir, id, time);
+	public void perform(GameCommandInterface gci) {
+		gci.updatePosition(pos, ort, dir, id, time);
 	}
 }
