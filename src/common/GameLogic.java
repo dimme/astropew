@@ -12,7 +12,7 @@ import common.world.Universe;
 import common.world.WorldObject;
 
 public abstract class GameLogic {
-	protected HashMap<Player, Ship> shiptable = new HashMap<Player, Ship>();
+	private HashMap<Player, Ship> shiptable = new HashMap<Player, Ship>();
 	private final HashSet<MobileObject> mobjs = new HashSet<MobileObject>();
 	private final HashMap<Integer, WorldObject> objects = new HashMap<Integer, WorldObject>();
 
@@ -44,10 +44,15 @@ public abstract class GameLogic {
 		return removed;
 	}
 	
+	public Ship getShipByPlayer(Player player) {
+		return shiptable.get(player);
+	}
+	
 	public WorldObject remove(WorldObject obj) {
 		if (obj != null) {
 			mobjs.remove(obj);
 			objects.remove(obj.getID());
+			shiptable.values().remove(obj);
 		}
 		return obj;
 	}
@@ -79,6 +84,12 @@ public abstract class GameLogic {
 			}
 		}
 	}
+	
+	public final WorldObject getObject(int objid) {
+		return objects.get(objid);
+	}
 
+	public abstract void destroy(Missile m);
+	public abstract void destroy(Ship ship);
 	public abstract void destroy(WorldObject worldObject);
 }

@@ -1,13 +1,15 @@
 package client.command;
 
+import common.world.WorldObject;
+
 
 public class DestroyObjectCommand extends AbstractCommand {
 
 	private final int objid;
 	
-	public DestroyObjectCommand(int objid) {
+	public DestroyObjectCommand(int id) {
 		super(0); //as fast as possible
-		this.objid = objid;
+		objid = id;
 	}
 
 	public void perform(GameCommandInterface gci) {

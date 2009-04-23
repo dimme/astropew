@@ -1,6 +1,8 @@
 package server;
 
 import server.command.DestroyCommand;
+import common.world.Missile;
+import common.world.Ship;
 import common.world.WorldObject;
 
 public class GameLogic extends common.GameLogic {
@@ -13,6 +15,18 @@ public class GameLogic extends common.GameLogic {
 	}
 	
 	public void destroy(WorldObject worldObject) {
-		game.addCommand(new DestroyCommand(worldObject, game.getFrameTime()));
+		_destroy(worldObject);
+	}
+	
+	private void _destroy(WorldObject wobj) {
+		game.addCommand(new DestroyCommand(wobj, game.getFrameTime()));
+	}
+
+	public void destroy(Missile m) {
+		_destroy(m);
+	}
+
+	public void destroy(Ship ship) {
+		_destroy(ship);
 	}
 }

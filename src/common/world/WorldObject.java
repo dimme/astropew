@@ -67,7 +67,7 @@ public abstract class WorldObject extends Node {
 		return false;
 	}
 	
-	protected void destroy() {
+	public final void destroy() {
 		logic.destroy(this);
 	}
 

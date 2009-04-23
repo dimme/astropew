@@ -280,6 +280,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		logic.add(s);
 	}
 	
+	public Universe getUniverse() {
+		return universe;
+	}
+	
 	public void fireMissile(){
 		Ship s = self.getShip();
 		if (s.canFire(lastUpdateTime)) {
@@ -327,7 +331,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 
 		public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time) {
-			final Ship s = logic.getShip(id);
+			final Ship s = logic.getShipByPlayerID(id);
 			if (s != null) {
 				if (s.shouldUpdate(time)) {
 					s.getPosition().set(pos);
@@ -343,8 +347,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 		
 		public void destroyObject(int objid) {
-			WorldObject wobj = logic.remove(objid);
-			universe.removeChild(wobj);
+			WorldObject destroyed = logic.getObject(objid);
+			if (destroyed != null) {
+				destroyed.destroy();
+			}
 		}
 	}
 

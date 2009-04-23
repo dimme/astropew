@@ -5,6 +5,7 @@ import java.util.HashMap;
 import client.command.DestroyObjectCommand;
 
 import common.Player;
+import common.world.Missile;
 import common.world.Ship;
 import common.world.WorldObject;
 
@@ -41,12 +42,24 @@ public class GameLogic extends common.GameLogic {
 		players.remove(p.getID());
 	}
 
-	public Ship getShip(int id) {
-		return shiptable.get(players.get(id));
+	public Ship getShipByPlayerID(int playerid) {
+		return getShipByPlayer(players.get(playerid));
 	}
 
 	public void destroy(WorldObject wobj) {
-		game.addCommand(new DestroyObjectCommand(wobj.getID()));
+		game.getUniverse().removeChild(wobj);
+	}
+
+	@Override
+	public void destroy(Missile m) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void destroy(Ship ship) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

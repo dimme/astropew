@@ -15,7 +15,7 @@ public class Missile extends common.world.Missile {
 
 	public void collidedWith(WorldObject wobj) {
 		if (getOwner() != wobj.getOwner()) {
-			System.out.println("Missile " + getID() + " collided with " + wobj);
+			System.out.println("Missile (" + getID() + ") collided with " + wobj);
 			setIsCollidable(false);
 			wobj.takeDamage(10);
 			destroy();
