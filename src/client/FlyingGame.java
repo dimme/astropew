@@ -284,7 +284,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		Ship s = self.getShip();
 		if (s.canFire(lastUpdateTime)) {
 			s.setLastFireTime(lastUpdateTime);
-			gc.sender.send(PacketDataFactory.createFireMissile(lastUpdateTime+0.2f));
+			gc.sender.controlledSend(PacketDataFactory.createFireMissile(lastUpdateTime+0.2f));
 		}
 	}
 	

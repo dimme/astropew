@@ -4,6 +4,8 @@ import java.net.DatagramPacket;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import common.CommonPacketType;
 import common.Util;
@@ -46,25 +48,30 @@ public abstract class AckingFilter implements PacketFilter {
 	
 	private static class Data {
 		private boolean[] received = new boolean[256];
-		private byte oldestPending = 0;
+		private int oldestPending = 0;
 		
 		/**
 		 * @param seq
 		 * @return true if seq was inside the window
 		 */
-		public boolean received(byte seq) {
-			int diff = oldestPending - seq;
+		public boolean received(byte s) {
+			int seq = s<0 ? s+256 : s;
+			int op = oldestPending < 0 ? oldestPending+256 : oldestPending;
+			int diff = op - seq;
 			if (diff < 0) {
 				diff += 256;
 			}
+			
 			if (diff < 128) {
 				received[seq] = true;
 				while ( received[oldestPending] ) {
 					received[oldestPending] = false;
-					oldestPending++;
+					oldestPending = oldestPending == 255 ? 0 : oldestPending+1;
 				}
 				return true;
 			}
+			
+			Logger.getLogger(getClass().getName()).log(Level.INFO, "Received packet outside window, seq = " + seq);
 			return false;
 		}
 	}

@@ -18,13 +18,15 @@ public class UDPConnection {
 	}
 
 	public byte addControlledPacket(byte[] data) throws SendWindowFullException {
-		int diff = (nextSeq) - oldestPending;
+		int ns = nextSeq < 0 ? nextSeq + 256 : nextSeq;
+		int op = oldestPending < 0 ? oldestPending + 256 : oldestPending;
+		int diff = ns - op;
 		if (diff < 0) {
 			diff += 256;
 		}
-
+		
 		if (diff > 128) {
-			throw new SendWindowFullException("Send window overflow");
+			throw new SendWindowFullException("Send window overflow; next=" + nextSeq + ", oldestpending=" + oldestPending);
 		}
 
 		data[0] |= Util.CONTROLLED_PACKET_MASK;
@@ -36,14 +38,15 @@ public class UDPConnection {
 	public void acknowledged(byte seq) {
 		final int s = seq < 0 ? seq + 256 : seq;
 		acked[s] = true;
-		packets.remove(s);
+		packets.remove(seq);
 
 		int o = s;
 		while (acked[o]) {
-			acked[oldestPending] = false;
-			oldestPending++;
-			o = oldestPending < 0 ? oldestPending + 256 : oldestPending;
+			acked[o] = false;
+			o = o == 255 ? 0 : o+1;
 		}
+		
+		oldestPending = (byte)o;
 	}
 
 	public byte[] getData(byte seq) {
@@ -55,7 +58,6 @@ public class UDPConnection {
 	}
 
 	public String toString() {
-		return dgp.getSocketAddress().toString() + ", " + packets.size()
-				+ " pending";
+		return dgp.getSocketAddress().toString() + ", " + packets.size() + " pending";
 	}
 }

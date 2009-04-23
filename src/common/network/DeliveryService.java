@@ -17,7 +17,7 @@ public class DeliveryService implements PacketObserver {
 	private final PriorityQueue<Task> tasks;
 	private final Map<SocketAddress, UDPConnection> connections;
 	private final PacketSender ps;
-	private final Task compareSingleton;
+	private final Task compareSingleton; //used to remove Tasks
 
 	private static final long TIMEOUT = 500;
 
@@ -165,6 +165,7 @@ public class DeliveryService implements PacketObserver {
 
 		public void execute() {
 			final UDPConnection udpc = connections.get(saddr);
+			udpc.acknowledged(seq);
 			compareSingleton.seq = seq;
 			compareSingleton.udpc = udpc;
 			tasks.remove(compareSingleton);
