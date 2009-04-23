@@ -7,4 +7,6 @@ public class Todo {
 	// TODO: ExecutorService som kan prioritera (för att kunna lägga till grejor i PacketReaderThread så snabbt som möjligt)
 	// TODO: Undersök användandet av ticks/pointInTime/millis...
 	// TODO: Kolla så att controlled Send används där det ska.
+	// TODO: InitializeObserver bör spara ohanterade paket och skicka dem till GamePlayObservern den skapar.
+	// TODO: inte så många new Vector3f() i pakethantering
 }

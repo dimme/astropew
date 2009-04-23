@@ -1,5 +1,6 @@
 package server.world;
 
+import server.DestroyCommand;
 import server.Game;
 
 import com.jme.math.Vector3f;

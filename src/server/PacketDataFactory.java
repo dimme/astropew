@@ -69,27 +69,27 @@ public class PacketDataFactory {
 	public static byte[] createPosition(float time, Collection<Ship> ships) {
 		
 		//TODO: Check if the array will fit in a UDP Packet.
-		final byte[] b = new byte[ships.size() * 44  + 10];
+		final byte[] b = new byte[ships.size() * OffsetConstants.PLAYER_POSITIONS_ONE_SIZE  + OffsetConstants.PLAYER_POSITIONS_DATA_START];
 		
 		b[0] = ServerPacketType.PLAYER_POSITIONS;
 		b[1] = 0;
-		Util.put(time, b, OffsetConstants.PLAYER_POSITIONS_TICK_OFFSET);
+		Util.put(time, b, OffsetConstants.PLAYER_POSITIONS_TIME_OFFSET);
 		
-		int offset = 10;
+		int offset = OffsetConstants.PLAYER_POSITIONS_DATA_START;
 		
 		for(final Ship s: ships) {
-			Util.put(s.getOwner().getID(), b, offset);
-			Util.put(s.getLocalTranslation(), b, offset+4);
-			Util.put(s.getLocalRotation(), b, offset+16);
-			Util.put(s.getMovement(), b, offset+32);
-			offset += 44;
+			Util.put(s.getOwner().getID(), b, offset + OffsetConstants.PLAYER_POSITIONS_ID_OFFSET);
+			Util.put(s.getLocalTranslation(), b, offset+OffsetConstants.PLAYER_POSITIONS_POS_OFFSET);
+			Util.put(s.getLocalRotation(), b, offset+OffsetConstants.PLAYER_POSITIONS_ORT_OFFSET);
+			Util.put(s.getMovement(), b, offset+OffsetConstants.PLAYER_POSITIONS_DIR_OFFSET);
+			offset += OffsetConstants.PLAYER_POSITIONS_ONE_SIZE;
 		}
 		
 		return b;
 	}
 
 	public static byte[] createPlayersInfo(ClientDB cdb, Client Player) {
-		int size = 2;
+		int size = OffsetConstants.PLAYERS_INFO_DATA_START;
 		byte[][] byteNames;
 		int[] ids;
 		int[] shipids;
@@ -106,7 +106,7 @@ public class PacketDataFactory {
 					byteNames[i] = c.getName().getBytes();
 					ids[i] = c.getID();
 					shipids[i] = c.getShip().getID();
-					size += 9 + byteNames[i].length;
+					size += OffsetConstants.PLAYERS_DATA_NAME_OFFSET + byteNames[i].length;
 					i++;
 				}
 			}
@@ -118,13 +118,13 @@ public class PacketDataFactory {
 		b[0] = ServerPacketType.PLAYERS_INFO;
 		b[1] = 0;
 
-		int offset = 2;
+		int offset = OffsetConstants.PLAYERS_INFO_DATA_START;
 		for (int k = 0; k < numberOfClients; k++) {
-			Util.put(ids[k], b, offset);
-			Util.put(shipids[k], b, offset+4);
-			b[offset+8] = (byte) byteNames[k].length;
-			Util.put(byteNames[k], b, offset+9);
-			offset += 9+byteNames[k].length;
+			Util.put(ids[k], b, offset + OffsetConstants.PLAYERS_DATA_ID_OFFSET);
+			Util.put(shipids[k], b, offset+OffsetConstants.PLAYERS_DATA_SHIPID_OFFSET);
+			b[offset+OffsetConstants.PLAYERS_DATA_NAME_LENGTH_OFFSET] = (byte) byteNames[k].length;
+			Util.put(byteNames[k], b, offset+OffsetConstants.PLAYERS_DATA_NAME_OFFSET);
+			offset += OffsetConstants.PLAYERS_DATA_NAME_OFFSET+byteNames[k].length;
 		}
 
 		return b;
@@ -149,6 +149,16 @@ public class PacketDataFactory {
 		Util.put(m.getID(), b, OffsetConstants.MISSILE_ID_OFFSET);
 		Util.put(m.getOwner().getID(), b, OffsetConstants.MISSILE_OWNER_OFFSET);
 					
+		return b;
+	}
+
+	public static byte[] createDestroyObject(int id) {
+		final byte[] b = new byte[OffsetConstants.DESTROY_OBJECT_SIZE];
+		b[0] = ServerPacketType.DESTROY_OBJECT;
+		b[1] = 0;
+		
+		Util.put(id, b, OffsetConstants.DESTROY_OBJECT_ID_OFFSET);
+		
 		return b;
 	}
 }

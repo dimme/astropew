@@ -35,6 +35,14 @@ public interface ServerPacketType {
 	public static final byte MISSILE = 34;
 
 	/**
+	 * Sent to tell clients to destroy an object <br>
+	 * PacketType - 1 byte <br>
+	 * Seq - 1 byte <br>
+	 * object id - int - 4 bytes <br>
+	 */
+	public static final byte DESTROY_OBJECT = 39;
+	
+	/**
 	 * Sent to joining client to acknowledge their joining <br>
 	 * ServerPacketType - byte - 1 byte <br>
 	 * Sequence Number - byte - 1 byte <br>

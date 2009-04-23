@@ -2,6 +2,7 @@ package common.world;
 
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Sphere;
 import common.Player;
 

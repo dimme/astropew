@@ -14,6 +14,7 @@ import common.world.WorldObject;
 public abstract class GameLogic {
 	protected HashMap<Player, Ship> shiptable = new HashMap<Player, Ship>();
 	private final HashSet<MobileObject> mobjs = new HashSet<MobileObject>();
+	private final HashMap<Integer, WorldObject> objects = new HashMap<Integer, WorldObject>();
 
 	public GameLogic() {
 	}
@@ -21,20 +22,36 @@ public abstract class GameLogic {
 	public void add(Ship s) {
 		shiptable.put(s.getOwner(), s);
 		mobjs.add(s);
+		_add(s);
 	}
 	
 	public void add(MobileObject mobj) {
 		mobjs.add(mobj);
+		_add(mobj);
+	}
+	
+	public void add(WorldObject obj) {
+		_add(obj);
+	}
+	
+	private void _add(WorldObject obj) {
+		objects.put(obj.getID(), obj);
 	}
 
 	public Ship remove(Player owner) {
 		Ship removed = shiptable.remove(owner);
-		mobjs.remove(removed);
+		remove(removed);
 		return removed;
 	}
 	
-	public void remove(WorldObject mobj) {
-		mobjs.remove(mobj);
+	public WorldObject remove(WorldObject obj) {
+		mobjs.remove(obj);
+		objects.remove(obj.getID());
+		return obj;
+	}
+	
+	public WorldObject remove(int objid) {
+		return remove(objects.get(objid));
 	}
 
 	public Collection<Ship> getShips() {

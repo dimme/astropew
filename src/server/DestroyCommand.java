@@ -1,10 +1,7 @@
-package server.world;
+package server;
 
 import common.world.WorldObject;
 
-import server.AbstractCommand;
-import server.Command;
-import server.GameCommandInterface;
 
 public class DestroyCommand extends AbstractCommand {
 

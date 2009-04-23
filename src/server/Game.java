@@ -221,6 +221,8 @@ public class Game extends BaseHeadlessApp {
 		public void destroy(WorldObject obj) {
 			universe.removeChild(obj);
 			logic.remove(obj);
+			byte[] data = PacketDataFactory.createDestroyObject(obj.getID());
+			ps.sendToAll(data);
 		}
 		
 		
@@ -229,7 +231,9 @@ public class Game extends BaseHeadlessApp {
 	private class PlanetFactory implements common.world.PlanetFactory {
 
 		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
-			return new Planet(object_id++, center, 3, 3, size);
+			Planet p = new Planet(object_id++, center, 3, 3, size);
+			logic.add(p);
+			return p;
 		}
 	}
 }

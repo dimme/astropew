@@ -39,6 +39,7 @@ import common.world.Missile;
 import common.world.Planet;
 import common.world.Ship;
 import common.world.Universe;
+import common.world.WorldObject;
 
 public class FlyingGame extends VariableTimestepGame implements Game {
 
@@ -330,11 +331,18 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			ms.setAmbient(c.clone().multLocal(0.3f));
 			p.setRenderState(ms);
 			
+			logic.add(p);
+			
 			return p;
 		}
 	}
 
 	public float getLastUpdate() {
 		return lastUpdateTime;
+	}
+
+	public void destroyObject(int objid) {
+		WorldObject wobj = logic.remove(objid);
+		universe.removeChild(wobj);
 	}
 }

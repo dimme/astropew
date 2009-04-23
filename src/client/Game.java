@@ -20,4 +20,6 @@ public interface Game {
 	public abstract void fireMissile();
 
 	public abstract float getLastUpdate();
+
+	public abstract void destroyObject(int objid);
 }

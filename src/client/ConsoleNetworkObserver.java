@@ -26,10 +26,11 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
 		} else if (ptype == ServerPacketType.PLAYERS_INFO) {
 			String s = "";
-			for (int i = 2; i < data.length;) {
-				final byte namelen = data[i+8];
-				final String name = new String(data, i+9, namelen);
-				i += namelen + 9;
+			int i = OffsetConstants.PLAYERS_INFO_DATA_START; 
+			while(i < data.length) {
+				final byte namelen = data[i+OffsetConstants.PLAYERS_DATA_NAME_LENGTH_OFFSET];
+				final String name = new String(data, i+OffsetConstants.PLAYERS_DATA_NAME_OFFSET, namelen);
+				i += OffsetConstants.PLAYERS_DATA_NAME_OFFSET + namelen;
 				s += name + ", ";
 			}
 			System.out.println("Added players: " + s);
