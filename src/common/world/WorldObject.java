@@ -1,20 +1,28 @@
 package common.world;
 
+import server.command.DestroyCommand;
+
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
+import common.GameLogic;
 import common.Player;
 
 public abstract class WorldObject extends Node {
 	private static final long serialVersionUID = 1L;
 	protected Player owner = NoPlayer.instance;
 	protected final int id;
+	private final GameLogic logic;
+	
+	protected float hp;
 
-	public WorldObject(int id, String name, Player owner) {
+	public WorldObject(GameLogic logic, int id, String name, Player owner) {
 		super(name);
+		this.logic = logic;
 		this.id = id;
 		this.owner = owner;
+		hp = 100;
 	}
 
 	public Player getOwner() {
@@ -42,5 +50,32 @@ public abstract class WorldObject extends Node {
 	 */
 	public void collidedWith(WorldObject wobj) {
 		
+	}
+	
+	/**
+	 * 
+	 * @param dmg
+	 * @return true if the object was destroyed
+	 */
+	public final boolean takeDamage(float dmg) {
+		float ad = actualDamage(dmg);
+		hp -= ad;
+		if (hp <= 0) {
+			destroy();
+			return true;
+		}
+		return false;
+	}
+	
+	protected void destroy() {
+		logic.destroy(this);
+	}
+
+	protected float actualDamage(float dmg) {
+		return 0; //no damage as default
+	}
+	
+	public float getHP() {
+		return hp;
 	}
 }

@@ -2,6 +2,8 @@ package common.world;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+
+import common.GameLogic;
 import common.Player;
 
 public abstract class MobileObject extends WorldObject {
@@ -15,8 +17,8 @@ public abstract class MobileObject extends WorldObject {
 	
 	private final Vector3f tmpv = new Vector3f();
 	
-	public MobileObject(int id, String name, Player owner, float creationtime) {
-		super(id, name, owner);
+	public MobileObject(GameLogic logic, int id, String name, Player owner, float creationtime) {
+		super(logic, id, name, owner);
 		lastUpdate = creationtime;
 	}
 	

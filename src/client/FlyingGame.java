@@ -74,7 +74,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		commandQueue = new PriorityQueue<Command>(51);
 		universe = new Universe(seed);
 		self = new Player(name, id);
-		logic = new GameLogic(self);
+		logic = new GameLogic(this, self);
 		setConfigShowMode(ConfigShowMode.AlwaysShow);
 	}
 
@@ -232,10 +232,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		Ship s;
 		
 		if (p == self) {
-			s = new SelfShip(id, p, lastUpdateTime);
+			s = new SelfShip(logic, id, p, lastUpdateTime);
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
-			s = new Ship(id, p, lastUpdateTime);
+			s = new Ship(logic, id, p, lastUpdateTime);
 		}
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
@@ -292,7 +292,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		private int object_id = 0;
 		
 		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
-			Planet p = new Planet(object_id++, center, 20, 20, size);
+			Planet p = new Planet(logic, object_id++, center, 20, 20, size);
 			
 			final MaterialState ms = display.getRenderer().createMaterialState();
 			ms.setDiffuse(c);
@@ -309,7 +309,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float time) {
 			common.Player owner = logic.getPlayer(ownerid);
 			Ship s = owner.getShip();
-			Missile m = new Missile(id, pos, dir, owner, time);
+			Missile m = new Missile(logic, id, pos, dir, owner, time);
 			
 			MaterialState ms = display.getRenderer().createMaterialState();
 			

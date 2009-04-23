@@ -2,6 +2,7 @@ package client.world;
 
 import com.jme.math.Vector3f;
 
+import common.GameLogic;
 import common.Player;
 import common.world.Ship;
 
@@ -11,8 +12,8 @@ public class SelfShip extends Ship {
 	
 	private Vector3f tmpv = new Vector3f();
 
-	public SelfShip(int id, Player owner, float creationtime) {
-		super(id, owner, creationtime);
+	public SelfShip(GameLogic logic, int id, Player owner, float creationtime) {
+		super(logic, id, owner, creationtime);
 	}
 
 	public void interpolate(float delta, float currentTime) {

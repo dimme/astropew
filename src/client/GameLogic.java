@@ -2,16 +2,21 @@ package client;
 
 import java.util.HashMap;
 
+import client.command.DestroyObjectCommand;
+
 import common.Player;
 import common.world.Ship;
+import common.world.WorldObject;
 
 public class GameLogic extends common.GameLogic {
 
 	private final HashMap<Integer, Player> players;
 	private Player self;
+	private Game game;
 
-	public GameLogic(Player self) {
+	public GameLogic(Game game, Player self) {
 		super();
+		this.game=game;
 		players = new HashMap<Integer, Player>();
 		this.self = self;
 	}
@@ -38,6 +43,10 @@ public class GameLogic extends common.GameLogic {
 
 	public Ship getShip(int id) {
 		return shiptable.get(players.get(id));
+	}
+
+	public void destroy(WorldObject wobj) {
+		game.addCommand(new DestroyObjectCommand(wobj.getID()));
 	}
 
 }

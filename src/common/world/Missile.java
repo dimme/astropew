@@ -4,14 +4,16 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Sphere;
+
+import common.GameLogic;
 import common.Player;
 
 public class Missile extends MobileObject {
 
 	private static final long serialVersionUID = 1L;
 
-	public Missile(int id, Vector3f pos, Vector3f dir, Player owner, float time) {
-		super(id, "Missile", owner, time);
+	public Missile(GameLogic logic, int id, Vector3f pos, Vector3f dir, Player owner, float time) {
+		super(logic, id, "Missile", owner, time);
 		
 		final Sphere shape = new Sphere("MissileSphere", 10, 10, 0.1f );
 		shape.setModelBound(new BoundingSphere(0.1f, Vector3f.ZERO));

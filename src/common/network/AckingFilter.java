@@ -29,19 +29,21 @@ public abstract class AckingFilter implements PacketFilter {
 				sendData[0] = CommonPacketType.ACK;
 				sendData[1] = data[1];
 				ps.send(sendData, getDatagramPacket(addr));
+			
+			
+				Data d = ackdata.get(addr);
+				if (d == null) {
+					d = new Data();
+					ackdata.put(addr, d);
+				}
+				byte seq = data[1];
+				
+				boolean isNewPacket = d.received(seq);
+				
+				return isNewPacket;
 			}
-			
-			Data d = ackdata.get(addr);
-			if (d == null) {
-				d = new Data();
-				ackdata.put(addr, d);
-			}
-			byte seq = data[1];
-			
-			boolean isNewPacket = d.received(seq);
-			
-			return isNewPacket;
 		}
+		return true;
 	}
 
 	protected abstract DatagramPacket getDatagramPacket(SocketAddress saddr);

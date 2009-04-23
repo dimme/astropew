@@ -5,6 +5,8 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.TriMesh;
+
+import common.GameLogic;
 import common.Player;
 
 public class Ship extends MobileObject {
@@ -20,8 +22,8 @@ public class Ship extends MobileObject {
 		return color;
 	}
 
-	public Ship(int id, Player owner, float creationtime) {
-		super(id, "Ship", owner, creationtime);
+	public Ship(GameLogic logic, int id, Player owner, float creationtime) {
+		super(logic, id, "Ship", owner, creationtime);
 		
 		owner.setShip(this);
 
@@ -60,5 +62,9 @@ public class Ship extends MobileObject {
 
 	public void setLastFireTime(float time) {
 		lastFire = time;
+	}
+	
+	protected float actualDamage(float dmg) {
+		return dmg;
 	}
 }

@@ -61,7 +61,7 @@ public class Game extends BaseHeadlessApp {
 		this.cdb = cdb;
 		commandQueue = new PriorityQueue<Command>();
 
-		logic = new GameLogic();
+		logic = new GameLogic(this);
 
 		final Thread t = new Thread() {
 			public void run() {
@@ -159,7 +159,7 @@ public class Game extends BaseHeadlessApp {
 			if (c == null) {
 				c = cdb.createClient(name, saddr);
 
-				s = new Ship(object_id++,c, frameTime);
+				s = new Ship(logic, object_id++,c, frameTime);
 				universe.attachChild(s);
 				logic.add(s);
 
@@ -198,7 +198,7 @@ public class Game extends BaseHeadlessApp {
 					dir.multLocal(200f);
 					//dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
-					Missile m = new Missile(Game.this, object_id++, pos, dir, c, frameTime);
+					Missile m = new Missile(logic, object_id++, pos, dir, c, frameTime);
 					universe.attachChild(m);
 					logic.add(m);
 					ps.sendToAll(PacketDataFactory.createMissile(m));
@@ -233,7 +233,7 @@ public class Game extends BaseHeadlessApp {
 	private class PlanetFactory implements common.world.PlanetFactory {
 
 		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
-			Planet p = new Planet(object_id++, center, 3, 3, size);
+			Planet p = new Planet(logic, object_id++, center, 3, 3, size);
 			logic.add(p);
 			return p;
 		}

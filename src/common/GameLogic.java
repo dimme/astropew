@@ -79,4 +79,6 @@ public abstract class GameLogic {
 			}
 		}
 	}
+
+	public abstract void destroy(WorldObject worldObject);
 }
