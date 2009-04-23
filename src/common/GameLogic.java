@@ -45,8 +45,10 @@ public abstract class GameLogic {
 	}
 	
 	public WorldObject remove(WorldObject obj) {
-		mobjs.remove(obj);
-		objects.remove(obj.getID());
+		if (obj != null) {
+			mobjs.remove(obj);
+			objects.remove(obj.getID());
+		}
 		return obj;
 	}
 	
