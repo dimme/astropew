@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -168,7 +169,14 @@ public class DeliveryService implements PacketObserver {
 			udpc.acknowledged(seq);
 			compareSingleton.seq = seq;
 			compareSingleton.udpc = udpc;
-			tasks.remove(compareSingleton);
+
+			for(Iterator<Task> it = tasks.iterator(); it.hasNext();) {
+				Task t = it.next();
+				if(t.equals(compareSingleton)) {
+					it.remove();
+					break;
+				}
+			}
 
 			if (udpc.getNumPending() == 0) {
 				connections.remove(saddr);
