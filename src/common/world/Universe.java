@@ -13,7 +13,7 @@ public class Universe extends OctTreeNode {
 	
 	private static final long serialVersionUID = 1L;
 	private static final int MAX_NUM_PLANETS = 1000;
-	private static final int POSITION_RANGE = 1000;
+	private static final int POSITION_RANGE = 700;
 	
 	private final long seed;
 	private final BoundingBox worldbound;
@@ -43,7 +43,7 @@ public class Universe extends OctTreeNode {
 			float z = POSITION_RANGE*(rnd.nextFloat()-0.5f);
 			
 			position.set(x,y,z);
-			size = 1+10*rnd.nextFloat();
+			size = 0.3f+4*rnd.nextFloat();
 			
 			float r = 0.8f + 0.2f*rnd.nextFloat();
 			float g = r;

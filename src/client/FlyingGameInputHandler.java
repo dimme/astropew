@@ -7,6 +7,7 @@ import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.InputActionInterface;
+import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -65,9 +66,9 @@ public class FlyingGameInputHandler extends InputHandler {
 	
 	private class AccelerateAction implements InputActionInterface {
 		
-		public static final float ACCELERATE = 1f;
-		public static final float DECELERATE = -1f;
-		public static final float MAX_SPEED = 40f;
+		public static final float ACCELERATE = 20f;
+		public static final float DECELERATE = -20f;
+		public static final float MAX_SPEED = 20f;
 		public static final float MAX_SPEED_SQ = MAX_SPEED*MAX_SPEED;
 		
 		protected final float acceleration;
@@ -82,7 +83,7 @@ public class FlyingGameInputHandler extends InputHandler {
 			Quaternion ort = ship.getLocalRotation();
 			ort.getRotationColumn(2, z);
 			Vector3f velocity = ship.getMovement();
-			velocity.addLocal(z.multLocal(acceleration));
+			velocity.addLocal(z.multLocal(acceleration*evt.getTime()));
 			if (velocity.lengthSquared() > MAX_SPEED_SQ) {
 				velocity.normalizeLocal();
 				velocity.multLocal(MAX_SPEED);
@@ -98,7 +99,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		}
 
 		public void performAction(InputActionEvent evt) {
-			ship.getMovement().multLocal(BRAKE_COEFFICIENT);
+			ship.getMovement().multLocal(FastMath.pow(BRAKE_COEFFICIENT, evt.getTime()));
 		}
 	}
 	

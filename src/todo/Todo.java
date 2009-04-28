@@ -10,4 +10,6 @@ public class Todo {
 	// TODO: InitializeObserver bör spara ohanterade paket och skicka dem till GamePlayObservern den skapar.
 	// TODO: inte så många new Vector3f() i pakethantering
 	// TODO: Kolla så att grejor tas bort helt (alla referenser) både på klient och server. Glöm inte att skepp/missiler/worldobjects kan behandlas olika.
+	
+	//TODO: DELTA I INPUT!
 }
