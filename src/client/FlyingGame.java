@@ -392,6 +392,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				logic.add(s);
 				s.setHP(100);
 				if (playerid == self.getID()) {
+					skybox.setLocalTranslation(s.getLocalTranslation());
 					playing.setActive(true);
 					connected.setActive(false);
 				}
