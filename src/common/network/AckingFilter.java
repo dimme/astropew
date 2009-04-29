@@ -73,7 +73,7 @@ public abstract class AckingFilter implements PacketFilter {
 				return true;
 			}
 			
-			Logger.getLogger(getClass().getName()).log(Level.INFO, "Received packet outside window, seq = " + seq);
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Received packet outside window, seq = " + seq);
 			return false;
 		}
 	}

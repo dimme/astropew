@@ -57,7 +57,7 @@ public class Ship extends MobileObject {
 	}
 	
 	public boolean canFire(float currentTime) {
-		return lastFire+FIRE_INTERVAL <= currentTime;
+		return isAlive() && lastFire+FIRE_INTERVAL <= currentTime;
 	}
 
 	public void setLastFireTime(float time) {
@@ -66,5 +66,9 @@ public class Ship extends MobileObject {
 	
 	protected float actualDamage(float dmg) {
 		return dmg;
+	}
+
+	public void destroy() {
+		logic.destroy(this);
 	}
 }

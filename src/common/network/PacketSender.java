@@ -18,7 +18,7 @@ import common.Util;
 public class PacketSender {
 
 	private final DatagramSocket sock;
-	private final DeliveryService dserv;
+	protected final DeliveryService dserv;
 	ExecutorService exec;
 
 	public PacketSender(PacketReaderThread reader) throws SocketException {
@@ -33,7 +33,7 @@ public class PacketSender {
 	}
 
 	public void send(byte[] data, DatagramPacket dgp) {
-		addTask(new SendTask(data, dgp));
+		addTask(new SendTask(data, dgp, data[1]));
 	}
 
 	public Future<?> controlledSend(byte[] data, UDPConnection udpc) {
@@ -89,13 +89,20 @@ public class PacketSender {
 	private class SendTask extends AbstractSendTask {
 
 		protected DatagramPacket dgp;
+		protected byte seq;
 
 		public SendTask(byte[] data, DatagramPacket dgp) {
+			this(data,dgp,(byte)0);
+		}
+		
+		public SendTask(byte[] data, DatagramPacket dgp, byte seq) {
 			super(data);
 			this.dgp = dgp;
+			this.seq = seq;
 		}
 
 		public void perform() throws IOException {
+			data[1] = seq;
 			dgp.setData(data);
 			send(dgp);
 			dgp.setData(Util.nullbytes, 0, 0);

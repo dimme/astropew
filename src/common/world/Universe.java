@@ -1,7 +1,5 @@
 package common.world;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Random;
 
 import com.jme.bounding.BoundingBox;

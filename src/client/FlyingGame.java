@@ -22,20 +22,21 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.Spatial;
-import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.scene.state.ZBufferState.TestFunction;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
+import com.jmex.game.state.BasicGameState;
+import com.jmex.game.state.GameState;
+import com.jmex.game.state.GameStateManager;
 
 import common.world.Missile;
 import common.world.Planet;
@@ -57,6 +58,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private CameraController cameraController;
 	private Timer timer;
 	private final GameCommandInterface gci;
+	
+	private BasicGameState playing;
+	private BasicGameState connected;
 	
 	private Skybox skybox;
 	
@@ -83,6 +87,18 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	protected void initGame() {
+		
+		playing = new BasicGameState("PlayingState");
+		connected = new BasicGameState("ConnectedState");
+		playing.setActive(true);
+		connected.setActive(false);
+		
+		GameStateManager gsm = GameStateManager.create();
+		gsm.attachChild(playing);
+		gsm.attachChild(connected);
+		
+		Node playingRoot = playing.getRootNode();
+		
 		timer = Timer.getTimer();
 		timer.update();
 		long curt = System.currentTimeMillis();
@@ -99,15 +115,17 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		universe.generate(new PlanetFactory());
 		
+		playingRoot.attachChild(universe);
+		
 		
 		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
 		buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
-		universe.setRenderState(buf);
+		playingRoot.setRenderState(buf);
 
 		final CullState cs = display.getRenderer().createCullState();
 		cs.setCullFace(CullState.Face.Back);
-		universe.setRenderState(cs);
+		playingRoot.setRenderState(cs);
 		
 		// LIGHTS
 		final LightState ltst = display.getRenderer().createLightState();
@@ -121,19 +139,19 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		ltst.attach(lt);
 
-		universe.setRenderState(ltst);
+		playingRoot.setRenderState(ltst);
 		
 		addPlayer(selfShipId, self);
 		inputHandler = new FlyingGameInputHandler(self.getShip(), this);
 		
-		universe.updateRenderState();
+		playingRoot.updateRenderState();
 
 		GameControlManager gcm = new GameControlManager();
         GameControl toggleCameraControl = gcm.addControl("toggleCamera");
         toggleCameraControl.addBinding(new KeyboardBinding(KeyInput.KEY_M));
         cameraController = new CameraController(self.getShip(), cam, toggleCameraControl);
 
-        universe.addController(cameraController);
+        playingRoot.addController(cameraController);
 
         FollowCameraPerspective p1 = new FollowCameraPerspective(new Vector3f(0f,1f,-5f));
 
@@ -185,7 +203,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		cameraController.update(interpolation);
 		
 		display.getRenderer().clearBuffers();
-		display.getRenderer().draw(universe);
+		GameStateManager.getInstance().render(interpolation);
+		//display.getRenderer().draw(universe);
 		//System.out.println("render " + interpolation);
 
 	}
@@ -199,6 +218,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				c.perform(gci);
 			}
 		}
+		
+		GameStateManager.getInstance().update(interpolation);
+		
 		Ship ship = self.getShip();
 
 		inputHandler.update(interpolation);
@@ -269,6 +291,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	public void startInThread() {
 		final Thread t = new Thread() {
 			public void run() {
+				Logger.getLogger("").setLevel(Level.WARNING);
 				FlyingGame.this.start();
 			}
 		};
@@ -330,8 +353,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.removeChild(removed);
 		}
 
-		public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time) {
-			final Ship s = logic.getShipByPlayerID(id);
+		public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int pid, float time) {
+			final Ship s = logic.getShipByPlayerID(pid);
 			if (s != null) {
 				if (s.shouldUpdate(time)) {
 					s.getPosition().set(pos);
@@ -350,6 +373,28 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			WorldObject destroyed = logic.getObject(objid);
 			if (destroyed != null) {
 				destroyed.destroy();
+			}
+			if (destroyed == self.getShip()) {
+				playing.setActive(false);
+				connected.setActive(true);
+			}
+		}
+
+		public void spawn(int playerid, Vector3f pos, Quaternion ort, Vector3f dir, float time) {
+			updatePosition(pos, ort, dir, playerid, time);
+			
+			Ship s = logic.getShipByPlayerID(playerid);
+			if ( s!=null ) {
+				s.setLocalTranslation(s.getPosition());
+				s.setLocalRotation(s.getOrientation());
+				
+				universe.attachChild(s);
+				logic.add(s);
+				s.setHP(100);
+				if (playerid == self.getID()) {
+					playing.setActive(true);
+					connected.setActive(false);
+				}
 			}
 		}
 	}

@@ -49,6 +49,12 @@ public class UDPConnection {
 		oldestPending = (byte)o;
 	}
 
+	/**
+	 * 
+	 * @param seq
+	 * @return
+	 * @throws NullPointerException if data for seq does not exist.
+	 */
 	public byte[] getData(byte seq) {
 		return packets.get(seq);
 	}

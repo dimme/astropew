@@ -6,6 +6,7 @@ import client.command.AddMissileCommand;
 import client.command.AddPlayerCommand;
 import client.command.DestroyObjectCommand;
 import client.command.RemovePlayerCommand;
+import client.command.SpawnCommand;
 import client.command.UpdatePositionCommand;
 
 import com.jme.math.Quaternion;
@@ -58,6 +59,14 @@ public class GamePlayObserver implements PacketObserver {
 				i += OffsetConstants.PLAYER_POSITIONS_ONE_SIZE;
 				game.addCommand(new UpdatePositionCommand(id, pos, ort, dir, time));
 			}
+		} else if (packettype == ServerPacketType.SPAWN) {
+			System.out.println(Util.hex(data));
+			float t = Util.getFloat(data, OffsetConstants.SPAWN_TIME_OFFSET);
+			int id = Util.getInt(data, OffsetConstants.SPAWN_PLAYERID_OFFSET);
+			Vector3f pos = Util.getVector3f(data, OffsetConstants.SPAWN_POS_OFFSET, new Vector3f());
+			Quaternion ort = Util.getQuaternion(data, OffsetConstants.SPAWN_ORT_OFFSET, new Quaternion());
+			Vector3f dir = Util.getVector3f(data, OffsetConstants.SPAWN_DIR_OFFSET, new Vector3f());
+			game.addCommand(new SpawnCommand(id,pos,ort,dir,t));
 		} else if (packettype == ServerPacketType.MISSILE) {
 			float time = Util.getFloat(data, OffsetConstants.MISSILE_TIME_OFFSET);
 			int ownerid = Util.getInt(data, OffsetConstants.MISSILE_OWNER_OFFSET);

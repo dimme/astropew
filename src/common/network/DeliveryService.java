@@ -63,7 +63,7 @@ public class DeliveryService implements PacketObserver {
 					schedule += 50;
 				}
 			} catch (final RejectedExecutionException e) {
-				Logger.getLogger(getClass().getName()).log(Level.INFO, "Rejected execution of resend task: This is NOT a problem if you were shutting down.");
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Rejected execution of resend task: This is NOT a problem if you were shutting down.");
 			} catch (final InterruptedException e) {
 				Logger.getLogger(getClass().getName()).log(Level.WARNING,"Periodic resend thread interrupted!", e);
 			}
@@ -146,8 +146,7 @@ public class DeliveryService implements PacketObserver {
 			final long curt = System.currentTimeMillis();
 			Task t = tasks.peek();
 			while (t != null && t.timeout <= curt) {
-				Logger.getLogger(getClass().getName()).log(Level.INFO,
-						"Resending " + t.seq + " to " + t.udpc);
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Resending " + t.seq + " to " + t.udpc);
 				tasks.remove(t);
 				send(t);
 				t = tasks.peek();

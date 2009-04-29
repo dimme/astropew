@@ -52,7 +52,6 @@ public abstract class GameLogic {
 		if (obj != null) {
 			mobjs.remove(obj);
 			objects.remove(obj.getID());
-			shiptable.values().remove(obj);
 		}
 		return obj;
 	}

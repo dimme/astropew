@@ -161,4 +161,19 @@ public class PacketDataFactory {
 		
 		return b;
 	}
+
+	public static byte[] createSpawn(Ship ship) {
+		final byte[] b = new byte[OffsetConstants.SPAWN_SIZE];
+		
+		b[0] = ServerPacketType.SPAWN;
+		b[1] = 0;
+		
+		Util.put(ship.getLastUpdate(), b, OffsetConstants.SPAWN_TIME_OFFSET);
+		Util.put(ship.getOwner().getID(), b, OffsetConstants.SPAWN_PLAYERID_OFFSET);
+		Util.put(ship.getPosition(), b, OffsetConstants.SPAWN_POS_OFFSET);
+		Util.put(ship.getOrientation(), b, OffsetConstants.SPAWN_ORT_OFFSET);
+		Util.put(ship.getMovement(), b, OffsetConstants.SPAWN_DIR_OFFSET);
+		
+		return b;
+	}
 }

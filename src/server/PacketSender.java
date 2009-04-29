@@ -29,6 +29,11 @@ public class PacketSender extends common.network.PacketSender {
 	public void sendToAll(byte[] data) {
 		addTask(new SendToAllTask(data));
 	}
+	
+	public void controlledSendToAll(byte[] data) {
+		addTask(new ControlledSendToAllTask(data));
+		
+	}
 
 	private class SendToAllTask extends AbstractSendTask {
 
@@ -42,6 +47,21 @@ public class PacketSender extends common.network.PacketSender {
 					c.udpc.dgp.setData(data);
 					send(c.udpc.dgp);
 					c.udpc.dgp.setData(Util.nullbytes, 0, 0);
+				}
+			}
+		}
+	}
+	
+	private class ControlledSendToAllTask extends AbstractSendTask {
+
+		public ControlledSendToAllTask(byte[] data) {
+			super(data);
+		}
+
+		protected void perform() throws IOException {
+			synchronized (cdb) {
+				for (final Client c : cdb) {
+					dserv.addDelivery(data, c.udpc);
 				}
 			}
 		}

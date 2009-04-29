@@ -13,7 +13,7 @@ public abstract class WorldObject extends Node {
 	private static final long serialVersionUID = 1L;
 	protected Player owner = NoPlayer.instance;
 	protected final int id;
-	private final GameLogic logic;
+	protected final GameLogic logic;
 	
 	protected float hp;
 
@@ -67,9 +67,7 @@ public abstract class WorldObject extends Node {
 		return false;
 	}
 	
-	public final void destroy() {
-		logic.destroy(this);
-	}
+	public abstract void destroy();
 
 	protected float actualDamage(float dmg) {
 		return 0; //no damage as default
@@ -77,5 +75,13 @@ public abstract class WorldObject extends Node {
 	
 	public float getHP() {
 		return hp;
+	}
+	
+	public void setHP(float hp) {
+		this.hp = hp;
+	}
+	
+	public boolean isAlive() {
+		return hp > 0;
 	}
 }

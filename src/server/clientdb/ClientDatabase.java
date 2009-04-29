@@ -44,8 +44,7 @@ public class ClientDatabase implements ClientDB {
 			return c;
 
 		} catch (final SocketException e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					e.getMessage(), e);
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 			throw new RuntimeException(new CatastrophicException(e));
 		}
 	}

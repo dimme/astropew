@@ -1,6 +1,7 @@
 package server;
 
 import server.command.DestroyCommand;
+import server.command.SpawnCommand;
 import common.world.Missile;
 import common.world.Ship;
 import common.world.WorldObject;
@@ -28,5 +29,6 @@ public class GameLogic extends common.GameLogic {
 
 	public void destroy(Ship ship) {
 		_destroy(ship);
+		game.addCommand(new SpawnCommand(ship, game.getFrameTime()+5));
 	}
 }

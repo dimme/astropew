@@ -22,8 +22,7 @@ public class AckingFilter extends common.network.AckingFilter {
 	protected DatagramPacket getDatagramPacket(SocketAddress saddr) {
 		final Client c = cdb.getClient(saddr);
 		if (c == null) {
-			Logger.getLogger(getClass().getName()).log(Level.INFO,
-					"ACKing packet from nonexistant client");
+			Logger.getLogger(getClass().getName()).log(Level.WARNING,"ACKing packet from nonexistant client");
 			final DatagramPacket dgp = new DatagramPacket(Util.nullbytes, 0);
 			dgp.setSocketAddress(saddr);
 			return dgp;

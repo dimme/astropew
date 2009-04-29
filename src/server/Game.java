@@ -65,6 +65,7 @@ public class Game extends BaseHeadlessApp {
 
 		final Thread t = new Thread() {
 			public void run() {
+				Logger.getLogger("").setLevel(Level.WARNING);
 				Game.this.start();
 			}
 		};
@@ -165,7 +166,7 @@ public class Game extends BaseHeadlessApp {
 
 				final byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name, s.getID());
 
-				ps.sendToAll(data);
+				ps.controlledSendToAll(data);
 			} else {
 				s = c.getShip();
 			}
@@ -190,7 +191,7 @@ public class Game extends BaseHeadlessApp {
 			Client c = cdb.getClient(sender);
 			if (c != null) {
 				Ship s = c.getShip();
-				if (s.canFire(time) || true) {
+				if (s.canFire(time)) {
 					s.setLastFireTime(time);
 					s.interpolate(-1f,time);
 					Vector3f pos = s.getLocalTranslation();
@@ -225,6 +226,19 @@ public class Game extends BaseHeadlessApp {
 			logic.remove(obj);
 			byte[] data = PacketDataFactory.createDestroyObject(obj.getID());
 			ps.sendToAll(data);
+		}
+
+		public void spawn(Ship ship) {
+			ship.getPosition().set(new Vector3f());
+			ship.getOrientation().set(new Quaternion());
+			ship.getMovement().set(new Vector3f());
+			ship.setLastUpdate(frameTime);
+			ship.setHP(100);
+			
+			universe.attachChild(ship);
+			logic.add(ship);
+			
+			ps.controlledSendToAll(PacketDataFactory.createSpawn(ship));
 		}
 		
 		

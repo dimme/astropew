@@ -15,8 +15,8 @@ public interface ServerPacketType {
 	 * Player position, direction and orientation<br>
 	 * ServerPacketType - byte - 1 byte <br>
 	 * Sequence Number - byte - 1 byte <br>
-	 * Time - long - 8 byte <br>
-	 * (ID - int - 4 byte <br>
+	 * Time - float - 4 byte <br>
+	 * (PlayerID - int - 4 byte <br>
 	 * pos - Vector3f - 12 byte <br>
 	 * ort - Quartinion - 16 byte <br>
 	 * dir - Vector3f - 12 byte) <br>
@@ -80,4 +80,16 @@ public interface ServerPacketType {
 	 */
 
 	public static final byte PLAYERS_INFO = 38;
+	
+	/**
+	 * Sent to inform of a spawned ship
+	 * ServerPacketType - byte - 1 byte <br>
+	 * Sequence Number - byte - 1 byte <br>
+	 * time - float - 4 bytes <br>
+	 * PlayerID - int - 4 bytes <br>
+	 * Position - Vector3f - 12 bytes <br>
+	 * Orientation - Quaternion - 16 bytes <br>
+	 * Direction - Vector3f - 12 bytes <br>
+	 */
+	public static final byte SPAWN = 40;
 }

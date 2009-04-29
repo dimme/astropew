@@ -43,6 +43,13 @@ public interface OffsetConstants {
 	public static final int MISSILE_ID_OFFSET = 30;
 	public static final int MISSILE_OWNER_OFFSET = 34;
 	public static final int MISSILE_SIZE = 38;
+	
+	public static final int SPAWN_TIME_OFFSET = 2;
+	public static final int SPAWN_PLAYERID_OFFSET = 6;
+	public static final int SPAWN_POS_OFFSET = 10;
+	public static final int SPAWN_ORT_OFFSET = 22;
+	public static final int SPAWN_DIR_OFFSET = 38;
+	public static final int SPAWN_SIZE = 50;
 
 	// FROM CLIENT
 

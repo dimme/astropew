@@ -35,7 +35,7 @@ public abstract class MobileObject extends WorldObject {
 	}
 	
 	public boolean shouldUpdate(float newPointInTime) {
-		if ( lastUpdate > newPointInTime ) {
+		if ( !isAlive() || lastUpdate > newPointInTime ) {
 			return false;
 		}
 		return true;

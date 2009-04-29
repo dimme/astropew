@@ -93,7 +93,7 @@ public class FlyingGameInputHandler extends InputHandler {
 	
 	private class BrakeAction implements InputActionInterface {
 
-		private static final float BRAKE_COEFFICIENT = 0.97f;
+		private static final float BRAKE_COEFFICIENT = 0.1f;
 		
 		public BrakeAction() {
 		}

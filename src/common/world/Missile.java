@@ -26,4 +26,8 @@ public class Missile extends MobileObject {
 		updateGeometricState(0, true);
 		updateModelBound();
 	}
+
+	public void destroy() {
+		logic.destroy(this);
+	}
 }

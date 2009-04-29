@@ -15,4 +15,6 @@ public interface GameCommandInterface {
 
 	void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time);
 
+	void spawn(int playerid, Vector3f pos, Quaternion ort, Vector3f dir, float time);
+
 }

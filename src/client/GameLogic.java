@@ -47,19 +47,21 @@ public class GameLogic extends common.GameLogic {
 	}
 
 	public void destroy(WorldObject wobj) {
-		game.getUniverse().removeChild(wobj);
+		_destroy(wobj);
 	}
 
-	@Override
 	public void destroy(Missile m) {
-		// TODO Auto-generated method stub
-		
+		_destroy(m);
 	}
 
-	@Override
 	public void destroy(Ship ship) {
-		// TODO Auto-generated method stub
-		
+		_destroy(ship);
+	}
+
+	private void _destroy(WorldObject wobj) {
+		wobj.setHP(0);
+		game.getUniverse().removeChild(wobj);
+		remove(wobj);
 	}
 
 }
