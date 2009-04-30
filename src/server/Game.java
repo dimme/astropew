@@ -13,6 +13,7 @@ import server.clientdb.ClientDB;
 import server.command.Command;
 import server.command.DestroyCommand;
 import server.command.GameCommandInterface;
+import server.command.SetHPCommand;
 
 import com.jme.app.BaseHeadlessApp;
 import com.jme.bounding.BoundingSphere;
@@ -47,10 +48,10 @@ public class Game extends BaseHeadlessApp {
 	private int object_id = 0;
 	private final GameCommandInterface gci = new CommandInterface();
 	private Timer timer;
-	
-	private int frame_counter = 0;
+	private int frame_count = 0;
 	
 	private static final long FRAME_SPACING = 10;
+	private static final int RENDER_SPACING = 10;
 
 	public Game(PacketSender ps, ClientDB cdb) {
 		Random rnd = new Random();
@@ -84,24 +85,31 @@ public class Game extends BaseHeadlessApp {
 	}
 
 	public void render(float unused) {
-		
-		frame_counter++;
-		if (frame_counter == 5) {
-			frame_counter = 0;
-			long cur = System.currentTimeMillis();
+		frame_count++;
+		if (frame_count  == RENDER_SPACING) {
+			frame_count = 0;
 			
 			ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
-			while (last + FRAME_SPACING > cur) {
-				try {
-					Thread.sleep(last+FRAME_SPACING - cur);
-				} catch (final InterruptedException e) {
-					Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Interrupted while sleeping.");
-					throw new RuntimeException(e);
+			
+			for (WorldObject wobj : logic.getObjects()) {
+				if (wobj.getHPChanged()) {
+					wobj.resetHPChanged();
+					ps.sendToAll(PacketDataFactory.createHPUpdate(wobj));
 				}
-				cur = System.currentTimeMillis();
 			}
-			last += FRAME_SPACING;
 		}
+		
+		long cur = System.currentTimeMillis();
+		while (last + FRAME_SPACING > cur) {
+			try {
+				Thread.sleep(last+FRAME_SPACING - cur);
+			} catch (final InterruptedException e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Interrupted while sleeping.");
+				throw new RuntimeException(e);
+			}
+			cur = System.currentTimeMillis();
+		}
+		last += FRAME_SPACING;
 	}
 
 	public float getFrameTime() {
@@ -201,7 +209,7 @@ public class Game extends BaseHeadlessApp {
 					//dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
 					Missile m = new Missile(logic, object_id++, pos, dir, c, frameTime);
-					addCommand(new DestroyCommand(m, frameTime+2f));
+					addCommand(new SetHPCommand(m, 0, frameTime+2f));
 					universe.attachChild(m);
 					logic.add(m);
 					ps.sendToAll(PacketDataFactory.createMissile(m));
@@ -226,8 +234,7 @@ public class Game extends BaseHeadlessApp {
 		public void destroy(WorldObject obj) {
 			universe.removeChild(obj);
 			logic.remove(obj);
-			byte[] data = PacketDataFactory.createHPUpdate(obj);
-			ps.sendToAll(data);
+			ps.controlledSendToAll(PacketDataFactory.createHPUpdate(obj));
 		}
 
 		public void spawn(Ship ship) {

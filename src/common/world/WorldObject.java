@@ -16,6 +16,7 @@ public abstract class WorldObject extends Node {
 	protected final GameLogic logic;
 	
 	protected float hp;
+	protected boolean hp_changed = false;
 
 	public WorldObject(GameLogic logic, int id, String name, Player owner) {
 		super(name);
@@ -83,7 +84,12 @@ public abstract class WorldObject extends Node {
 	
 	public void setHP(float hp) {
 		this.hp = hp;
+		hp_changed=true;
 		checkDestroy();
+	}
+	
+	public void resetHPChanged() {
+		hp_changed=false;
 	}
 	
 	public boolean isAlive() {
@@ -92,5 +98,9 @@ public abstract class WorldObject extends Node {
 	
 	public int hashCode() {
 		return id;
+	}
+
+	public boolean getHPChanged() {
+		return hp_changed;
 	}
 }

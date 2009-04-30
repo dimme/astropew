@@ -12,5 +12,6 @@ public class Todo {
 	// TODO: Kolla så att grejor tas bort helt (alla referenser) både på klient och server. Glöm inte att skepp/missiler/worldobjects kan behandlas olika.
 	
 	// TODO: controlled send-to-all
-	// TODO: ordning på hp-paket 
+	// TODO: ordning på hp-paket
+	// TODO: That's no moon... :)
 }

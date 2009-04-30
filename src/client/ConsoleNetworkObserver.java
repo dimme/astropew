@@ -24,6 +24,10 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			final byte[] bt = new byte[data.length - OffsetConstants.PLAYER_JOINED_STRING_OFFSET];
 			System.arraycopy(data, OffsetConstants.PLAYER_JOINED_STRING_OFFSET, bt, 0, bt.length);
 			System.out.println("Player Joined. ID = " + nid + " Name = " + new String(bt));
+		} else if (ptype == ServerPacketType.OBJECT_HP) {
+			int id = Util.getInt(data, OffsetConstants.OBJECT_HP_ID_OFFSET);
+			float hp = Util.getFloat(data, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
+			System.out.println("HP=" + hp + " for " + id);
 		} else if (ptype == ServerPacketType.PLAYERS_INFO) {
 			String s = "";
 			int i = OffsetConstants.PLAYERS_INFO_DATA_START; 
