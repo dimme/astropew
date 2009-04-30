@@ -242,12 +242,13 @@ public class Game extends BaseHeadlessApp {
 			ship.getOrientation().set(new Quaternion());
 			ship.getMovement().set(new Vector3f());
 			ship.setLastUpdate(frameTime);
-			ship.setHP(100);
 			
 			universe.attachChild(ship);
 			logic.add(ship);
 			
 			ps.controlledSendToAll(PacketDataFactory.createSpawn(ship));
+			
+			ship.setHP(100);
 		}
 		
 		

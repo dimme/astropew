@@ -219,23 +219,26 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			}
 		}
 		
-		GameStateManager.getInstance().update(interpolation);
-		
-		Ship ship = self.getShip();
-
-		inputHandler.update(interpolation);
-		
-		logic.interpolate(interpolation, lastUpdateTime);
-		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
 			//TODO: I input handler istället
 		}
 		
-		universe.updateGeometricState(interpolation, true);
-		universe.updateRenderState();
+		if (playing.isActive()) {
+			GameStateManager.getInstance().update(interpolation);
+			
+			Ship ship = self.getShip();
+	
+			inputHandler.update(interpolation);
+			
+			logic.interpolate(interpolation, lastUpdateTime);
+			
+			universe.updateGeometricState(interpolation, true);
+			universe.updateRenderState();
+			
+			gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
+		}
 		
-		gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 		//System.out.println("update ");
 	}
 
@@ -382,18 +385,21 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 
 		public void spawn(int playerid, Vector3f pos, Quaternion ort, Vector3f dir, float time) {
-			updatePosition(pos, ort, dir, playerid, time);
 			
 			Ship s = logic.getShipByPlayerID(playerid);
 			if ( s!=null ) {
-				s.setLocalTranslation(s.getPosition());
-				s.setLocalRotation(s.getOrientation());
+				s.getPosition().set(pos);
+				s.getOrientation().set(ort);
+				s.getMovement().set(dir);
+				s.getLocalTranslation().set(s.getPosition());
+				s.getLocalRotation().set(s.getOrientation());
+				s.setLastUpdate(time);
 				
 				universe.attachChild(s);
 				logic.add(s);
 				s.setHP(100);
 				if (playerid == self.getID()) {
-					skybox.setLocalTranslation(s.getLocalTranslation());
+					//skybox.setLocalTranslation(s.getLocalTranslation());
 					playing.setActive(true);
 					connected.setActive(false);
 				}
