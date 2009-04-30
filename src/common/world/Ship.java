@@ -68,7 +68,7 @@ public class Ship extends MobileObject {
 		return dmg;
 	}
 
-	public void destroy() {
+	protected void destroy() {
 		logic.destroy(this);
 	}
 }

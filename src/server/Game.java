@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 import server.command.Command;
+import server.command.DestroyCommand;
 import server.command.GameCommandInterface;
 
 import com.jme.app.BaseHeadlessApp;
@@ -200,6 +201,7 @@ public class Game extends BaseHeadlessApp {
 					//dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
 					Missile m = new Missile(logic, object_id++, pos, dir, c, frameTime);
+					addCommand(new DestroyCommand(m, frameTime+2f));
 					universe.attachChild(m);
 					logic.add(m);
 					ps.sendToAll(PacketDataFactory.createMissile(m));
@@ -224,7 +226,7 @@ public class Game extends BaseHeadlessApp {
 		public void destroy(WorldObject obj) {
 			universe.removeChild(obj);
 			logic.remove(obj);
-			byte[] data = PacketDataFactory.createDestroyObject(obj.getID());
+			byte[] data = PacketDataFactory.createHPUpdate(obj);
 			ps.sendToAll(data);
 		}
 

@@ -9,7 +9,7 @@ public interface GameCommandInterface {
 
 	void addPlayer(int id, String name, int shipid);
 
-	void destroyObject(int objid);
+	void updateObjectHP(int objid, float hp);
 
 	void removePlayer(int id);
 

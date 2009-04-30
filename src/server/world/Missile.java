@@ -18,7 +18,7 @@ public class Missile extends common.world.Missile {
 			System.out.println("Missile (" + getID() + ") collided with " + wobj);
 			setIsCollidable(false);
 			wobj.takeDamage(10);
-			destroy();
+			setHP(0);
 		}
 	}
 }

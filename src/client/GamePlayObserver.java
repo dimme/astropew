@@ -4,7 +4,7 @@ import java.net.SocketAddress;
 
 import client.command.AddMissileCommand;
 import client.command.AddPlayerCommand;
-import client.command.DestroyObjectCommand;
+import client.command.UpdateObjectHPCommand;
 import client.command.RemovePlayerCommand;
 import client.command.SpawnCommand;
 import client.command.UpdatePositionCommand;
@@ -74,9 +74,10 @@ public class GamePlayObserver implements PacketObserver {
 			Vector3f pos = Util.getVector3f(data, OffsetConstants.MISSILE_POS_OFFSET, new Vector3f() );
 			Vector3f dir = Util.getVector3f(data, OffsetConstants.MISSILE_DIR_OFFSET, new Vector3f() );
 			game.addCommand(new AddMissileCommand(time, id, pos,dir,ownerid));
-		} else if (packettype == ServerPacketType.DESTROY_OBJECT) {
-			int objid = Util.getInt(data, OffsetConstants.DESTROY_OBJECT_ID_OFFSET);
-			game.addCommand(new DestroyObjectCommand(objid));
+		} else if (packettype == ServerPacketType.OBJECT_HP) {
+			int objid = Util.getInt(data, OffsetConstants.OBJECT_HP_ID_OFFSET);
+			float hp = Util.getFloat(data, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
+			game.addCommand(new UpdateObjectHPCommand(objid, hp));
 		} else {
 			return false;
 		}

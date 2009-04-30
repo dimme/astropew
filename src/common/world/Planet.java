@@ -20,8 +20,7 @@ public class Planet extends WorldObject {
 		updateModelBound();
 	}
 
-	public void destroy() {
-		logic.destroy(this);
+	protected void destroy() {
 	}
 
 }

@@ -60,6 +60,10 @@ public abstract class WorldObject extends Node {
 	public final boolean takeDamage(float dmg) {
 		float ad = actualDamage(dmg);
 		hp -= ad;
+		return checkDestroy();
+	}
+	
+	protected final boolean checkDestroy() {
 		if (hp <= 0) {
 			destroy();
 			return true;
@@ -67,7 +71,7 @@ public abstract class WorldObject extends Node {
 		return false;
 	}
 	
-	public abstract void destroy();
+	protected abstract void destroy();
 
 	protected float actualDamage(float dmg) {
 		return 0; //no damage as default
@@ -79,9 +83,14 @@ public abstract class WorldObject extends Node {
 	
 	public void setHP(float hp) {
 		this.hp = hp;
+		checkDestroy();
 	}
 	
 	public boolean isAlive() {
 		return hp > 0;
+	}
+	
+	public int hashCode() {
+		return id;
 	}
 }

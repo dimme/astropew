@@ -29,6 +29,6 @@ public class GameLogic extends common.GameLogic {
 
 	public void destroy(Ship ship) {
 		_destroy(ship);
-		game.addCommand(new SpawnCommand(ship, game.getFrameTime()+5));
+		game.addCommand(new SpawnCommand(ship, game.getFrameTime()+5f));
 	}
 }

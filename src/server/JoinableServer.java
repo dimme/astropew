@@ -22,7 +22,7 @@ public class JoinableServer extends Thread {
 	}
 
 	public JoinableServer() {
-
+		System.out.println("Starting server..");
 		try {
 
 			final ClientDB cdb = new ClientDatabase();

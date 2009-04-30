@@ -10,6 +10,7 @@ import common.ServerPacketType;
 import common.Util;
 import common.world.Missile;
 import common.world.Ship;
+import common.world.WorldObject;
 
 public class PacketDataFactory {
 
@@ -152,12 +153,13 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createDestroyObject(int id) {
-		final byte[] b = new byte[OffsetConstants.DESTROY_OBJECT_SIZE];
-		b[0] = ServerPacketType.DESTROY_OBJECT;
+	public static byte[] createHPUpdate(WorldObject wobj) {
+		final byte[] b = new byte[OffsetConstants.OBJECT_HP_SIZE];
+		b[0] = ServerPacketType.OBJECT_HP;
 		b[1] = 0;
 		
-		Util.put(id, b, OffsetConstants.DESTROY_OBJECT_ID_OFFSET);
+		Util.put(wobj.getID(), b, OffsetConstants.OBJECT_HP_ID_OFFSET);
+		Util.put(wobj.getHP(), b, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
 		
 		return b;
 	}

@@ -2,7 +2,7 @@ package client;
 
 import java.util.HashMap;
 
-import client.command.DestroyObjectCommand;
+import client.command.UpdateObjectHPCommand;
 
 import common.Player;
 import common.world.Missile;
@@ -59,7 +59,6 @@ public class GameLogic extends common.GameLogic {
 	}
 
 	private void _destroy(WorldObject wobj) {
-		wobj.setHP(0);
 		game.getUniverse().removeChild(wobj);
 		remove(wobj);
 	}

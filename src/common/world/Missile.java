@@ -27,7 +27,7 @@ public class Missile extends MobileObject {
 		updateModelBound();
 	}
 
-	public void destroy() {
+	protected void destroy() {
 		logic.destroy(this);
 	}
 }

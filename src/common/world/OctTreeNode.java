@@ -1,6 +1,7 @@
 package common.world;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import com.jme.scene.Node;
@@ -130,7 +131,7 @@ public class OctTreeNode extends Node {
 		private Collection<WorldObject> nodes;
 		
 		public WholeData() {
-			nodes = new LinkedList<WorldObject>();
+			nodes = new HashSet<WorldObject>();
 		}
 		
 		public void findCollisions(WorldObject wobj, Collection<WorldObject> collided) {

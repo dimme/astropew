@@ -254,7 +254,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		Ship s;
 		
 		if (p == self) {
-			s = new SelfShip(logic, id, p, lastUpdateTime);
+			s = new SelfShip(this, logic, id, p, lastUpdateTime);
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
 			s = new Ship(logic, id, p, lastUpdateTime);
@@ -315,6 +315,11 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 	}
 	
+	public void setPlaying(boolean b) {
+		playing.setActive(b);
+		connected.setActive(!b);
+	}
+	
 	private class PlanetFactory implements common.world.PlanetFactory {
 		private int object_id = 0;
 		
@@ -369,14 +374,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			FlyingGame.this.addPlayer( shipid, new Player(name, id) );
 		}
 		
-		public void destroyObject(int objid) {
-			WorldObject destroyed = logic.getObject(objid);
-			if (destroyed != null) {
-				destroyed.destroy();
-			}
-			if (destroyed == self.getShip()) {
-				playing.setActive(false);
-				connected.setActive(true);
+		public void updateObjectHP(int objid, float hp) {
+			WorldObject wobj = logic.getObject(objid);
+			if (wobj != null) {
+				wobj.setHP(hp);
 			}
 		}
 

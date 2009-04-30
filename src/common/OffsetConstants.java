@@ -62,7 +62,8 @@ public interface OffsetConstants {
 	public static final int FIRE_MISSILE_TIME_OFFSET = 2;
 	public static final int FIRE_MISSILE_SIZE = 6;
 	
-	public static final int DESTROY_OBJECT_ID_OFFSET = 2;
-	public static final int DESTROY_OBJECT_SIZE = 6;
+	public static final int OBJECT_HP_ID_OFFSET = 2;
+	public static final int OBJECT_HP_VALUE_OFFSET = 6;
+	public static final int OBJECT_HP_SIZE = 10;
 
 }
