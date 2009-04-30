@@ -24,11 +24,15 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
+import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
@@ -37,7 +41,6 @@ import com.jme.system.PropertiesGameSettings;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 import com.jmex.game.state.BasicGameState;
-import com.jmex.game.state.GameState;
 import com.jmex.game.state.GameStateManager;
 
 import common.world.Missile;
@@ -60,6 +63,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private CameraController cameraController;
 	private Timer timer;
 	private final GameCommandInterface gci;
+	
+	private ZBufferState targetSpriteZbufs;
+	private TextureState targetSpriteTexture;
+	private BlendState targetSpriteBlend;
 	
 	private BasicGameState playing;
 	private BasicGameState connected;
@@ -119,6 +126,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		playingRoot.attachChild(universe);
 		
+		initTargetSpriteStates();
 		
 		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
@@ -158,6 +166,28 @@ public class FlyingGame extends VariableTimestepGame implements Game {
         FollowCameraPerspective p1 = new FollowCameraPerspective(new Vector3f(0f,1f,-5f));
 
         cameraController.addPerspective(p1);
+	}
+	
+	private void initTargetSpriteStates() {
+		targetSpriteZbufs = display.getRenderer().createZBufferState();
+		targetSpriteZbufs.setEnabled(true);
+		targetSpriteZbufs.setFunction(ZBufferState.TestFunction.Always);
+		targetSpriteZbufs.setWritable(false);
+		
+		targetSpriteTexture = display.getRenderer().createTextureState();
+		final Texture targettext = TextureManager.loadTexture("../files/target.png",
+				Texture.MinificationFilter.Trilinear,
+				Texture.MagnificationFilter.Bilinear, 1.0f, true);
+		targetSpriteTexture.setTexture(targettext);
+		targetSpriteTexture.setEnabled(true);
+		
+		targetSpriteBlend = display.getRenderer().createBlendState();
+		targetSpriteBlend.setBlendEnabled( true );
+		targetSpriteBlend.setSourceFunctionAlpha( BlendState.SourceFunction.SourceAlpha );
+		targetSpriteBlend.setDestinationFunctionAlpha( BlendState.DestinationFunction.OneMinusSourceAlpha );
+		targetSpriteBlend.setBlendEquation( BlendState.BlendEquation.Add );
+		targetSpriteBlend.setTestEnabled( false );
+		targetSpriteBlend.setEnabled( true );
 	}
 
 	protected void initSystem() {
@@ -223,7 +253,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
-			//TODO: I input handler istället
+			//TODO: I input handler istället?
 		}
 		
 		if (playing.isActive()) {
@@ -263,19 +293,32 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
 			TargetSprite ts = new TargetSprite();
-			MaterialState ms = display.getRenderer().createMaterialState();
-			
-			ms.setDiffuse(ColorRGBA.red);
-			ms.setAmbient(ColorRGBA.green);
-			ts.setRenderState(ms); 
-			self.getShip().attachChild(ts);
 			s = new client.world.OtherShip(logic, id, p, lastUpdateTime, ts);
+			s.attachChild(ts);
+			
+			
+			MaterialState ms = display.getRenderer().createMaterialState();
+			ColorRGBA c = s.getColor().clone();
+			float max = Math.max(c.r, Math.max(c.g, c.b)) * 0.8f;
+			c.r /= max;  c.g /= max;  c.b /= max;
+			c.clamp();
+			ms.setAmbient(c);
+			ms.setDiffuse(ColorRGBA.black);
+			ms.setEmissive(ColorRGBA.black);
+			ms.setSpecular(ColorRGBA.black);
+			ts.setRenderState(ms);
+			ts.setRenderState(targetSpriteZbufs);
+			ts.setRenderState(targetSpriteTexture);
+			ts.setRenderState(targetSpriteBlend);
+			ts.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 		}
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
 		
-		ms.setDiffuse(ColorRGBA.white);
-		ms.setAmbient(s.getColor());
+		ColorRGBA diffuse = s.getColor().clone().addLocal(ColorRGBA.gray);
+		diffuse.clamp();
+		ms.setDiffuse(diffuse);
+		ms.setAmbient(s.getColor().clone().multLocal(0.8f));
 		s.setRenderState(ms);
 		universe.attachChild(s);
 		

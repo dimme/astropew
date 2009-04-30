@@ -32,10 +32,7 @@ public class Ship extends MobileObject {
 		color.fromIntRGBA(c);
 		color.a = 1;
 		float max = Math.max(color.r, Math.max(color.g, color.b));
-		float mult = 1f/max;
-		color.r *= mult;
-		color.g *= mult;
-		color.b *= mult;
+		color.r /= max;  color.g /= max;  color.b /= max;
 
 		TriMesh shape = ShipHull.create();
 		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
