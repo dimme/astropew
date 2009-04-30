@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 
 import client.command.Command;
 import client.command.GameCommandInterface;
+import client.world.OtherShip;
 import client.world.SelfShip;
+import client.world.TargetSprite;
 
 import com.jme.app.VariableTimestepGame;
 import com.jme.image.Texture;
@@ -260,13 +262,20 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			s = new SelfShip(this, logic, id, p, lastUpdateTime);
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
-			s = new Ship(logic, id, p, lastUpdateTime);
+			TargetSprite ts = new TargetSprite();
+			MaterialState ms = display.getRenderer().createMaterialState();
+			
+			ms.setDiffuse(ColorRGBA.red);
+			ms.setAmbient(ColorRGBA.green);
+			ts.setRenderState(ms); 
+			self.getShip().attachChild(ts);
+			s = new client.world.OtherShip(logic, id, p, lastUpdateTime, ts);
 		}
 		
 		MaterialState ms = display.getRenderer().createMaterialState();
 		
-		ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
-		ms.setAmbient(s.getColor().clone().multLocal(0.3f));
+		ms.setDiffuse(ColorRGBA.white);
+		ms.setAmbient(s.getColor());
 		s.setRenderState(ms);
 		universe.attachChild(s);
 		
@@ -359,6 +368,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		public void removePlayer(int id) {
 			Ship removed = logic.remove(logic.getPlayer(id));
 			universe.removeChild(removed);
+			if (removed instanceof OtherShip) {
+				((OtherShip)removed).removeTargetSprite();
+			}
 		}
 
 		public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int pid, float time) {
