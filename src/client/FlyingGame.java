@@ -292,7 +292,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			s = new SelfShip(this, logic, id, p, lastUpdateTime);
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
-			TargetSprite ts = new TargetSprite();
+			TargetSprite ts = new TargetSprite(p.getName());
 			s = new client.world.OtherShip(logic, id, p, lastUpdateTime, ts);
 			s.attachChild(ts);
 			
