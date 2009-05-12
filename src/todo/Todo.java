@@ -11,6 +11,7 @@ public class Todo {
 	// TODO: Kolla så att grejor tas bort helt (alla referenser) både på klient och server. Glöm inte att skepp/missiler/worldobjects kan behandlas olika.
 
 	// TODO: Kollisioner med planeter/skepp
+	// TODO: Poängvisning (connected-state?)
 
 	// TODO: That's no moon... :) (texturer!) (låg prioritet)
 	// TODO: Lägre prioritet: Inte skicka allt till alla hela tiden.

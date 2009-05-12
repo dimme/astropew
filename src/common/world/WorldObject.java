@@ -56,8 +56,10 @@ public abstract class WorldObject extends Node {
 	 */
 	public final boolean takeDamage(float dmg, WorldObject instigator) {
 		float ad = actualDamage(dmg);
-		hp -= ad;
-		hp_changed = true;
+		if (ad != 0) {
+			hp -= ad;
+			hp_changed = true;
+		}
 		if (checkDestroy()) {
 			Player owner = instigator.getOwner();
 			System.out.println(owner + " got points!");

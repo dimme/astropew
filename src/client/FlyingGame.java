@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Font;
+import java.util.Formatter;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -284,13 +285,28 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateRenderState();
 
 			gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
-
-			txtHP.setText(ship.getHP() + "%");
-			txtPoints.setText(self.getPoints() + "p");
-			txtSpeed.setText(ship.getMovement().length() + " px/hr :)");
+			
+			updateHUD();
 		}
 
 		//System.out.println("update ");
+	}
+	
+	private void updateHUD() {
+		Ship ship = self.getShip();
+		
+		StringBuilder sb = new StringBuilder();
+		Formatter fmt = new Formatter(sb);
+		
+		fmt.format("%03d%%", Math.round(ship.getHP()));
+		txtHP.setText(fmt.out().toString());
+		sb.delete(0, sb.length());
+		
+		txtPoints.setText(self.getPoints() + "p");
+		
+		fmt.format("%03d kessel runs/parsec ;)", Math.round(10*ship.getMovement().length()));
+		txtSpeed.setText(fmt.out().toString());
+		//sb.delete(0, sb.length());
 	}
 
 	protected GameSettings getNewSettings() {
