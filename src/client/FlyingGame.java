@@ -81,6 +81,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private Text2D txtHP;
 	private Text2D txtPoints;
 	private Text2D txtSpeed;
+	private Text2D txtScores;
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
@@ -137,6 +138,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		txtPoints = f2d.createText("10000", 1f, Font.PLAIN);
 		txtPoints.setLocalTranslation(0f, display.getHeight() - 20f, 0f);
 		universe.attachChild(txtPoints);
+		
+		txtScores = f2d.createText("You're dead!", 1f, Font.PLAIN);
+		txtScores.setLocalTranslation(10f, display.getHeight()-20f, 0f);
+		connected.getRootNode().attachChild(txtScores);
 
 		universe.generate(new PlanetFactory());
 
@@ -287,6 +292,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			
 			updateHUD();
+		}
+		if (connected.isActive()) {
+			StringBuilder sb = new StringBuilder("Scores: \n\n");
+			
+			for (Ship s : logic.getShips()) {
+				sb.append(s.getOwner().getName() + " " + s.getOwner().getPoints() + "p");
+			}
+			
+			txtScores.setText(sb.toString());
 		}
 
 		//System.out.println("update ");
