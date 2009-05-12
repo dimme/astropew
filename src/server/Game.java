@@ -161,7 +161,8 @@ public class Game extends BaseHeadlessApp {
 			if (c == null) {
 				c = cdb.createClient(name, saddr);
 
-				s = new Ship(logic, objectId++,c, frameTime);
+				s = new Ship(logic, objectId++, c, frameTime);
+				s.setSpawnPositions(frameTime);
 				universe.attachChild(s);
 				logic.add(s);
 
@@ -231,10 +232,7 @@ public class Game extends BaseHeadlessApp {
 		}
 
 		public void spawn(Ship ship) {
-			ship.getPosition().set(new Vector3f());
-			ship.getOrientation().set(new Quaternion());
-			ship.getMovement().set(new Vector3f());
-			ship.setLastUpdate(frameTime);
+			ship.setSpawnPositions(frameTime);
 
 			universe.attachChild(ship);
 			logic.add(ship);
@@ -242,6 +240,8 @@ public class Game extends BaseHeadlessApp {
 			ps.controlledSendToAll(PacketDataFactory.createSpawn(ship));
 
 			ship.setHP(100, frameTime);
+			
+			universe.updateGeometricState(0, true);
 		}
 
 

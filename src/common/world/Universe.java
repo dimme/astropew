@@ -11,20 +11,13 @@ public class Universe extends OctTreeNode {
 
 	private static final long serialVersionUID = 1L;
 	private static final int MAX_NUM_PLANETS = 1000;
-	private static final int POSITION_RANGE = 700;
+	private static final int POSITION_RANGE = 1000;
 
 	private final long seed;
-	private final BoundingBox worldbound;
 
 	public Universe(long seed) {
-		super("Universe");
+		super("Universe", new BoundingBox(Vector3f.ZERO,POSITION_RANGE,POSITION_RANGE,POSITION_RANGE));
 		this.seed = seed;
-
-		worldbound = new BoundingBox(Vector3f.ZERO,POSITION_RANGE,POSITION_RANGE,POSITION_RANGE);
-	}
-
-	public BoundingVolume getWorldBound() {
-		return worldbound;
 	}
 
 	public void generate(PlanetFactory pf) {

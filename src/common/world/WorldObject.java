@@ -62,7 +62,6 @@ public abstract class WorldObject extends Node {
 		}
 		if (checkDestroy()) {
 			Player owner = instigator.getOwner();
-			System.out.println(owner + " got points!");
 			owner.setPoints(owner.getPoints() + 1000);
 			return true;
 		}

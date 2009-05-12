@@ -47,9 +47,25 @@ public class Ship extends MobileObject {
                         tempMb));
         shape.getLocalRotation().normalize();
 		attachChild(shape);
-
+		
 		updateGeometricState(0, true);
 		updateModelBound();
+	}
+	
+	public void setSpawnPositions(float time) {
+		getPosition().set(100*(float)Math.random(), 100*(float)Math.random(), 100*(float)Math.random());
+		getLocalTranslation().set(getPosition());
+		
+		Vector3f z = getPosition();
+		Vector3f y = z.cross(Vector3f.UNIT_X);
+		Vector3f x = z.cross(y);
+		getOrientation().fromAxes(x,y,z);
+		getOrientation().normalize();
+		getLocalRotation().set(getOrientation());
+		
+		getMovement().set(0,0,0);
+		
+		setLastUpdate(time);
 	}
 
 	public boolean canFire(float currentTime) {
@@ -66,5 +82,9 @@ public class Ship extends MobileObject {
 
 	protected void destroy() {
 		logic.destroy(this);
+	}
+	
+	public void collidedWith(WorldObject wobj) {
+		wobj.takeDamage(100, this);
 	}
 }

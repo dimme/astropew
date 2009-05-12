@@ -3,6 +3,8 @@ package common.world;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingVolume;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
@@ -11,14 +13,21 @@ public class OctTreeNode extends Node {
 	private static final long serialVersionUID = 1L;
 
 	private OctTreeData data;
+	
+	private final BoundingBox worldbound;
 
-	public OctTreeNode(){
-		this("OctTreeNode");
+	public OctTreeNode(BoundingBox worldbound){
+		this("OctTreeNode", worldbound);
+	}
+	
+	public BoundingVolume getWorldBound() {
+		return worldbound;
 	}
 
-	public OctTreeNode(String name) {
+	public OctTreeNode(String name, BoundingBox worldbound) {
 		super(name);
 		data = new WholeData();
+		this.worldbound = worldbound;
 	}
 
 	public int attachChild(WorldObject wobj) {
@@ -67,6 +76,11 @@ public class OctTreeNode extends Node {
 		boolean addIfColliding(WorldObject wobj);
 		void remove(WorldObject wobj);
 	}
+	
+	public void split() {
+		new SplitData(); //Så att Fredrik inte tar bort den igen.
+		throw new RuntimeException("Not yet");
+	}
 
 	private static class WholeData implements OctTreeData {
 
@@ -91,6 +105,65 @@ public class OctTreeNode extends Node {
 
 		public void remove(WorldObject wobj) {
 			nodes.remove(wobj);
+		}
+	}
+	
+	private static class SplitData implements OctTreeData {
+		private final OctTreeNode n0;
+		private final OctTreeNode n1;
+		private final OctTreeNode n2;
+		private final OctTreeNode n3;
+		private final OctTreeNode n4;
+		private final OctTreeNode n5;
+		private final OctTreeNode n6;
+		private final OctTreeNode n7;
+		
+		public SplitData() {
+			//TODO: split. :)
+			n0 = new OctTreeNode(null);
+			n1 = new OctTreeNode(null);
+			n2 = new OctTreeNode(null);
+			n3 = new OctTreeNode(null);
+			n4 = new OctTreeNode(null);
+			n5 = new OctTreeNode(null);
+			n6 = new OctTreeNode(null);
+			n7 = new OctTreeNode(null);
+			throw new RuntimeException("Trodde du ja!");
+		}
+		
+		public void findCollisions(WorldObject wobj, Collection<WorldObject> collided) {
+			n0.findCollisions(wobj, collided);
+			n1.findCollisions(wobj, collided);
+			n2.findCollisions(wobj, collided);
+			n3.findCollisions(wobj, collided);
+			n4.findCollisions(wobj, collided);
+			n5.findCollisions(wobj, collided);
+			n6.findCollisions(wobj, collided);
+			n7.findCollisions(wobj, collided);
+		}
+
+		public boolean addIfColliding(WorldObject wobj) {
+			boolean b = false;
+			b = n0.addIfColliding(wobj) || b;
+			b = n1.addIfColliding(wobj) || b;
+			b = n2.addIfColliding(wobj) || b;
+			b = n3.addIfColliding(wobj) || b;
+			b = n4.addIfColliding(wobj) || b;
+			b = n5.addIfColliding(wobj) || b;
+			b = n6.addIfColliding(wobj) || b;
+			b = n7.addIfColliding(wobj) || b;
+			return b;
+		}
+
+		public void remove(WorldObject wobj) {
+			n0.data.remove(wobj);
+			n1.data.remove(wobj);
+			n2.data.remove(wobj);
+			n3.data.remove(wobj);
+			n4.data.remove(wobj);
+			n5.data.remove(wobj);
+			n6.data.remove(wobj);
+			n7.data.remove(wobj);
 		}
 	}
 

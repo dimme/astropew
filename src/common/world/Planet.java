@@ -23,4 +23,10 @@ public class Planet extends WorldObject {
 	protected void destroy() {
 	}
 
+	public void collidedBy(WorldObject wobj) {
+		if (getOwner() != wobj.getOwner()) {
+			wobj.forceHP(0);
+		}
+	}
+	
 }

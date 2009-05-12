@@ -355,6 +355,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		ms.setDiffuse(diffuse);
 		ms.setAmbient(s.getColor().clone().multLocal(0.8f));
 		s.setRenderState(ms);
+		
 		universe.attachChild(s);
 
 		return s;
