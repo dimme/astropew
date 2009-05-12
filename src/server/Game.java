@@ -93,6 +93,7 @@ public class Game extends BaseHeadlessApp {
 			
 			for (WorldObject wobj : logic.getObjects()) {
 				if (wobj.getHPChanged()) {
+					System.out.println("hp update: " + wobj + " - " + wobj.getHP());
 					wobj.resetHPChanged();
 					ps.sendToAll(PacketDataFactory.createHPUpdate(wobj));
 				}
@@ -201,6 +202,7 @@ public class Game extends BaseHeadlessApp {
 			if (c != null) {
 				Ship s = c.getShip();
 				if (s.canFire(time)) {
+					c.setPoints(c.getPoints()-1);
 					s.setLastFireTime(time);
 					s.interpolate(-1f,time);
 					Vector3f pos = s.getLocalTranslation();
@@ -248,7 +250,7 @@ public class Game extends BaseHeadlessApp {
 			
 			ps.controlledSendToAll(PacketDataFactory.createSpawn(ship));
 			
-			ship.setHP(100);
+			ship.setHP(100, frameTime);
 		}
 		
 		

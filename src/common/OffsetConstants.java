@@ -15,7 +15,8 @@ public interface OffsetConstants {
 	public static final int PLAYER_POSITIONS_POS_OFFSET = 4;
 	public static final int PLAYER_POSITIONS_ORT_OFFSET = 16;
 	public static final int PLAYER_POSITIONS_DIR_OFFSET = 32;
-	public static final int PLAYER_POSITIONS_ONE_SIZE = 44;
+	public static final int PLAYER_POSITIONS_POINTS_OFFSET = 44;
+	public static final int PLAYER_POSITIONS_ONE_SIZE = 48;
 	
 	public static final int PLAYERS_INFO_DATA_START = 2;
 	public static final int PLAYERS_DATA_ID_OFFSET = 0;
@@ -63,7 +64,8 @@ public interface OffsetConstants {
 	public static final int FIRE_MISSILE_SIZE = 6;
 	
 	public static final int OBJECT_HP_ID_OFFSET = 2;
-	public static final int OBJECT_HP_VALUE_OFFSET = 6;
-	public static final int OBJECT_HP_SIZE = 10;
+	public static final int OBJECT_HP_VALUE_OFFSET = 10;
+	public static final int OBJECT_HP_TIME_OFFSET = 6;
+	public static final int OBJECT_HP_SIZE = 14;
 
 }

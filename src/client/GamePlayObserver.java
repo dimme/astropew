@@ -56,8 +56,9 @@ public class GamePlayObserver implements PacketObserver {
 				final Vector3f pos = Util.getVector3f(data, i + OffsetConstants.PLAYER_POSITIONS_POS_OFFSET, new Vector3f());
 				final Quaternion ort = Util.getQuaternion(data, i + OffsetConstants.PLAYER_POSITIONS_ORT_OFFSET, new Quaternion());
 				final Vector3f dir = Util.getVector3f(data, i + OffsetConstants.PLAYER_POSITIONS_DIR_OFFSET, new Vector3f());
+				final int points = Util.getInt(data, i + OffsetConstants.PLAYER_POSITIONS_POINTS_OFFSET);
 				i += OffsetConstants.PLAYER_POSITIONS_ONE_SIZE;
-				game.addCommand(new UpdatePositionCommand(id, pos, ort, dir, time));
+				game.addCommand(new UpdatePositionCommand(id, pos, ort, dir, points, time));
 			}
 		} else if (packettype == ServerPacketType.SPAWN) {
 			System.out.println(Util.hex(data));
@@ -77,7 +78,8 @@ public class GamePlayObserver implements PacketObserver {
 		} else if (packettype == ServerPacketType.OBJECT_HP) {
 			int objid = Util.getInt(data, OffsetConstants.OBJECT_HP_ID_OFFSET);
 			float hp = Util.getFloat(data, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
-			game.addCommand(new UpdateObjectHPCommand(objid, hp));
+			float time = Util.getFloat(data, OffsetConstants.OBJECT_HP_TIME_OFFSET);
+			game.addCommand(new UpdateObjectHPCommand(objid, hp, time));
 		} else {
 			return false;
 		}

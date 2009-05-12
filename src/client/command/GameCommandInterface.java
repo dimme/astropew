@@ -9,11 +9,12 @@ public interface GameCommandInterface {
 
 	void addPlayer(int id, String name, int shipid);
 
-	void updateObjectHP(int objid, float hp);
+	void updateObjectHP(int objid, float hp, float time);
 
 	void removePlayer(int id);
 
 	void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int id, float time);
+	void updatePoints(int pid, int points);
 
 	void spawn(int playerid, Vector3f pos, Quaternion ort, Vector3f dir, float time);
 

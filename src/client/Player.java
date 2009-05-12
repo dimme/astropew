@@ -8,6 +8,7 @@ public class Player implements common.Player {
 	private final String name;
 	private final int id;
 	private Ship ship;
+	private int points = 0;
 
 	public Player(String name, int id) {
 		this.name = name;
@@ -39,6 +40,18 @@ public class Player implements common.Player {
 
 	public void setShip(Ship ship) {
 		this.ship=ship;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	
+	public String toString() {
+		return name; 
 	}
 
 }

@@ -2,6 +2,7 @@ package common.world;
 
 import server.command.DestroyCommand;
 
+import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
@@ -17,6 +18,7 @@ public abstract class WorldObject extends Node {
 	
 	protected float hp;
 	protected boolean hp_changed = false;
+	protected float last_hp_update = 0;
 
 	public WorldObject(GameLogic logic, int id, String name, Player owner) {
 		super(name);
@@ -58,10 +60,17 @@ public abstract class WorldObject extends Node {
 	 * @param dmg
 	 * @return true if the object was destroyed
 	 */
-	public final boolean takeDamage(float dmg) {
+	public final boolean takeDamage(float dmg, WorldObject instigator) {
 		float ad = actualDamage(dmg);
 		hp -= ad;
-		return checkDestroy();
+		hp_changed = true;
+		if (checkDestroy()) {
+			Player owner = instigator.getOwner(); 
+			System.out.println(owner + " got points!");
+			owner.setPoints(owner.getPoints() + 1000);
+			return true;
+		}
+		return false;
 	}
 	
 	protected final boolean checkDestroy() {
@@ -82,7 +91,14 @@ public abstract class WorldObject extends Node {
 		return hp;
 	}
 	
-	public void setHP(float hp) {
+	public void setHP(float hp, float atTime) {
+		if (atTime >= last_hp_update) {
+			last_hp_update = atTime;
+			forceHP(hp);
+		}
+	}
+	
+	public void forceHP(float hp) {
 		this.hp = hp;
 		hp_changed=true;
 		checkDestroy();
@@ -102,5 +118,9 @@ public abstract class WorldObject extends Node {
 
 	public boolean getHPChanged() {
 		return hp_changed;
+	}
+
+	public float getHPLastUpdate() {
+		return last_hp_update;
 	}
 }

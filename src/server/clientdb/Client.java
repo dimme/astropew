@@ -10,6 +10,7 @@ public class Client implements Player {
 	protected int id;
 	protected String name;
 	protected Ship ship;
+	protected int points = 0;
 	public final UDPConnection udpc;
 
 	public Client(DatagramPacket packet, int id, String name) {
@@ -43,5 +44,13 @@ public class Client implements Player {
 
 	public void setShip(Ship ship) {
 		this.ship = ship;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+	
+	public void setPoints(int points) {
+		this.points = points;
 	}
 }

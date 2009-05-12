@@ -83,6 +83,7 @@ public class PacketDataFactory {
 			Util.put(s.getLocalTranslation(), b, offset+OffsetConstants.PLAYER_POSITIONS_POS_OFFSET);
 			Util.put(s.getLocalRotation(), b, offset+OffsetConstants.PLAYER_POSITIONS_ORT_OFFSET);
 			Util.put(s.getMovement(), b, offset+OffsetConstants.PLAYER_POSITIONS_DIR_OFFSET);
+			Util.put(s.getOwner().getPoints(), b, offset+OffsetConstants.PLAYER_POSITIONS_POINTS_OFFSET);
 			offset += OffsetConstants.PLAYER_POSITIONS_ONE_SIZE;
 		}
 		
@@ -160,6 +161,7 @@ public class PacketDataFactory {
 		
 		Util.put(wobj.getID(), b, OffsetConstants.OBJECT_HP_ID_OFFSET);
 		Util.put(wobj.getHP(), b, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
+		Util.put(wobj.getHPLastUpdate(), b, OffsetConstants.OBJECT_HP_TIME_OFFSET);
 		
 		return b;
 	}

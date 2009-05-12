@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Font;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +10,7 @@ import client.command.GameCommandInterface;
 import client.world.OtherShip;
 import client.world.SelfShip;
 import client.world.TargetSprite;
+import client.world.TextNode;
 
 import com.jme.app.VariableTimestepGame;
 import com.jme.image.Texture;
@@ -40,6 +42,8 @@ import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
+import com.jmex.font2d.Font2D;
+import com.jmex.font2d.Text2D;
 import com.jmex.game.state.BasicGameState;
 import com.jmex.game.state.GameStateManager;
 
@@ -76,6 +80,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private final long serverltime;
 	private final float serverftime;
 	private float timediff;
+	private Text2D txtHP;
+	private Text2D txtPoints;
+	private Text2D txtSpeed;
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
@@ -121,6 +128,17 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		
 		skybox = buildSkyBox();
 		universe.attachChild(skybox);
+		
+		Font2D f2d = new Font2D();
+		txtHP = f2d.createText("000%", 1f, Font.PLAIN);
+		txtHP.setLocalTranslation(0f, 0f, 0f);
+		universe.attachChild(txtHP);
+		txtSpeed = f2d.createText("200 pixels/hour :)", 1f, Font.PLAIN);
+		txtSpeed.setLocalTranslation(0f, 20f, 0f);
+		universe.attachChild(txtSpeed);
+		txtPoints = f2d.createText("10000", 1f, Font.PLAIN);
+		txtPoints.setLocalTranslation(0f, display.getHeight() - 20f, 0f);
+		universe.attachChild(txtPoints);
 		
 		universe.generate(new PlanetFactory());
 		
@@ -269,6 +287,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateRenderState();
 			
 			gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
+			
+			txtHP.setText(ship.getHP() + "%");
+			txtPoints.setText(self.getPoints() + "p");
+			txtSpeed.setText(ship.getMovement().length() + " px/hr :)");
 		}
 		
 		//System.out.println("update ");
@@ -432,10 +454,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			FlyingGame.this.addPlayer( shipid, new Player(name, id) );
 		}
 		
-		public void updateObjectHP(int objid, float hp) {
+		public void updateObjectHP(int objid, float hp, float time) {
 			WorldObject wobj = logic.getObject(objid);
 			if (wobj != null) {
-				wobj.setHP(hp);
+				wobj.setHP(hp, time);
 			}
 		}
 
@@ -452,12 +474,19 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				
 				universe.attachChild(s);
 				logic.add(s);
-				s.setHP(100);
+				s.setHP(100, time);
 				if (playerid == self.getID()) {
 					//skybox.setLocalTranslation(s.getLocalTranslation());
 					playing.setActive(true);
 					connected.setActive(false);
 				}
+			}
+		}
+
+		public void updatePoints(int pid, int points) {
+			common.Player pl = logic.getPlayer(pid);
+			if (pl != null) {
+				pl.setPoints(points);
 			}
 		}
 	}

@@ -33,4 +33,10 @@ public class NoPlayer implements Player {
 		throw new RuntimeException("This method should not be called!");
 	}
 
+	public int getPoints() {
+		return 0;
+	}
+
+	public void setPoints(int p) {
+	}
 }
