@@ -35,7 +35,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the acceleration of this vehicle.
-	 * 
+	 *
 	 * @return the acceleration of this vehicle.
 	 */
 	public float getAcceleration() {
@@ -44,7 +44,7 @@ public class Ship extends Node {
 
 	/**
 	 * set the acceleration rate of this vehicle
-	 * 
+	 *
 	 * @param acceleration
 	 *            the acceleration rate of this vehicle
 	 */
@@ -54,7 +54,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the braking speed of this vehicle.
-	 * 
+	 *
 	 * @return the braking speed of this vehicle.
 	 */
 	public float getBraking() {
@@ -63,7 +63,7 @@ public class Ship extends Node {
 
 	/**
 	 * set the braking speed of this vehicle
-	 * 
+	 *
 	 * @param braking
 	 *            the braking speed of this vehicle
 	 */
@@ -73,7 +73,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the model Spatial of this vehicle.
-	 * 
+	 *
 	 * @return the model Spatial of this vehicle.
 	 */
 	public Spatial getModel() {
@@ -83,7 +83,7 @@ public class Ship extends Node {
 	/**
 	 * sets the model spatial of this vehicle. It first detaches any previously
 	 * attached models.
-	 * 
+	 *
 	 * @param model
 	 *            the model to attach to this vehicle.
 	 */
@@ -95,7 +95,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the velocity of this vehicle.
-	 * 
+	 *
 	 * @return the velocity of this vehicle.
 	 */
 	public float getVelocity() {
@@ -104,7 +104,7 @@ public class Ship extends Node {
 
 	/**
 	 * set the velocity of this vehicle
-	 * 
+	 *
 	 * @param velocity
 	 *            the velocity of this vehicle
 	 */
@@ -114,7 +114,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the turn speed of this vehicle.
-	 * 
+	 *
 	 * @return the turn speed of this vehicle.
 	 */
 	public float getTurnSpeed() {
@@ -123,7 +123,7 @@ public class Ship extends Node {
 
 	/**
 	 * set the turn speed of this vehicle
-	 * 
+	 *
 	 * @param turnSpeed
 	 *            the turn speed of this vehicle
 	 */
@@ -133,7 +133,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the maximum speed of this vehicle.
-	 * 
+	 *
 	 * @return the maximum speed of this vehicle.
 	 */
 	public float getMaxSpeed() {
@@ -142,7 +142,7 @@ public class Ship extends Node {
 
 	/**
 	 * sets the maximum speed of this vehicle.
-	 * 
+	 *
 	 * @param maxSpeed
 	 *            the maximum speed of this vehicle.
 	 */
@@ -152,7 +152,7 @@ public class Ship extends Node {
 
 	/**
 	 * retrieves the minimum speed of this vehicle.
-	 * 
+	 *
 	 * @return the minimum speed of this vehicle.
 	 */
 	public float getMinSpeed() {
@@ -161,7 +161,7 @@ public class Ship extends Node {
 
 	/**
 	 * sets the minimum speed of this vehicle.
-	 * 
+	 *
 	 * @param minSpeed
 	 *            the minimum speed of this vehicle.
 	 */
@@ -173,7 +173,7 @@ public class Ship extends Node {
 	 * brake adjusts the velocity of the vehicle based on the braking speed. If
 	 * the velocity reaches 0, braking will put the vehicle in reverse up to the
 	 * minimum speed.
-	 * 
+	 *
 	 * @param time
 	 *            the time between frames.
 	 */
@@ -188,7 +188,7 @@ public class Ship extends Node {
 	 * accelerate adjusts the velocity of the vehicle based on the acceleration.
 	 * The velocity will continue to raise until maxSpeed is reached, at which
 	 * point it will stop.
-	 * 
+	 *
 	 * @param time
 	 *            the time between frames.
 	 */

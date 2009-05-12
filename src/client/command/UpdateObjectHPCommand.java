@@ -1,13 +1,12 @@
 package client.command;
 
-import common.world.WorldObject;
 
 
 public class UpdateObjectHPCommand extends AbstractCommand {
 
 	private final int objid;
 	private final float hp;
-	
+
 	public UpdateObjectHPCommand(int id, float hp, float time) {
 		super(time);
 		objid = id;

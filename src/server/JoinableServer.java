@@ -5,12 +5,9 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.org.apache.bcel.internal.generic.DDIV;
-
 import server.clientdb.ClientDB;
 import server.clientdb.ClientDatabase;
 
-import common.network.DataOutput;
 import common.network.PacketReaderThread;
 
 public class JoinableServer extends Thread {

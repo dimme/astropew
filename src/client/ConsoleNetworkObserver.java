@@ -2,8 +2,6 @@ package client;
 
 import java.net.SocketAddress;
 
-import com.jme.math.Vector3f;
-
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
@@ -13,7 +11,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 
 	public boolean packetReceived(byte[] data, SocketAddress saddr) {
 		final byte ptype = Util.packetType(data);
-		
+
 		if (ptype == ServerPacketType.INITIALIZER) {
 			final String name = new String(data, OffsetConstants.INITIALIZER_STRING_OFFSET, data.length-OffsetConstants.INITIALIZER_STRING_OFFSET);
 			final int id = Util.getInt(data, OffsetConstants.INITIALIZER_ID_OFFSET);
@@ -33,7 +31,7 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			System.out.println("HP=" + hp + " for " + id);
 		} else if (ptype == ServerPacketType.PLAYERS_INFO) {
 			String s = "";
-			int i = OffsetConstants.PLAYERS_INFO_DATA_START; 
+			int i = OffsetConstants.PLAYERS_INFO_DATA_START;
 			while(i < data.length) {
 				final byte namelen = data[i+OffsetConstants.PLAYERS_DATA_NAME_LENGTH_OFFSET];
 				final String name = new String(data, i+OffsetConstants.PLAYERS_DATA_NAME_OFFSET, namelen);

@@ -80,7 +80,7 @@ public class TestBaseGame extends BaseGame {
 	/**
 	 * During an update we look for the escape button and update the timer to
 	 * get the framerate. Things are now starting to happen, so we will update
-	 * 
+	 *
 	 * @see com.jme.app.BaseGame#update(float)
 	 */
 	protected void update(float interpolation) {
@@ -109,7 +109,7 @@ public class TestBaseGame extends BaseGame {
 
 	/**
 	 * draws the scene graph
-	 * 
+	 *
 	 * @see com.jme.app.BaseGame#render(float)
 	 */
 	protected void render(float interpolation) {
@@ -120,7 +120,7 @@ public class TestBaseGame extends BaseGame {
 
 	/**
 	 * initializes the display and camera.
-	 * 
+	 *
 	 * @see com.jme.app.BaseGame#initSystem()
 	 */
 	protected void initSystem() {
@@ -163,7 +163,7 @@ public class TestBaseGame extends BaseGame {
 
 	/**
 	 * initializes the scene
-	 * 
+	 *
 	 * @see com.jme.app.BaseGame#initGame()
 	 */
 	protected void initGame() {
@@ -209,11 +209,11 @@ public class TestBaseGame extends BaseGame {
 	 * model and convert it to .jme in realtime. The next lesson will show how
 	 * to store as .jme so this conversion doesn't have to take place every
 	 * time.
-	 * 
+	 *
 	 * We now have a Vehicle object that represents our player. The vehicle
 	 * object will allow us to have multiple vehicle types with different
 	 * capabilities.
-	 * 
+	 *
 	 */
 	private void buildPlayer() {
 		final Box b = new Box("box", new Vector3f(), 0.35f, 0.25f, 0.5f);
@@ -310,7 +310,7 @@ public class TestBaseGame extends BaseGame {
 	/**
 	 * buildSkyBox creates a new skybox object with all the proper textures. The
 	 * textures used are the standard skybox textures from all the tests.
-	 * 
+	 *
 	 */
 	private void buildSkyBox() {
 		skybox = new Skybox("skybox", 10, 10, 10);
@@ -333,10 +333,10 @@ public class TestBaseGame extends BaseGame {
 	 * set the basic parameters of the chase camera. This includes the offset.
 	 * We want to be behind the vehicle and a little above it. So we will the
 	 * offset as 0 for x and z, but be 1.5 times higher than the node.
-	 * 
+	 *
 	 * We then set the roll out parameters (2 units is the closest the camera
 	 * can get, and 5 is the furthest).
-	 * 
+	 *
 	 */
 	private void buildChaseCamera() {
 		final Vector3f targetOffset = new Vector3f();
@@ -356,7 +356,7 @@ public class TestBaseGame extends BaseGame {
 
 	/**
 	 * create our custom input handler.
-	 * 
+	 *
 	 */
 	private void buildInput() {
 		input = new FlagRushHandler(battleShip, settings.getRenderer());
@@ -364,7 +364,7 @@ public class TestBaseGame extends BaseGame {
 
 	/**
 	 * will be called if the resolution changes
-	 * 
+	 *
 	 * @see com.jme.app.BaseGame#reinit()
 	 */
 	protected void reinit() {
@@ -381,7 +381,7 @@ public class TestBaseGame extends BaseGame {
 
 	/**
 	 * clean up the textures.
-	 * 
+	 *
 	 * @see com.jme.app.BaseGame#cleanup()
 	 */
 	protected void cleanup() {

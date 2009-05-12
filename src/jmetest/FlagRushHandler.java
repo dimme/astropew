@@ -42,9 +42,9 @@ import com.jme.input.KeyInput;
 /**
  * Input Handler for the Flag Rush game. This controls a supplied spatial
  * allowing us to move it forward, backward and rotate it left and right.
- * 
+ *
  * @author Mark Powell
- * 
+ *
  */
 public class FlagRushHandler extends InputHandler {
 
@@ -58,7 +58,7 @@ public class FlagRushHandler extends InputHandler {
 
 	/**
 	 * Supply the node to control and the api that will handle input creation.
-	 * 
+	 *
 	 * @param node
 	 *            the node we wish to move
 	 * @param api
@@ -74,7 +74,7 @@ public class FlagRushHandler extends InputHandler {
 	 * creates the keyboard object, allowing us to obtain the values of a
 	 * keyboard as keys are pressed. It then sets the jmetest.actions to be
 	 * triggered based on if certain keys are pressed (WSAD).
-	 * 
+	 *
 	 * @param api
 	 */
 	private void setKeyBindings(String api) {
@@ -94,7 +94,7 @@ public class FlagRushHandler extends InputHandler {
 	/**
 	 * assigns action classes to triggers. These jmetest.actions handle moving
 	 * the node forward, backward and rotating it.
-	 * 
+	 *
 	 * @param node
 	 *            the node to control.
 	 */

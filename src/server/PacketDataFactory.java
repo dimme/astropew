@@ -68,16 +68,16 @@ public class PacketDataFactory {
 	}
 
 	public static byte[] createPosition(float time, Collection<Ship> ships) {
-		
+
 		//TODO: Check if the array will fit in a UDP Packet.
 		final byte[] b = new byte[ships.size() * OffsetConstants.PLAYER_POSITIONS_ONE_SIZE  + OffsetConstants.PLAYER_POSITIONS_DATA_START];
-		
+
 		b[0] = ServerPacketType.PLAYER_POSITIONS;
 		b[1] = 0;
 		Util.put(time, b, OffsetConstants.PLAYER_POSITIONS_TIME_OFFSET);
-		
+
 		int offset = OffsetConstants.PLAYER_POSITIONS_DATA_START;
-		
+
 		for(final Ship s: ships) {
 			Util.put(s.getOwner().getID(), b, offset + OffsetConstants.PLAYER_POSITIONS_ID_OFFSET);
 			Util.put(s.getLocalTranslation(), b, offset+OffsetConstants.PLAYER_POSITIONS_POS_OFFSET);
@@ -86,7 +86,7 @@ public class PacketDataFactory {
 			Util.put(s.getOwner().getPoints(), b, offset+OffsetConstants.PLAYER_POSITIONS_POINTS_OFFSET);
 			offset += OffsetConstants.PLAYER_POSITIONS_ONE_SIZE;
 		}
-		
+
 		return b;
 	}
 
@@ -140,9 +140,9 @@ public class PacketDataFactory {
 	 * dir - Vector3f - 12 byte <br>
 	 */
 	public static byte[] createMissile(Missile m) {
-		
+
 		final byte[] b = new byte[OffsetConstants.MISSILE_SIZE];
-		
+
 		b[0] = ServerPacketType.MISSILE;
 		b[1] = 0;
 		Util.put(m.getLastUpdate(), b, OffsetConstants.MISSILE_TIME_OFFSET);
@@ -150,7 +150,7 @@ public class PacketDataFactory {
 		Util.put(m.getMovement(), b, OffsetConstants.MISSILE_DIR_OFFSET);
 		Util.put(m.getID(), b, OffsetConstants.MISSILE_ID_OFFSET);
 		Util.put(m.getOwner().getID(), b, OffsetConstants.MISSILE_OWNER_OFFSET);
-					
+
 		return b;
 	}
 
@@ -158,26 +158,26 @@ public class PacketDataFactory {
 		final byte[] b = new byte[OffsetConstants.OBJECT_HP_SIZE];
 		b[0] = ServerPacketType.OBJECT_HP;
 		b[1] = 0;
-		
+
 		Util.put(wobj.getID(), b, OffsetConstants.OBJECT_HP_ID_OFFSET);
 		Util.put(wobj.getHP(), b, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
 		Util.put(wobj.getHPLastUpdate(), b, OffsetConstants.OBJECT_HP_TIME_OFFSET);
-		
+
 		return b;
 	}
 
 	public static byte[] createSpawn(Ship ship) {
 		final byte[] b = new byte[OffsetConstants.SPAWN_SIZE];
-		
+
 		b[0] = ServerPacketType.SPAWN;
 		b[1] = 0;
-		
+
 		Util.put(ship.getLastUpdate(), b, OffsetConstants.SPAWN_TIME_OFFSET);
 		Util.put(ship.getOwner().getID(), b, OffsetConstants.SPAWN_PLAYERID_OFFSET);
 		Util.put(ship.getPosition(), b, OffsetConstants.SPAWN_POS_OFFSET);
 		Util.put(ship.getOrientation(), b, OffsetConstants.SPAWN_ORT_OFFSET);
 		Util.put(ship.getMovement(), b, OffsetConstants.SPAWN_DIR_OFFSET);
-		
+
 		return b;
 	}
 }

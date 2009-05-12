@@ -12,7 +12,7 @@ public class ShipHull {
 
 	private ShipHull() {
 	}
-	
+
 	public static TriMesh create() {
 		float root2 = FastMath.sqrt(2);
 		float topz = root2/3;
@@ -36,5 +36,5 @@ public class ShipHull {
 
 		return m;
 	}
-	
+
 }

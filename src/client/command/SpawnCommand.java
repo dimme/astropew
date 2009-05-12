@@ -9,8 +9,8 @@ public class SpawnCommand extends AbstractCommand {
 	final int pid;
 	final Vector3f pos, dir;
 	final Quaternion ort;
-	
-	
+
+
 	public SpawnCommand(int playerid, Vector3f pos, Quaternion ort, Vector3f dir, float t) {
 		super(t);
 		pid = playerid;
@@ -23,5 +23,5 @@ public class SpawnCommand extends AbstractCommand {
 		gci.spawn(pid, pos, ort, dir, time);
 	}
 
-	
+
 }

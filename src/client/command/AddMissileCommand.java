@@ -4,7 +4,7 @@ package client.command;
 import com.jme.math.Vector3f;
 
 public class AddMissileCommand extends AbstractCommand {
-	
+
 	private Vector3f pos;
 	private Vector3f dir;
 	private int ownerid;

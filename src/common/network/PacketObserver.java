@@ -13,7 +13,7 @@ public interface PacketObserver {
 
 	/**
 	 * Make the {@link PacketObserver} handle the received data
-	 * 
+	 *
 	 * @param data
 	 *            the received data
 	 * @param addr

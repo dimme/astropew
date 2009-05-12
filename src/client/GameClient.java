@@ -34,12 +34,12 @@ public class GameClient {
 			if (dataoutput) {
 				reader.addPacketObserver(new DataOutput());
 			}
-			
+
 			reader.addPacketObserver(new InitializeObserver(reader, this));
 			reader.addPacketObserver(new ConsoleNetworkObserver());
 			reader.addPacketFilter(new AckingFilter(sender, address));
 			reader.start();
-			
+
 			connect(playername);
 		} catch (final SocketException ex) {
 			Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE,

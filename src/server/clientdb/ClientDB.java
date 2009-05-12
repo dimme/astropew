@@ -16,7 +16,7 @@ public interface ClientDB extends Iterable<Client> {
 	/**
 	 * Check to see if saddr already exists. If not, create it and add to the
 	 * DB. Calculate and set id.
-	 * 
+	 *
 	 * @param name
 	 *            requested player name
 	 * @param saddr

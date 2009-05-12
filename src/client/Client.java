@@ -7,7 +7,7 @@ public class Client {
 	public static void main(String[] args) {
 		startGame(args, false);
 	}
-	
+
 	protected static void startGame(String[] args, boolean debugoutput) {
 		if (args.length < 3) {
 			System.out.println("Usage: host port username");

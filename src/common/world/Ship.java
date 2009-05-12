@@ -5,16 +5,15 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.TriMesh;
-
 import common.GameLogic;
 import common.Player;
 
 public class Ship extends MobileObject {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	protected ColorRGBA color;
-	
+
 	private static final float FIRE_INTERVAL = 0.23f;
 	private float lastFire = 0;
 
@@ -24,7 +23,7 @@ public class Ship extends MobileObject {
 
 	public Ship(GameLogic logic, int id, Player owner, float creationtime) {
 		super(logic, id, "Ship", owner, creationtime);
-		
+
 		owner.setShip(this);
 
 		int c = owner.getName().hashCode();
@@ -48,11 +47,11 @@ public class Ship extends MobileObject {
                         tempMb));
         shape.getLocalRotation().normalize();
 		attachChild(shape);
-		
+
 		updateGeometricState(0, true);
 		updateModelBound();
 	}
-	
+
 	public boolean canFire(float currentTime) {
 		return isAlive() && lastFire+FIRE_INTERVAL <= currentTime;
 	}
@@ -60,7 +59,7 @@ public class Ship extends MobileObject {
 	public void setLastFireTime(float time) {
 		lastFire = time;
 	}
-	
+
 	protected float actualDamage(float dmg) {
 		return dmg;
 	}

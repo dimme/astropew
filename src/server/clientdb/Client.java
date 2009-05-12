@@ -49,7 +49,7 @@ public class Client implements Player {
 	public int getPoints() {
 		return points;
 	}
-	
+
 	public void setPoints(int points) {
 		this.points = points;
 	}

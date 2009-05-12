@@ -1,12 +1,6 @@
 package common.world;
 
-import server.command.DestroyCommand;
-
-import com.jme.math.Vector3f;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-
 import common.GameLogic;
 import common.Player;
 
@@ -15,7 +9,7 @@ public abstract class WorldObject extends Node {
 	protected Player owner = NoPlayer.instance;
 	protected final int id;
 	protected final GameLogic logic;
-	
+
 	protected float hp;
 	protected boolean hp_changed = false;
 	protected float last_hp_update = 0;
@@ -31,7 +25,7 @@ public abstract class WorldObject extends Node {
 	public Player getOwner() {
 		return owner;
 	}
-	
+
 	public final int getID() {
 		return id;
 	}
@@ -44,19 +38,19 @@ public abstract class WorldObject extends Node {
 	 * @param wobj
 	 */
 	public void collidedBy(WorldObject wobj) {
-		
+
 	}
-	
+
 	/**
 	 * Called when this object's collision check found wobj
 	 * @param wobj
 	 */
 	public void collidedWith(WorldObject wobj) {
-		
+
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param dmg
 	 * @return true if the object was destroyed
 	 */
@@ -65,14 +59,14 @@ public abstract class WorldObject extends Node {
 		hp -= ad;
 		hp_changed = true;
 		if (checkDestroy()) {
-			Player owner = instigator.getOwner(); 
+			Player owner = instigator.getOwner();
 			System.out.println(owner + " got points!");
 			owner.setPoints(owner.getPoints() + 1000);
 			return true;
 		}
 		return false;
 	}
-	
+
 	protected final boolean checkDestroy() {
 		if (hp <= 0) {
 			destroy();
@@ -80,38 +74,38 @@ public abstract class WorldObject extends Node {
 		}
 		return false;
 	}
-	
+
 	protected abstract void destroy();
 
 	protected float actualDamage(float dmg) {
 		return 0; //no damage as default
 	}
-	
+
 	public float getHP() {
 		return hp;
 	}
-	
+
 	public void setHP(float hp, float atTime) {
 		if (atTime >= last_hp_update) {
 			last_hp_update = atTime;
 			forceHP(hp);
 		}
 	}
-	
+
 	public void forceHP(float hp) {
 		this.hp = hp;
 		hp_changed=true;
 		checkDestroy();
 	}
-	
+
 	public void resetHPChanged() {
 		hp_changed=false;
 	}
-	
+
 	public boolean isAlive() {
 		return hp > 0;
 	}
-	
+
 	public int hashCode() {
 		return id;
 	}

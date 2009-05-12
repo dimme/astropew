@@ -9,7 +9,7 @@ import com.jme.math.Vector3f;
 
 /**
  * ShipRotateLeftAction turns the node to the left (while traveling forward).
- * 
+ *
  */
 public class RotateAction extends KeyInputAction {
 	// temporary variables to handle rotation
@@ -29,7 +29,7 @@ public class RotateAction extends KeyInputAction {
 
 	/**
 	 * create a new action with the node to turn.
-	 * 
+	 *
 	 * @param node
 	 *            the node to turn
 	 */

@@ -24,16 +24,16 @@ public abstract class GameLogic {
 		mobjs.add(s);
 		_add(s);
 	}
-	
+
 	public void add(MobileObject mobj) {
 		mobjs.add(mobj);
 		_add(mobj);
 	}
-	
+
 	public void add(WorldObject obj) {
 		_add(obj);
 	}
-	
+
 	private void _add(WorldObject obj) {
 		objects.put(obj.getID(), obj);
 	}
@@ -43,11 +43,11 @@ public abstract class GameLogic {
 		remove(removed);
 		return removed;
 	}
-	
+
 	public Ship getShipByPlayer(Player player) {
 		return shiptable.get(player);
 	}
-	
+
 	public WorldObject remove(WorldObject obj) {
 		if (obj != null) {
 			mobjs.remove(obj);
@@ -55,7 +55,7 @@ public abstract class GameLogic {
 		}
 		return obj;
 	}
-	
+
 	public WorldObject remove(int objid) {
 		return remove(objects.get(objid));
 	}
@@ -63,23 +63,23 @@ public abstract class GameLogic {
 	public Collection<Ship> getShips() {
 		return shiptable.values();
 	}
-	
+
 	public Collection<WorldObject> getObjects() {
 		return objects.values();
 	}
-	
+
 	public void interpolate(float delta, float currentTime) {
 		for (MobileObject mobj : mobjs) {
 			mobj.interpolate(delta, currentTime);
 		}
 	}
-	
+
 	public void handleCollisions(Universe universe) {
 		for (MobileObject mobj : mobjs) {
 			//System.out.println("Checking collisions for " + mobj);
 			Collection<WorldObject> collisions = new LinkedList<WorldObject>();
 			universe.findCollisions(mobj, collisions);
-			
+
 			for (WorldObject wobj : collisions) {
 				mobj.collidedWith(wobj);
 				wobj.collidedBy(mobj);
@@ -87,7 +87,7 @@ public abstract class GameLogic {
 			}
 		}
 	}
-	
+
 	public final WorldObject getObject(int objid) {
 		return objects.get(objid);
 	}

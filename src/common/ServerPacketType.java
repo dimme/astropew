@@ -42,7 +42,7 @@ public interface ServerPacketType {
 	 * hp - float - 4 bytes <br>
 	 */
 	public static final byte OBJECT_HP = 39;
-	
+
 	/**
 	 * Sent to joining client to acknowledge their joining <br>
 	 * ServerPacketType - byte - 1 byte <br>
@@ -81,7 +81,7 @@ public interface ServerPacketType {
 	 */
 
 	public static final byte PLAYERS_INFO = 38;
-	
+
 	/**
 	 * Sent to inform of a spawned ship
 	 * ServerPacketType - byte - 1 byte <br>

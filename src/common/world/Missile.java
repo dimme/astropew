@@ -2,9 +2,7 @@ package common.world;
 
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Sphere;
-
 import common.GameLogic;
 import common.Player;
 
@@ -14,7 +12,7 @@ public class Missile extends MobileObject {
 
 	public Missile(GameLogic logic, int id, Vector3f pos, Vector3f dir, Player owner, float time) {
 		super(logic, id, "Missile", owner, time);
-		
+
 		final Sphere shape = new Sphere("MissileSphere", 10, 10, 0.1f );
 		shape.setModelBound(new BoundingSphere(0.1f, Vector3f.ZERO));
 		attachChild(shape);
@@ -22,7 +20,7 @@ public class Missile extends MobileObject {
 		movement.set(dir);
 		position.set(pos);
 		setLastUpdate(time);
-		
+
 		updateGeometricState(0, true);
 		updateModelBound();
 	}

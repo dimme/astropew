@@ -4,7 +4,6 @@ import java.net.SocketAddress;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-
 import common.world.Ship;
 import common.world.WorldObject;
 

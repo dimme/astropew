@@ -43,7 +43,7 @@ public class PacketDecoder implements PacketObserver {
 		case ClientPacketType.FIRE_MISSILE:
 			float t = Util.getFloat(data, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
 			game.addCommand(new FireMissileCommand(sender, t) );
-			
+
 			break;
 		default:
 			return false;

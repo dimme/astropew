@@ -22,7 +22,7 @@ import common.GameException;
 import common.Util;
 
 /**
- * 
+ *
  * @author jonsturk
  */
 public class PacketReaderThread extends Thread {
@@ -41,15 +41,15 @@ public class PacketReaderThread extends Thread {
 		readPacket = new DatagramPacket(buff, Util.PACKET_SIZE);
 		exec = Executors.newSingleThreadExecutor();
 	}
-	
+
 	public void addPacketFilter(PacketFilter pf) {
 		filters.add(pf);
 	}
-	
+
 	public void removePacketFilter(PacketFilter pf) {
 		filters.remove(pf);
 	}
-	
+
 	public void addPacketObserver(PacketObserver po) {
 		observers.add(po);
 	}
@@ -78,7 +78,7 @@ public class PacketReaderThread extends Thread {
 					Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
-	
+
 			if (!handled) {
 				//Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
 			}

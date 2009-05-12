@@ -2,11 +2,8 @@ package server.command;
 
 import java.net.SocketAddress;
 
-import server.clientdb.Client;
-
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import common.world.Ship;
 
 
 public class PlayerUpdateCommand extends AbstractCommand {
@@ -15,7 +12,7 @@ public class PlayerUpdateCommand extends AbstractCommand {
 	private Quaternion ort;
 	private Vector3f dir;
 	private SocketAddress sender;
-	
+
 	public PlayerUpdateCommand(SocketAddress sender, Vector3f pos, Quaternion ort, Vector3f dir, float time) {
 		super(time);
 		this.pos=pos;

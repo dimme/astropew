@@ -4,7 +4,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 /**
- * 
+ *
  * @author jonsturk
  */
 public class Util {
@@ -17,7 +17,7 @@ public class Util {
 	/**
 	 * reads 4 bytes (off, off+1, off+2 and off+3) from b and composits them to
 	 * an int. The most significant byte will be at b[off].
-	 * 
+	 *
 	 * @param b
 	 *            a byte array
 	 * @param off
@@ -42,7 +42,7 @@ public class Util {
 
 	/**
 	 * reads 4 bytes from b and composits them into a float.
-	 * 
+	 *
 	 * @param b
 	 *            a byte array
 	 * @param off
@@ -55,7 +55,7 @@ public class Util {
 
 	/**
 	 * Fills v with three floats read from off, off+4 and off+8.
-	 * 
+	 *
 	 * @param b
 	 *            array to read bytes from
 	 * @param off
@@ -69,7 +69,7 @@ public class Util {
 		v.z = getFloat(b, off + 8);
 		return v;
 	}
-	
+
 	public static Quaternion getQuaternion(byte[] b, int off, Quaternion q) {
 		q.w = getFloat(b,off);
 		q.x = getFloat(b,off+4);
@@ -89,7 +89,7 @@ public class Util {
 	/**
 	 * reads 8 bytes from b and composits them to a long. The most significant
 	 * byte will be at b[off].
-	 * 
+	 *
 	 * @param b
 	 *            a byte array
 	 * @param off
@@ -115,7 +115,7 @@ public class Util {
 	/**
 	 * splits an int to 4 bytes and puts them in dst, starting at offset. The
 	 * most significant byte is placed at dst[offset].
-	 * 
+	 *
 	 * @param i
 	 *            the integer to put
 	 * @param dst
@@ -132,7 +132,7 @@ public class Util {
 
 	/**
 	 * splits a float to 4 bytes and puts them in dst, starting at offset.
-	 * 
+	 *
 	 * @param f
 	 *            the float to put
 	 * @param dst
@@ -147,7 +147,7 @@ public class Util {
 
 	/**
 	 * Takes the floats from v and puts them at offset, offset+4 and offset+8
-	 * 
+	 *
 	 * @param v
 	 *            vector of floats
 	 * @param dst
@@ -160,7 +160,7 @@ public class Util {
 		put(v.y, dst, offset + 4);
 		put(v.z, dst, offset + 8);
 	}
-	
+
 	public static void put(Quaternion q, byte[] dst, int offset) {
 		put(q.w, dst, offset);
 		put(q.x, dst, offset + 4);
@@ -171,7 +171,7 @@ public class Util {
 	/**
 	 * splits a long to 8 bytes and puts them in dst, starting at offset. The
 	 * most significant byte is placed at dst[offset].
-	 * 
+	 *
 	 * @param l
 	 *            the long to put
 	 * @param dst
@@ -193,7 +193,7 @@ public class Util {
 	/**
 	 * Copies the values from src to dst, starting at dst[offset]. Will copy the
 	 * full length of src.
-	 * 
+	 *
 	 * @param src
 	 *            the array to copy from
 	 * @param dst
@@ -244,7 +244,7 @@ public class Util {
 		}
 		return sb.toString();
 	}
-	
+
 	public static boolean isControlledPacket(byte[] data) {
 		final int b = data[0] & Util.CONTROLLED_PACKET_MASK;
 

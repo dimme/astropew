@@ -9,7 +9,7 @@ import com.jme.input.action.KeyInputAction;
  * AccelerateAction defines the action that occurs when the key is pressed to
  * speed the Ship up. It obtains the velocity of the Ship and translates the
  * Ship by this value.
- * 
+ *
  */
 public class AccelerateAction extends KeyInputAction {
 	public static final int FORWARD = 1;
@@ -20,7 +20,7 @@ public class AccelerateAction extends KeyInputAction {
 
 	/**
 	 * The Ship to accelerate is supplied during construction.
-	 * 
+	 *
 	 * @param node
 	 *            the Ship to speed up.
 	 */

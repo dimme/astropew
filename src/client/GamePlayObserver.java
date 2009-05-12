@@ -4,9 +4,9 @@ import java.net.SocketAddress;
 
 import client.command.AddMissileCommand;
 import client.command.AddPlayerCommand;
-import client.command.UpdateObjectHPCommand;
 import client.command.RemovePlayerCommand;
 import client.command.SpawnCommand;
+import client.command.UpdateObjectHPCommand;
 import client.command.UpdatePositionCommand;
 
 import com.jme.math.Quaternion;
@@ -19,12 +19,8 @@ import common.network.PacketObserver;
 
 public class GamePlayObserver implements PacketObserver {
 
-	private final GameClient client;
 	private Game game;
-	private final Player self = null;
-
 	public GamePlayObserver(GameClient client, Game game) {
-		this.client = client;
 		this.game = game;
 	}
 

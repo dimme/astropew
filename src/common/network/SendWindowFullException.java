@@ -3,7 +3,7 @@ package common.network;
 public class SendWindowFullException extends NetworkException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

@@ -94,7 +94,7 @@ public class PacketSender {
 		public SendTask(byte[] data, DatagramPacket dgp) {
 			this(data,dgp,(byte)0);
 		}
-		
+
 		public SendTask(byte[] data, DatagramPacket dgp, byte seq) {
 			super(data);
 			this.dgp = dgp;

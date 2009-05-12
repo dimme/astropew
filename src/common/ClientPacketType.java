@@ -20,8 +20,8 @@ public interface ClientPacketType {
 	public static final byte PLAYER_UPDATE = 65;
 
 	public static final byte JOINING = 66;
-	
-	
+
+
 	/**
 	 * ClientPacketType - byte - 1 byte <br>
 	 * Sequence Number - byte - 1 byte <br>

@@ -2,10 +2,10 @@ package common.network;
 
 import java.net.SocketAddress;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

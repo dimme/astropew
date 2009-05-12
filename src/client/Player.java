@@ -1,6 +1,5 @@
 package client;
 
-import client.world.OtherShip;
 import common.world.Ship;
 
 public class Player implements common.Player {
@@ -49,9 +48,9 @@ public class Player implements common.Player {
 	public void setPoints(int points) {
 		this.points = points;
 	}
-	
+
 	public String toString() {
-		return name; 
+		return name;
 	}
 
 }

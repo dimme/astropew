@@ -2,7 +2,6 @@
 package client;
 
 import com.jme.input.controls.controller.camera.CameraPerspective;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -12,31 +11,29 @@ import com.jme.scene.Spatial.CullHint;
 public class FollowCameraPerspective implements CameraPerspective {
 	private Quaternion q;
 	private Vector3f v;
-    private Matrix3f m;
-	
+
 	private Vector3f location;
 	private boolean hideSpatialOnActivate;
-	
+
 	private CullHint previousCullMode;
 	private Vector3f v2;
-	
+
 	public FollowCameraPerspective(Vector3f location) {
 		this(location, false);
 	}
-	
+
 	public FollowCameraPerspective(Vector3f location, boolean hideSpatialOnActivate) {
 		q = new Quaternion();
 		v = new Vector3f();
 		v2 = new Vector3f();
-        m = new Matrix3f();
 		this.location = location;
 		this.hideSpatialOnActivate = hideSpatialOnActivate;
 	}
-	
+
 	public Vector3f getLocation() {
 		return location;
 	}
-	
+
 	public void update(Camera camera, Spatial spatial, float time) {
 		q.set(spatial.getWorldRotation());				// Get the spatial's current rotation
 		camera.setDirection(q.getRotationColumn(2));	// Match direction to the spatial's
@@ -55,7 +52,7 @@ public class FollowCameraPerspective implements CameraPerspective {
 		camera.update();
 	}
 
-	
+
 	public void setActive(Camera camera, Spatial spatial, boolean active) {
 		if ((active) && (hideSpatialOnActivate)) {
 			previousCullMode = spatial.getCullHint();

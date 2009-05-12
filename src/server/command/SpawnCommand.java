@@ -6,7 +6,7 @@ import common.world.Ship;
 public class SpawnCommand extends AbstractCommand{
 
 	final Ship ship;
-	
+
 	public SpawnCommand(Ship ship, float time) {
 		super(time);
 		this.ship=ship;

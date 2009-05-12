@@ -2,8 +2,6 @@ package client;
 
 import java.util.HashMap;
 
-import client.command.UpdateObjectHPCommand;
-
 import common.Player;
 import common.world.Missile;
 import common.world.Ship;
@@ -21,7 +19,7 @@ public class GameLogic extends common.GameLogic {
 		players = new HashMap<Integer, Player>();
 		this.self = self;
 	}
-	
+
 	public Player getSelf() {
 		return self;
 	}

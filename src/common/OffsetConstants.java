@@ -17,7 +17,7 @@ public interface OffsetConstants {
 	public static final int PLAYER_POSITIONS_DIR_OFFSET = 32;
 	public static final int PLAYER_POSITIONS_POINTS_OFFSET = 44;
 	public static final int PLAYER_POSITIONS_ONE_SIZE = 48;
-	
+
 	public static final int PLAYERS_INFO_DATA_START = 2;
 	public static final int PLAYERS_DATA_ID_OFFSET = 0;
 	public static final int PLAYERS_DATA_SHIPID_OFFSET = 4;
@@ -37,14 +37,14 @@ public interface OffsetConstants {
 
 	public static final int PLAYER_LEFT_ID_OFFSET = 2;
 	public static final int PLAYER_LEFT_SIZE = 6;
-	
+
 	public static final int MISSILE_TIME_OFFSET = 2;
 	public static final int MISSILE_POS_OFFSET = 6;
 	public static final int MISSILE_DIR_OFFSET = 18;
 	public static final int MISSILE_ID_OFFSET = 30;
 	public static final int MISSILE_OWNER_OFFSET = 34;
 	public static final int MISSILE_SIZE = 38;
-	
+
 	public static final int SPAWN_TIME_OFFSET = 2;
 	public static final int SPAWN_PLAYERID_OFFSET = 6;
 	public static final int SPAWN_POS_OFFSET = 10;
@@ -59,10 +59,10 @@ public interface OffsetConstants {
 	public static final int PLAYER_UPDATE_ORT_OFFSET = 18;
 	public static final int PLAYER_UPDATE_DIR_OFFSET = 34;
 	public static final int PLAYER_UPDATE_SIZE = 46;
-	
+
 	public static final int FIRE_MISSILE_TIME_OFFSET = 2;
 	public static final int FIRE_MISSILE_SIZE = 6;
-	
+
 	public static final int OBJECT_HP_ID_OFFSET = 2;
 	public static final int OBJECT_HP_VALUE_OFFSET = 10;
 	public static final int OBJECT_HP_TIME_OFFSET = 6;

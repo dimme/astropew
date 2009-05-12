@@ -29,10 +29,10 @@ public class PacketSender extends common.network.PacketSender {
 	public void sendToAll(byte[] data) {
 		addTask(new SendToAllTask(data));
 	}
-	
+
 	public void controlledSendToAll(byte[] data) {
 		addTask(new ControlledSendToAllTask(data));
-		
+
 	}
 
 	private class SendToAllTask extends AbstractSendTask {
@@ -51,7 +51,7 @@ public class PacketSender extends common.network.PacketSender {
 			}
 		}
 	}
-	
+
 	private class ControlledSendToAllTask extends AbstractSendTask {
 
 		public ControlledSendToAllTask(byte[] data) {

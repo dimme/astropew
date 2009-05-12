@@ -24,7 +24,7 @@ public class UDPConnection {
 		if (diff < 0) {
 			diff += 256;
 		}
-		
+
 		if (diff > 128) {
 			throw new SendWindowFullException("Send window overflow; next=" + nextSeq + ", oldestpending=" + oldestPending);
 		}
@@ -45,12 +45,12 @@ public class UDPConnection {
 			acked[o] = false;
 			o = o == 255 ? 0 : o+1;
 		}
-		
+
 		oldestPending = (byte)o;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param seq
 	 * @return
 	 * @throws NullPointerException if data for seq does not exist.

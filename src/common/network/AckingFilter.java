@@ -12,7 +12,7 @@ import common.Util;
 
 public abstract class AckingFilter implements PacketFilter {
 	protected PacketSender ps;
-	
+
 	protected Map<SocketAddress, Data> ackdata;
 
 	public AckingFilter(PacketSender ps) {
@@ -29,17 +29,17 @@ public abstract class AckingFilter implements PacketFilter {
 				sendData[0] = CommonPacketType.ACK;
 				sendData[1] = data[1];
 				ps.send(sendData, getDatagramPacket(addr));
-			
-			
+
+
 				Data d = ackdata.get(addr);
 				if (d == null) {
 					d = new Data();
 					ackdata.put(addr, d);
 				}
 				byte seq = data[1];
-				
+
 				boolean isNewPacket = d.received(seq);
-				
+
 				return isNewPacket;
 			}
 		}
@@ -47,11 +47,11 @@ public abstract class AckingFilter implements PacketFilter {
 	}
 
 	protected abstract DatagramPacket getDatagramPacket(SocketAddress saddr);
-	
+
 	private static class Data {
 		private boolean[] received = new boolean[256];
 		private int oldestPending = 0;
-		
+
 		/**
 		 * @param seq
 		 * @return true if seq was inside the window
@@ -63,7 +63,7 @@ public abstract class AckingFilter implements PacketFilter {
 			if (diff < 0) {
 				diff += 256;
 			}
-			
+
 			if (diff < 128) {
 				received[seq] = true;
 				while ( received[oldestPending] ) {
@@ -72,7 +72,7 @@ public abstract class AckingFilter implements PacketFilter {
 				}
 				return true;
 			}
-			
+
 			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Received packet outside window, seq = " + seq);
 			return false;
 		}
