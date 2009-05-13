@@ -2,12 +2,14 @@ package client;
 
 import java.awt.Font;
 import java.util.Formatter;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import client.command.Command;
 import client.command.GameCommandInterface;
+import client.world.NodeThatCanRemoveAllChildren;
 import client.world.OtherShip;
 import client.world.SelfShip;
 import client.world.TargetSprite;
@@ -29,6 +31,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
+import com.jme.scene.Spatial;
 import com.jme.scene.state.BlendState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
@@ -81,7 +84,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private Text2D txtHP;
 	private Text2D txtPoints;
 	private Text2D txtSpeed;
-	private Text2D txtScores;
+	private NodeThatCanRemoveAllChildren scoreNode;
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
@@ -139,9 +142,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		txtPoints.setLocalTranslation(0f, display.getHeight() - 20f, 0f);
 		universe.attachChild(txtPoints);
 		
-		txtScores = f2d.createText("You're dead!", 1f, Font.PLAIN);
-		txtScores.setLocalTranslation(10f, display.getHeight()-20f, 0f);
-		connected.getRootNode().attachChild(txtScores);
+		scoreNode = new NodeThatCanRemoveAllChildren("ScoreDisplay");
+		connected.getRootNode().attachChild(scoreNode);
 
 		universe.generate(new PlanetFactory());
 
@@ -274,7 +276,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		if (KeyBindingManager.getKeyBindingManager().isValidCommand("exit")) {
 			finished = true;
-			//TODO: I input handler istället?
 		}
 
 		if (playing.isActive()) {
@@ -294,13 +295,24 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			updateHUD();
 		}
 		if (connected.isActive()) {
-			StringBuilder sb = new StringBuilder("Scores: \n\n");
 			
+			scoreNode.removeAllChildren();
+			
+			Font2D f2d = new Font2D();
+			
+			final Text2D header = f2d.createText("Scores:", 1f, Font.PLAIN);
+			header.setLocalTranslation(0f, display.getHeight()-20f, 0f);
+			scoreNode.attachChild(header);
+			
+			float pos = display.getHeight()-60f;
 			for (Ship s : logic.getShips()) {
-				sb.append(s.getOwner().getName() + " " + s.getOwner().getPoints() + "p");
+				String text = s.getOwner().getName() + " " + s.getOwner().getPoints() + "p";
+				final Text2D score = f2d.createText(text, 1f, Font.PLAIN);
+				score.setLocalTranslation(0f, pos, 0f);
+				scoreNode.attachChild(score);
+				
+				pos-= 20f;
 			}
-			
-			txtScores.setText(sb.toString());
 		}
 
 		//System.out.println("update ");
