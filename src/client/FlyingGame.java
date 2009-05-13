@@ -36,6 +36,7 @@ import com.jme.scene.state.BlendState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
@@ -159,18 +160,38 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		final CullState cs = display.getRenderer().createCullState();
 		cs.setCullFace(CullState.Face.Back);
 		playingRoot.setRenderState(cs);
+		
+		//Wireframe
+		/*final RenderState wfs = display.getRenderer().createWireframeState();
+		playingRoot.setRenderState(wfs);*/
 
 		// LIGHTS
 		final LightState ltst = display.getRenderer().createLightState();
 		ltst.setEnabled(true);
 
+		ColorRGBA ltclr = ColorRGBA.white.clone().multLocal(0.3f);
+		
 		final PointLight lt = new PointLight();
-		lt.setLocation(new Vector3f(4, 2, 3));
-		lt.setDiffuse(ColorRGBA.white);
-		lt.setAmbient(ColorRGBA.white);
+		lt.setLocation(new Vector3f(1000, 0, 0));
+		lt.setDiffuse(ltclr);
+		lt.setAmbient(ltclr);
 		lt.setEnabled(true);
-
 		ltst.attach(lt);
+		
+		final PointLight lt2 = new PointLight();
+		lt2.copyFrom(lt);
+		lt2.setLocation(new Vector3f(0,1000,0));
+		ltst.attach(lt2);
+		
+		final PointLight lt3 = new PointLight();
+		lt3.copyFrom(lt);
+		lt3.setLocation(new Vector3f(0,-1000,-1000));
+		ltst.attach(lt3);
+		
+		final PointLight lt4 = new PointLight();
+		lt4.copyFrom(lt);
+		lt4.setLocation(new Vector3f(-1000,-1000,0));
+		ltst.attach(lt4);
 
 		playingRoot.setRenderState(ltst);
 
@@ -376,10 +397,11 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		MaterialState ms = display.getRenderer().createMaterialState();
 
-		ColorRGBA diffuse = s.getColor().clone().addLocal(ColorRGBA.gray);
+		ColorRGBA diffuse = s.getColor().clone().addLocal(ColorRGBA.gray.clone().multLocal(0.3f));
 		diffuse.clamp();
-		ms.setDiffuse(diffuse);
-		ms.setAmbient(s.getColor().clone().multLocal(0.8f));
+		ms.setDiffuse(diffuse.clone().multLocal(0.8f));
+		ms.setAmbient(s.getColor().clone().multLocal(0.1f));
+		ms.setSpecular(ColorRGBA.white.clone().multLocal(0.02f));
 		s.setRenderState(ms);
 		
 		universe.attachChild(s);
@@ -439,14 +461,29 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	private class PlanetFactory implements common.world.PlanetFactory {
 		private int object_id = 0;
+		
+		private final MaterialState ms;
+		private final TextureState ts;
+		
+		public PlanetFactory() {
+			ms = display.getRenderer().createMaterialState();
+			ms.setDiffuse(ColorRGBA.white);
+			ms.setAmbient(ColorRGBA.white.clone().multLocal(0.3f));
+			
+			ts = display.getRenderer().createTextureState();
+			final Texture texture = TextureManager.loadTexture("../files/moon.jpg",
+					Texture.MinificationFilter.Trilinear,
+					Texture.MagnificationFilter.Bilinear, 1.0f, true);
+			ts.setTexture(texture);
+			ts.setEnabled(true);
+		}
 
 		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
 			Planet p = new Planet(logic, object_id++, center, 20, 20, size);
 
-			final MaterialState ms = display.getRenderer().createMaterialState();
-			ms.setDiffuse(c);
-			ms.setAmbient(c.clone().multLocal(0.3f));
+			
 			p.setRenderState(ms);
+			p.setRenderState(ts);
 
 			logic.add(p);
 

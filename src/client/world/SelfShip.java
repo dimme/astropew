@@ -15,7 +15,7 @@ public class SelfShip extends Ship {
 	private final Game game;
 
 	public SelfShip(Game game, GameLogic logic, int id, Player owner, float creationtime) {
-		super(logic, id, owner, creationtime);
+		super(logic, id, owner, 4, creationtime);
 		this.game = game;
 	}
 

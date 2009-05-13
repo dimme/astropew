@@ -21,7 +21,7 @@ public class Ship extends MobileObject {
 		return color;
 	}
 
-	public Ship(GameLogic logic, int id, Player owner, float creationtime) {
+	public Ship(GameLogic logic, int id, Player owner, int subdivides, float creationtime) {
 		super(logic, id, "Ship", owner, creationtime);
 
 		owner.setShip(this);
@@ -33,7 +33,7 @@ public class Ship extends MobileObject {
 		float max = Math.max(color.r, Math.max(color.g, color.b));
 		color.r /= max;  color.g /= max;  color.b /= max;
 
-		TriMesh shape = ShipHull.create();
+		TriMesh shape = ShipHull.create(subdivides);
 		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
 		shape.getLocalScale().z = 0.3f;
 
@@ -86,5 +86,10 @@ public class Ship extends MobileObject {
 	
 	public void collidedWith(WorldObject wobj) {
 		wobj.takeDamage(100, this);
+	}
+	
+	public void forceHP(float hp) {
+		super.forceHP(hp);
+		
 	}
 }

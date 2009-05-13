@@ -86,7 +86,11 @@ public class Game extends BaseHeadlessApp {
 				if (wobj.getHPChanged()) {
 					System.out.println("hp update: " + wobj + " - " + wobj.getHP());
 					wobj.resetHPChanged();
-					ps.sendToAll(PacketDataFactory.createHPUpdate(wobj));
+					if (wobj.getHP() == 0) {
+						ps.controlledSendToAll(PacketDataFactory.createHPUpdate(wobj));
+					} else {
+						ps.sendToAll(PacketDataFactory.createHPUpdate(wobj));
+					}
 				}
 			}
 		}
@@ -161,7 +165,7 @@ public class Game extends BaseHeadlessApp {
 			if (c == null) {
 				c = cdb.createClient(name, saddr);
 
-				s = new Ship(logic, objectId++, c, frameTime);
+				s = new Ship(logic, objectId++, c, 0, frameTime);
 				s.setSpawnPositions(frameTime);
 				universe.attachChild(s);
 				logic.add(s);
@@ -185,7 +189,7 @@ public class Game extends BaseHeadlessApp {
 				universe.removeChild(s);
 
 				final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
-				ps.sendToAll(data);
+				ps.controlledSendToAll(data);
 			}
 		}
 

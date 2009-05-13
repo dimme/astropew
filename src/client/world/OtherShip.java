@@ -19,7 +19,7 @@ public class OtherShip extends common.world.Ship {
 	private final Vector3f diff = new Vector3f();
 
 	public OtherShip(GameLogic logic, int id, Player owner, float creationtime, TargetSprite ts) {
-		super(logic, id, owner, creationtime);
+		super(logic, id, owner, 2, creationtime);
 		this.ts = ts;
 		this.logic = logic;
 	}

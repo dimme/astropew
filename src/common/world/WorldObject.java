@@ -57,8 +57,7 @@ public abstract class WorldObject extends Node {
 	public final boolean takeDamage(float dmg, WorldObject instigator) {
 		float ad = actualDamage(dmg);
 		if (ad != 0) {
-			hp -= ad;
-			hp_changed = true;
+			forceHP(hp-ad);
 		}
 		if (checkDestroy()) {
 			Player owner = instigator.getOwner();
