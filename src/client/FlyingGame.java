@@ -397,11 +397,12 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		MaterialState ms = display.getRenderer().createMaterialState();
 
-		ColorRGBA diffuse = s.getColor().clone().addLocal(ColorRGBA.gray.clone().multLocal(0.3f));
+		ColorRGBA diffuse = s.getColor().clone();
 		diffuse.clamp();
-		ms.setDiffuse(diffuse.clone().multLocal(0.8f));
-		ms.setAmbient(s.getColor().clone().multLocal(0.1f));
-		ms.setSpecular(ColorRGBA.white.clone().multLocal(0.02f));
+		ms.setDiffuse(diffuse);
+		ms.setAmbient(s.getColor().clone().multLocal(0.2f));
+		ms.setSpecular(ColorRGBA.white.clone().multLocal(0.1f));
+		ms.setShininess(128f);
 		s.setRenderState(ms);
 		
 		universe.attachChild(s);
