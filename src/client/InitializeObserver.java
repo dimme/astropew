@@ -1,10 +1,12 @@
 package client;
 
 import java.net.SocketAddress;
+import java.util.LinkedList;
 
 import common.CatastrophicException;
 import common.GameException;
 import common.OffsetConstants;
+import common.Pair;
 import common.ServerPacketType;
 import common.Util;
 import common.network.PacketObserver;
@@ -14,7 +16,8 @@ public class InitializeObserver implements PacketObserver {
 
 	private final GameClient client;
 	private final PacketReaderThread reader;
-
+	private final LinkedList<Pair<byte[],SocketAddress>> unhandled = new LinkedList<Pair<byte[],SocketAddress>>(); 
+	
 	public InitializeObserver(PacketReaderThread reader, GameClient client) {
 		this.client = client;
 		this.reader = reader;
@@ -35,12 +38,19 @@ public class InitializeObserver implements PacketObserver {
 				//final Game game = new DumbDummySenderGame(id, name, client);
 				//final Game game = new ObserverGame(id, name, client);
 				reader.removePacketObserver(this);
-				reader.addPacketObserver( new GamePlayObserver(client, game) );
+				GamePlayObserver gpo = new GamePlayObserver(client, game);
+				reader.addPacketObserver( gpo );
 				game.startInThread();
+				
+				for (Pair<byte[],SocketAddress> p: unhandled) {
+					gpo.packetReceived(p.item1, p.item2);
+				}
 			} catch (Exception e) {
 				throw new CatastrophicException(e);
 			}
 			return true;
+		} else {
+			unhandled.add(new Pair<byte[],SocketAddress>(data, addr));
 		}
 		return false;
 	}

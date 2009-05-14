@@ -112,8 +112,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		playing = new BasicGameState("PlayingState");
 		connected = new BasicGameState("ConnectedState");
-		playing.setActive(true);
-		connected.setActive(false);
+		playing.setActive(false);
+		connected.setActive(true);
 
 		GameStateManager gsm = GameStateManager.create();
 		gsm.attachChild(playing);
@@ -449,8 +449,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	private void addPlayer(int shipid, Player p) {
-		Ship s = createShip(shipid, p);
-		logic.add(s);
+		if (logic.getPlayer(p.getID()) == null) {
+			Ship s = createShip(shipid, p);
+			logic.add(s);
+		}
 	}
 
 	public Universe getUniverse() {

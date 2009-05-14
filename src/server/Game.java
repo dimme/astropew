@@ -11,6 +11,7 @@ import server.clientdb.ClientDB;
 import server.command.Command;
 import server.command.GameCommandInterface;
 import server.command.SetHPCommand;
+import server.command.SpawnCommand;
 import server.world.Missile;
 
 import com.jme.app.BaseHeadlessApp;
@@ -174,6 +175,7 @@ public class Game extends BaseHeadlessApp {
 				final byte[] data = pdf.createPlayerJoined(c.getID(), name, s.getID());
 
 				ps.controlledSendToAll(data);
+				addCommand(new SpawnCommand(s, frameTime));
 			} else {
 				s = c.getShip();
 			}
