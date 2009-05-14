@@ -312,7 +312,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 
-			if (lastPosSend + 0.5f < lastUpdateTime) {
+			if (lastPosSend + 0.05f < lastUpdateTime) {
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			}
