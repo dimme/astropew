@@ -87,6 +87,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private Text2D txtSpeed;
 	private NodeThatCanRemoveAllChildren scoreNode;
 	private float lastPosSend = 0;
+	private final Vector3f oldMovement = new Vector3f();
+	private final Quaternion oldRotation = new Quaternion();
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
@@ -305,6 +307,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 			Ship ship = self.getShip();
 
+			oldMovement.set(ship.getMovement());
+			oldRotation.set(ship.getLocalRotation());
 			inputHandler.update(interpolation);
 
 			logic.interpolate(interpolation, lastUpdateTime);
@@ -312,7 +316,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 
-			if (lastPosSend + 0.05f < lastUpdateTime) {
+			if (lastPosSend + 0.05f < lastUpdateTime && 
+					(!oldMovement.equals(ship.getMovement()) || 
+					 !oldRotation.equals(ship.getLocalRotation()))) {
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			}
