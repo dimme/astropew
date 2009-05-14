@@ -9,6 +9,8 @@ public abstract class WorldObject extends Node {
 	protected final Player owner;
 	protected final int id;
 	protected final GameLogic logic;
+	
+	public static final WorldObject NullWobj = NullWorldObject.instance;
 
 	protected float hp;
 	protected boolean hp_changed = false;
@@ -61,9 +63,9 @@ public abstract class WorldObject extends Node {
 	public final boolean takeDamage(float dmg, WorldObject instigator) {
 		float ad = actualDamage(dmg);
 		if (ad != 0) {
-			forceHP(hp-ad);
+			forceHP(hp-ad, instigator);
 		}
-		if (checkDestroy()) {
+		if (checkDestroy(instigator)) {
 			Player owner = instigator.getOwner();
 			owner.setPoints(owner.getPoints() + 1000);
 			return true;
@@ -71,15 +73,15 @@ public abstract class WorldObject extends Node {
 		return false;
 	}
 
-	protected final boolean checkDestroy() {
+	protected final boolean checkDestroy(WorldObject instigator) {
 		if (hp <= 0) {
-			destroy();
+			destroy(instigator);
 			return true;
 		}
 		return false;
 	}
 
-	protected abstract void destroy();
+	protected abstract void destroy(WorldObject instigator);
 
 	protected float actualDamage(float dmg) {
 		return 0; //no damage as default
@@ -92,14 +94,16 @@ public abstract class WorldObject extends Node {
 	public void setHP(float hp, float atTime) {
 		if (atTime >= last_hp_update) {
 			last_hp_update = atTime;
-			forceHP(hp);
+			forceHP(hp, NullWobj);
 		}
 	}
 
-	public void forceHP(float hp) {
-		this.hp = hp;
-		hp_changed=true;
-		checkDestroy();
+	public void forceHP(float hp, WorldObject instigator) {
+		if (this.hp != hp) {
+			this.hp = hp;
+			hp_changed=true;
+			checkDestroy(instigator);
+		}
 	}
 
 	public void resetHPChanged() {

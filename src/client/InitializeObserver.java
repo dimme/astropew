@@ -51,8 +51,8 @@ public class InitializeObserver implements PacketObserver {
 			return true;
 		} else {
 			unhandled.add(new Pair<byte[],SocketAddress>(data, addr));
+			return true;
 		}
-		return false;
 	}
 
 }

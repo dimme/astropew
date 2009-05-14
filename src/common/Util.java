@@ -79,7 +79,11 @@ public class Util {
 	}
 
 	public static String getString(byte[] b, int off, int len) {
-		return new String(b, off, len);
+		if (off+len < b.length) {
+			return new String(b, off, len);
+		} else {
+			return "";
+		}
 	}
 
 	public static String getString(byte[] b, int off) {

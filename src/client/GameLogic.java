@@ -44,15 +44,15 @@ public class GameLogic extends common.GameLogic {
 		return getShipByPlayer(players.get(playerid));
 	}
 
-	public void destroy(WorldObject wobj) {
+	public void destroy(WorldObject wobj, WorldObject instigator) {
 		_destroy(wobj);
 	}
 
-	public void destroy(Missile m) {
+	public void destroy(Missile m, WorldObject instigator) {
 		_destroy(m);
 	}
 
-	public void destroy(Ship ship) {
+	public void destroy(Ship ship, WorldObject instigator) {
 		_destroy(ship);
 	}
 

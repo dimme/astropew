@@ -18,4 +18,5 @@ public interface GameCommandInterface {
 
 	void spawn(int playerid, Vector3f pos, Quaternion ort, Vector3f dir, float time);
 
+	void addMessage(Message m);
 }

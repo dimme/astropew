@@ -232,10 +232,13 @@ public class Game extends BaseHeadlessApp {
 			}
 		}
 
-		public void destroy(WorldObject obj) {
+		public void destroy(WorldObject obj, WorldObject instigator) {
 			universe.removeChild(obj);
 			logic.remove(obj);
 			ps.controlledSendToAll(pdf.createHPUpdate(obj));
+			if (instigator != obj && instigator != WorldObject.NullWobj) {
+				ps.sendToAll(pdf.createKilled(obj, instigator, frameTime));
+			}
 		}
 
 		public void spawn(Ship ship) {

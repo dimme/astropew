@@ -6,6 +6,7 @@ import com.jme.math.Vector3f;
 import common.GameLogic;
 import common.Player;
 import common.world.Ship;
+import common.world.WorldObject;
 
 public class SelfShip extends Ship {
 
@@ -33,8 +34,8 @@ public class SelfShip extends Ship {
 		return false;
 	}
 
-	protected void destroy() {
-		super.destroy();
+	protected void destroy(WorldObject instigator) {
+		super.destroy(instigator);
 		game.setPlaying(false);
 	}
 }

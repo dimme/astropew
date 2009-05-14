@@ -7,7 +7,11 @@ public interface OffsetConstants {
 	// FROM SERVER
 
 	public static final int MESSAGE_MESSAGE_TYPE_OFFSET = 2;
-	public static final int MESSAGE_STRING_OFFSET = 3;
+	public static final int MESSAGE_TIME_OFFSET = 3;
+	public static final int MESSAGE_NUM_OBJECTS_OFFSET = 7;
+	public static final int MESSAGE_OBJECT_IDS_OFFSET = 11;
+	public static final int MESSAGE_OVERHEAD_SIZE = MESSAGE_OBJECT_IDS_OFFSET;
+	public static final int MESSAGE_OBJECT_ID_LENGTH = 4;
 
 	public static final int PLAYER_POSITIONS_TIME_OFFSET = 2;
 	public static final int PLAYER_POSITIONS_DATA_START = 6;

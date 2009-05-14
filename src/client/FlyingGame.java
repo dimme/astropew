@@ -4,11 +4,13 @@ import java.awt.Font;
 import java.util.Formatter;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import client.command.Command;
 import client.command.GameCommandInterface;
+import client.command.Message;
 import client.world.NodeThatCanRemoveAllChildren;
 import client.world.OtherShip;
 import client.world.SelfShip;
@@ -49,6 +51,8 @@ import com.jmex.font2d.Font2D;
 import com.jmex.font2d.Text2D;
 import com.jmex.game.state.BasicGameState;
 import com.jmex.game.state.GameStateManager;
+import com.sun.org.apache.xml.internal.serializer.utils.Messages;
+
 import common.world.Missile;
 import common.world.Planet;
 import common.world.Ship;
@@ -69,6 +73,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private CameraController cameraController;
 	private Timer timer;
 	private final GameCommandInterface gci;
+	private final TreeSet<Message> messages = new TreeSet<Message>();
+	private static final int MAX_NUM_MESSAGES = 5;
 
 	private ZBufferState targetSpriteZbufs;
 	private TextureState targetSpriteTexture;
@@ -316,9 +322,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 
-			if (lastPosSend + 0.05f < lastUpdateTime && 
+			if (lastPosSend + 1f < lastUpdateTime || 
+					(lastPosSend + 0.05f < lastUpdateTime && 
 					(!oldMovement.equals(ship.getMovement()) || 
-					 !oldRotation.equals(ship.getLocalRotation()))) {
+					 !oldRotation.equals(ship.getLocalRotation())))) {
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			}
@@ -505,6 +512,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	}
 
 	private class CommandInterface implements GameCommandInterface {
+
 		public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float time) {
 			common.Player owner = logic.getPlayer(ownerid);
 			Ship s = owner.getShip();
@@ -578,6 +586,14 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			if (pl != null) {
 				pl.setPoints(points);
 			}
+		}
+
+		public void addMessage(Message m) {
+			messages.add(m);
+			while(messages.size() > MAX_NUM_MESSAGES) {
+				messages.remove(messages.first());
+			}
+			System.out.println(m.msg);
 		}
 	}
 

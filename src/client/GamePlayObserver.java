@@ -4,6 +4,7 @@ import java.net.SocketAddress;
 
 import client.command.AddMissileCommand;
 import client.command.AddPlayerCommand;
+import client.command.MessageCommand;
 import client.command.RemovePlayerCommand;
 import client.command.SpawnCommand;
 import client.command.UpdateObjectHPCommand;
@@ -76,6 +77,18 @@ public class GamePlayObserver implements PacketObserver {
 			float hp = Util.getFloat(data, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
 			float time = Util.getFloat(data, OffsetConstants.OBJECT_HP_TIME_OFFSET);
 			game.addCommand(new UpdateObjectHPCommand(objid, hp, time));
+		} else if (packettype == ServerPacketType.MESSAGE) {
+			byte msgtype = data[OffsetConstants.MESSAGE_MESSAGE_TYPE_OFFSET];
+			float time = Util.getFloat(data, OffsetConstants.MESSAGE_TIME_OFFSET);
+			int numids = Util.getInt(data, OffsetConstants.MESSAGE_NUM_OBJECTS_OFFSET);
+			int[] ids = new int[numids];
+			for (int i=0; i<ids.length; i++) {
+				ids[i] = Util.getInt(data, OffsetConstants.MESSAGE_OVERHEAD_SIZE + i*OffsetConstants.MESSAGE_OBJECT_ID_LENGTH);
+			}
+			int strpos = OffsetConstants.MESSAGE_OVERHEAD_SIZE + numids*OffsetConstants.MESSAGE_OBJECT_ID_LENGTH;
+			String str = Util.getString(data, strpos);
+			
+			game.addCommand(new MessageCommand(msgtype, ids, str, time));
 		} else {
 			return false;
 		}

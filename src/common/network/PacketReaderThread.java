@@ -80,7 +80,7 @@ public class PacketReaderThread extends Thread {
 			}
 
 			if (!handled) {
-				//Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unhandled packet type: " + data[0]);
 			}
 		}
 	}

@@ -20,12 +20,12 @@ public class Planet extends WorldObject {
 		updateModelBound();
 	}
 
-	protected void destroy() {
+	protected void destroy(WorldObject instigator) {
 	}
 
 	public void collidedBy(WorldObject wobj) {
 		if (getOwner() != wobj.getOwner()) {
-			wobj.forceHP(0);
+			wobj.forceHP(0, this);
 		}
 	}
 	

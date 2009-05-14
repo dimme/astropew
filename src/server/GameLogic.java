@@ -16,20 +16,20 @@ public class GameLogic extends common.GameLogic {
 		this.game = game;
 	}
 
-	public void destroy(WorldObject worldObject) {
-		_destroy(worldObject);
+	public void destroy(WorldObject worldObject, WorldObject instigator) {
+		_destroy(worldObject, instigator);
 	}
 
-	private void _destroy(WorldObject wobj) {
-		game.addCommand(new DestroyCommand(wobj, game.getFrameTime()));
+	private void _destroy(WorldObject wobj, WorldObject instigator) {
+		game.addCommand(new DestroyCommand(wobj, instigator, game.getFrameTime()));
 	}
 
-	public void destroy(Missile m) {
-		_destroy(m);
+	public void destroy(Missile m, WorldObject instigator) {
+		_destroy(m, instigator);
 	}
 
-	public void destroy(Ship ship) {
-		_destroy(ship);
+	public void destroy(Ship ship, WorldObject instigator) {
+		_destroy(ship, instigator);
 		game.addCommand(new SpawnCommand(ship, game.getFrameTime()+5f));
 	}
 }

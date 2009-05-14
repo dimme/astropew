@@ -80,16 +80,11 @@ public class Ship extends MobileObject {
 		return dmg;
 	}
 
-	protected void destroy() {
-		logic.destroy(this);
+	protected void destroy(WorldObject instigator) {
+		logic.destroy(this, instigator);
 	}
 	
 	public void collidedWith(WorldObject wobj) {
 		wobj.takeDamage(100, this);
-	}
-	
-	public void forceHP(float hp) {
-		super.forceHP(hp);
-		
 	}
 }

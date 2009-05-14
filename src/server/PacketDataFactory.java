@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
+import common.MessageType;
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
@@ -18,20 +19,6 @@ public class PacketDataFactory {
 	private static final float SEND_ALL_INTERVAL = 10;
 	private float lastPositionSend = 0;
 	private float lastAllSend = 0;
-	
-	public byte[] createMessagePacket(byte msgtype, String str) {
-
-		final byte[] sb = str.getBytes();
-
-		final byte[] b = new byte[OffsetConstants.MESSAGE_STRING_OFFSET	+ sb.length];
-
-		b[0] = ServerPacketType.MESSAGE;
-		b[1] = 0;
-		b[OffsetConstants.MESSAGE_MESSAGE_TYPE_OFFSET] = msgtype;
-		Util.put(sb, b, OffsetConstants.MESSAGE_STRING_OFFSET);
-
-		return b;
-	}
 
 	public byte[] createInitializer(long worldseed, int id, int shipid, String name, long ltime, float ftime) {
 		final byte[] namebytes = name.getBytes();
@@ -200,6 +187,21 @@ public class PacketDataFactory {
 		Util.put(ship.getOrientation(), b, OffsetConstants.SPAWN_ORT_OFFSET);
 		Util.put(ship.getMovement(), b, OffsetConstants.SPAWN_DIR_OFFSET);
 
+		return b;
+	}
+	
+	public byte[] createKilled(WorldObject killed, WorldObject killer, float time) {
+		final byte[] b = new byte[OffsetConstants.MESSAGE_OVERHEAD_SIZE + 2*OffsetConstants.MESSAGE_OBJECT_ID_LENGTH];
+		
+		b[0] = ServerPacketType.MESSAGE;
+		b[1] = 0;
+		b[OffsetConstants.MESSAGE_MESSAGE_TYPE_OFFSET] = MessageType.KILLED;
+		
+		Util.put(time, b, OffsetConstants.MESSAGE_TIME_OFFSET);
+		Util.put(2, b, OffsetConstants.MESSAGE_NUM_OBJECTS_OFFSET);
+		Util.put(killed.getID(), b, OffsetConstants.MESSAGE_OBJECT_IDS_OFFSET);
+		Util.put(killer.getID(), b, OffsetConstants.MESSAGE_OBJECT_IDS_OFFSET + OffsetConstants.MESSAGE_OBJECT_ID_LENGTH);
+		
 		return b;
 	}
 }

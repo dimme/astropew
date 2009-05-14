@@ -92,7 +92,7 @@ public abstract class GameLogic {
 		return objects.get(objid);
 	}
 
-	public abstract void destroy(Missile m);
-	public abstract void destroy(Ship ship);
-	public abstract void destroy(WorldObject worldObject);
+	public abstract void destroy(Missile m, WorldObject instigator);
+	public abstract void destroy(Ship ship, WorldObject instigator);
+	public abstract void destroy(WorldObject worldObject, WorldObject instigator);
 }

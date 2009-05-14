@@ -43,8 +43,6 @@ public class ConsoleNetworkObserver implements PacketObserver {
 			for( int i = 10; i < data.length;){
 				i += 44;
 			}
-		} else if (ptype == ServerPacketType.MESSAGE) {
-			System.out.println("Recieved msg: " + new String(data,OffsetConstants.MESSAGE_STRING_OFFSET, data.length-OffsetConstants.MESSAGE_STRING_OFFSET));
 		}
 		return false;
 	}
