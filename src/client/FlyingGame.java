@@ -73,8 +73,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private CameraController cameraController;
 	private Timer timer;
 	private final GameCommandInterface gci;
-	private final TreeSet<Message> messages = new TreeSet<Message>();
-	private static final int MAX_NUM_MESSAGES = 5;
 
 	private ZBufferState targetSpriteZbufs;
 	private TextureState targetSpriteTexture;
@@ -82,6 +80,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	private BasicGameState playing;
 	private BasicGameState connected;
+	private BasicGameState messages;
 
 	private Skybox skybox;
 
@@ -91,7 +90,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private Text2D txtHP;
 	private Text2D txtPoints;
 	private Text2D txtSpeed;
-	private NodeThatCanRemoveAllChildren scoreNode;
+	private TextBox scoreNode;
+	private MessageBox msgbox;
 	private float lastPosSend = 0;
 	private final Vector3f oldMovement = new Vector3f();
 	private final Quaternion oldRotation = new Quaternion();
@@ -118,12 +118,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		playing = new BasicGameState("PlayingState");
 		connected = new BasicGameState("ConnectedState");
+		messages = new BasicGameState("MessageState");
 		playing.setActive(false);
 		connected.setActive(true);
+		messages.setActive(true);
 
 		GameStateManager gsm = GameStateManager.create();
 		gsm.attachChild(playing);
 		gsm.attachChild(connected);
+		gsm.attachChild(messages);
 
 		Node playingRoot = playing.getRootNode();
 
@@ -143,17 +146,21 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		Font2D f2d = new Font2D();
 		txtHP = f2d.createText("000%", 1f, Font.PLAIN);
-		txtHP.setLocalTranslation(0f, 0f, 0f);
+		txtHP.setLocalTranslation(display.getRenderer().getWidth()-130f, 0f, 0f);
 		universe.attachChild(txtHP);
 		txtSpeed = f2d.createText("200 pixels/hour :)", 1f, Font.PLAIN);
-		txtSpeed.setLocalTranslation(0f, 20f, 0f);
+		txtSpeed.setLocalTranslation(display.getRenderer().getWidth()-130f, 20f, 0f);
 		universe.attachChild(txtSpeed);
 		txtPoints = f2d.createText("10000", 1f, Font.PLAIN);
 		txtPoints.setLocalTranslation(0f, display.getHeight() - 20f, 0f);
 		universe.attachChild(txtPoints);
 		
-		scoreNode = new NodeThatCanRemoveAllChildren("ScoreDisplay");
+		scoreNode = new TextBox("ScoreDisplay", 20f, display.getHeight()-20f);
 		connected.getRootNode().attachChild(scoreNode);
+		
+		msgbox = new MessageBox("MessageBox", 5f, 0f);
+		msgbox.setGrowUpwards(true);
+		messages.getRootNode().attachChild(msgbox);
 
 		universe.generate(new PlanetFactory());
 
@@ -333,24 +340,18 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			updateHUD();
 		}
 		if (connected.isActive()) {
+			String[] lines = new String[logic.getShips().size()+2];;
 			
-			scoreNode.removeAllChildren();
+			lines[0] = "Scores:";
+			lines[1] = "";
 			
-			Font2D f2d = new Font2D();
-			
-			final Text2D header = f2d.createText("Scores:", 1f, Font.PLAIN);
-			header.setLocalTranslation(0f, display.getHeight()-20f, 0f);
-			scoreNode.attachChild(header);
-			
-			float pos = display.getHeight()-60f;
+			int pos = 2;
 			for (Ship s : logic.getShips()) {
-				String text = s.getOwner().getName() + " " + s.getOwner().getPoints() + "p";
-				final Text2D score = f2d.createText(text, 1f, Font.PLAIN);
-				score.setLocalTranslation(0f, pos, 0f);
-				scoreNode.attachChild(score);
-				
-				pos-= 20f;
+				lines[pos] = s.getOwner().getName() + " " + s.getOwner().getPoints() + "p";
+				pos++;
 			}
+			
+			scoreNode.updateText(lines);
 		}
 
 		//System.out.println("update ");
@@ -362,13 +363,13 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		StringBuilder sb = new StringBuilder();
 		Formatter fmt = new Formatter(sb);
 		
-		fmt.format("%03d%%", Math.round(ship.getHP()));
+		fmt.format("Hull:  %03d%%", Math.round(ship.getHP()));
 		txtHP.setText(fmt.out().toString());
 		sb.delete(0, sb.length());
 		
 		txtPoints.setText(self.getPoints() + "p");
 		
-		fmt.format("%03d kessel runs/parsec ;)", Math.round(10*ship.getMovement().length()));
+		fmt.format("Speed: %03d", Math.round(10*ship.getMovement().length()));
 		txtSpeed.setText(fmt.out().toString());
 		//sb.delete(0, sb.length());
 	}
@@ -589,11 +590,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 
 		public void addMessage(Message m) {
-			messages.add(m);
-			while(messages.size() > MAX_NUM_MESSAGES) {
-				messages.remove(messages.first());
-			}
-			System.out.println(m.msg);
+			msgbox.addMessage(m);
 		}
 	}
 

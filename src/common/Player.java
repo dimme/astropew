@@ -10,4 +10,5 @@ public interface Player {
 	public Ship getShip();
 	public int getPoints();
 	public void setPoints(int points);
+	public void addPoints(int points);
 }

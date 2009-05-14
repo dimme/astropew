@@ -53,4 +53,8 @@ public class Client implements Player {
 	public void setPoints(int points) {
 		this.points = points;
 	}
+	
+	public void addPoints(int p) {
+		points+=p;
+	}
 }

@@ -76,7 +76,8 @@ public class Ship extends MobileObject {
 		lastFire = time;
 	}
 
-	protected float actualDamage(float dmg) {
+	protected float actualDamage(float dmg, WorldObject instigator) {
+		instigator.getOwner().setPoints(instigator.getOwner().getPoints()+100);
 		return dmg;
 	}
 

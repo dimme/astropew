@@ -58,32 +58,25 @@ public abstract class WorldObject extends Node {
 	/**
 	 *
 	 * @param dmg
-	 * @return true if the object was destroyed
+	 * @return the actual damage taken.
 	 */
-	public final boolean takeDamage(float dmg, WorldObject instigator) {
-		float ad = actualDamage(dmg);
+	public final float takeDamage(float dmg, WorldObject instigator) {
+		float ad = actualDamage(dmg, instigator);
 		if (ad != 0) {
 			forceHP(hp-ad, instigator);
 		}
-		if (checkDestroy(instigator)) {
-			Player owner = instigator.getOwner();
-			owner.setPoints(owner.getPoints() + 1000);
-			return true;
-		}
-		return false;
+		return ad;
 	}
 
-	protected final boolean checkDestroy(WorldObject instigator) {
+	protected final void checkDestroy(WorldObject instigator) {
 		if (hp <= 0) {
 			destroy(instigator);
-			return true;
 		}
-		return false;
 	}
 
 	protected abstract void destroy(WorldObject instigator);
 
-	protected float actualDamage(float dmg) {
+	protected float actualDamage(float dmg, WorldObject instigator) {
 		return 0; //no damage as default
 	}
 
