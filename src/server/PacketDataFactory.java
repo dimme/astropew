@@ -1,6 +1,7 @@
 package server;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
@@ -14,7 +15,11 @@ import common.world.WorldObject;
 
 public class PacketDataFactory {
 
-	public static byte[] createMessagePacket(byte msgtype, String str) {
+	private static final float SEND_ALL_INTERVAL = 10;
+	private float lastPositionSend = 0;
+	private float lastAllSend = 0;
+	
+	public byte[] createMessagePacket(byte msgtype, String str) {
 
 		final byte[] sb = str.getBytes();
 
@@ -28,7 +33,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createInitializer(long worldseed, int id, int shipid, String name, long ltime, float ftime) {
+	public byte[] createInitializer(long worldseed, int id, int shipid, String name, long ltime, float ftime) {
 		final byte[] namebytes = name.getBytes();
 		final byte[] b = new byte[OffsetConstants.INITIALIZER_STRING_OFFSET	+ namebytes.length];
 
@@ -45,7 +50,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createPlayerJoined(int id, String name, int shipid) {
+	public byte[] createPlayerJoined(int id, String name, int shipid) {
 		final byte[] sb = name.getBytes();
 		final byte[] b = new byte[OffsetConstants.PLAYER_JOINED_STRING_OFFSET
 				+ sb.length];
@@ -59,7 +64,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createPlayerLeft(int id) {
+	public byte[] createPlayerLeft(int id) {
 		final byte[] b = new byte[OffsetConstants.PLAYER_LEFT_SIZE];
 		b[0] = ServerPacketType.PLAYER_LEFT;
 		b[1] = 0;
@@ -67,10 +72,27 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createPosition(float time, Collection<Ship> ships) {
+	public byte[] createPosition(float time, Collection<Ship> ships) {
 
+		Collection<Ship> updated;
+		
+		if (lastAllSend + SEND_ALL_INTERVAL < time) {
+			lastAllSend = time;
+			updated = ships;
+		} else {
+			updated = new LinkedList<Ship>();
+			for (final Ship s : ships) {
+				if (s.getLastUpdate() >= lastPositionSend) {
+					updated.add(s);
+				}
+			}
+		}
+			
+		lastPositionSend = time;
+		ships = null;
+		
 		//TODO: Check if the array will fit in a UDP Packet.
-		final byte[] b = new byte[ships.size() * OffsetConstants.PLAYER_POSITIONS_ONE_SIZE  + OffsetConstants.PLAYER_POSITIONS_DATA_START];
+		final byte[] b = new byte[updated.size() * OffsetConstants.PLAYER_POSITIONS_ONE_SIZE  + OffsetConstants.PLAYER_POSITIONS_DATA_START];
 
 		b[0] = ServerPacketType.PLAYER_POSITIONS;
 		b[1] = 0;
@@ -78,7 +100,7 @@ public class PacketDataFactory {
 
 		int offset = OffsetConstants.PLAYER_POSITIONS_DATA_START;
 
-		for(final Ship s: ships) {
+		for(final Ship s : updated) {
 			Util.put(s.getOwner().getID(), b, offset + OffsetConstants.PLAYER_POSITIONS_ID_OFFSET);
 			Util.put(s.getLocalTranslation(), b, offset+OffsetConstants.PLAYER_POSITIONS_POS_OFFSET);
 			Util.put(s.getLocalRotation(), b, offset+OffsetConstants.PLAYER_POSITIONS_ORT_OFFSET);
@@ -90,7 +112,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createPlayersInfo(ClientDB cdb, Client Player) {
+	public byte[] createPlayersInfo(ClientDB cdb, Client Player) {
 		int size = OffsetConstants.PLAYERS_INFO_DATA_START;
 		byte[][] byteNames;
 		int[] ids;
@@ -139,7 +161,7 @@ public class PacketDataFactory {
 	 * pos - Vector3f - 12 byte <br>
 	 * dir - Vector3f - 12 byte <br>
 	 */
-	public static byte[] createMissile(Missile m) {
+	public byte[] createMissile(Missile m) {
 
 		final byte[] b = new byte[OffsetConstants.MISSILE_SIZE];
 
@@ -154,7 +176,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createHPUpdate(WorldObject wobj) {
+	public byte[] createHPUpdate(WorldObject wobj) {
 		final byte[] b = new byte[OffsetConstants.OBJECT_HP_SIZE];
 		b[0] = ServerPacketType.OBJECT_HP;
 		b[1] = 0;
@@ -166,7 +188,7 @@ public class PacketDataFactory {
 		return b;
 	}
 
-	public static byte[] createSpawn(Ship ship) {
+	public byte[] createSpawn(Ship ship) {
 		final byte[] b = new byte[OffsetConstants.SPAWN_SIZE];
 
 		b[0] = ServerPacketType.SPAWN;

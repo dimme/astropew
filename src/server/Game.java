@@ -43,6 +43,7 @@ public class Game extends BaseHeadlessApp {
 
 	private static final long FRAME_SPACING = 10;
 	private static final int RENDER_SPACING = 10;
+	private final PacketDataFactory pdf = new PacketDataFactory();
 
 	public Game(PacketSender ps, ClientDB cdb) {
 		Random rnd = new Random();
@@ -80,16 +81,16 @@ public class Game extends BaseHeadlessApp {
 		if (frameCount  == RENDER_SPACING) {
 			frameCount = 0;
 
-			ps.sendToAll(PacketDataFactory.createPosition(frameTime, logic.getShips()));
+			ps.sendToAll(pdf.createPosition(frameTime, logic.getShips()));
 
 			for (WorldObject wobj : logic.getObjects()) {
 				if (wobj.getHPChanged()) {
 					System.out.println("hp update: " + wobj + " - " + wobj.getHP());
 					wobj.resetHPChanged();
 					if (wobj.getHP() == 0) {
-						ps.controlledSendToAll(PacketDataFactory.createHPUpdate(wobj));
+						ps.controlledSendToAll(pdf.createHPUpdate(wobj));
 					} else {
-						ps.sendToAll(PacketDataFactory.createHPUpdate(wobj));
+						ps.sendToAll(pdf.createHPUpdate(wobj));
 					}
 				}
 			}
@@ -136,7 +137,7 @@ public class Game extends BaseHeadlessApp {
 	}
 
 	private void sendPlayersInfo(Client c) {
-		final byte[] tmp = PacketDataFactory.createPlayersInfo(cdb, c);
+		final byte[] tmp = pdf.createPlayersInfo(cdb, c);
 		if (tmp.length > 2) {
 			ps.controlledSend(tmp, c);
 		}
@@ -170,14 +171,14 @@ public class Game extends BaseHeadlessApp {
 				universe.attachChild(s);
 				logic.add(s);
 
-				final byte[] data = PacketDataFactory.createPlayerJoined(c.getID(), name, s.getID());
+				final byte[] data = pdf.createPlayerJoined(c.getID(), name, s.getID());
 
 				ps.controlledSendToAll(data);
 			} else {
 				s = c.getShip();
 			}
 
-			ps.controlledSend(PacketDataFactory.createInitializer(worldseed, c.getID(), s.getID(), name, frameTimeL, frameTime), c);
+			ps.controlledSend(pdf.createInitializer(worldseed, c.getID(), s.getID(), name, frameTimeL, frameTime), c);
 			sendPlayersInfo(c);
 		}
 
@@ -188,7 +189,7 @@ public class Game extends BaseHeadlessApp {
 				final Ship s = logic.remove(removed);
 				universe.removeChild(s);
 
-				final byte[] data = PacketDataFactory.createPlayerLeft(removed.getID());
+				final byte[] data = pdf.createPlayerLeft(removed.getID());
 				ps.controlledSendToAll(data);
 			}
 		}
@@ -210,7 +211,7 @@ public class Game extends BaseHeadlessApp {
 					addCommand(new SetHPCommand(m, 0, frameTime+2f));
 					universe.attachChild(m);
 					logic.add(m);
-					ps.sendToAll(PacketDataFactory.createMissile(m));
+					ps.sendToAll(pdf.createMissile(m));
 				}
 			}
 		}
@@ -232,7 +233,7 @@ public class Game extends BaseHeadlessApp {
 		public void destroy(WorldObject obj) {
 			universe.removeChild(obj);
 			logic.remove(obj);
-			ps.controlledSendToAll(PacketDataFactory.createHPUpdate(obj));
+			ps.controlledSendToAll(pdf.createHPUpdate(obj));
 		}
 
 		public void spawn(Ship ship) {
@@ -241,7 +242,7 @@ public class Game extends BaseHeadlessApp {
 			universe.attachChild(ship);
 			logic.add(ship);
 
-			ps.controlledSendToAll(PacketDataFactory.createSpawn(ship));
+			ps.controlledSendToAll(pdf.createSpawn(ship));
 
 			ship.setHP(100, frameTime);
 			

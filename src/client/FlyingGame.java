@@ -86,6 +86,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private Text2D txtPoints;
 	private Text2D txtSpeed;
 	private NodeThatCanRemoveAllChildren scoreNode;
+	private float lastPosSend = 0;
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
@@ -311,7 +312,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 
-			gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
+			if (lastPosSend + 0.5f < lastUpdateTime) {
+				lastPosSend = lastUpdateTime;
+				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
+			}
 			
 			updateHUD();
 		}
@@ -402,7 +406,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		ms.setDiffuse(diffuse);
 		ms.setAmbient(s.getColor().clone().multLocal(0.2f));
 		ms.setSpecular(ColorRGBA.white.clone().multLocal(0.1f));
-		ms.setShininess(70f);
+		ms.setShininess(128f);
 		s.setRenderState(ms);
 		
 		universe.attachChild(s);
