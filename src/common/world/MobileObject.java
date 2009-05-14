@@ -17,7 +17,7 @@ public abstract class MobileObject extends WorldObject {
 	private final Vector3f tmpv = new Vector3f();
 
 	public MobileObject(GameLogic logic, int id, String name, Player owner, float creationtime) {
-		super(logic, id, name, owner);
+		super(logic, id, owner, name);
 		lastUpdate = creationtime;
 	}
 

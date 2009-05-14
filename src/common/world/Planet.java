@@ -10,7 +10,7 @@ public class Planet extends WorldObject {
 	private static final long serialVersionUID = 1L;
 
 	public Planet(GameLogic logic, int id, Vector3f center, int zsamples, int rsamples, float size) {
-		super(logic, id, "Planet", NoPlayer.instance);
+		super(logic, id, "Planet");
 
 		Sphere s = new Sphere("PlanetSphere", center, zsamples, rsamples, size);
 		s.setModelBound( new BoundingSphere(size, center) );

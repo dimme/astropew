@@ -6,7 +6,7 @@ import common.Player;
 
 public abstract class WorldObject extends Node {
 	private static final long serialVersionUID = 1L;
-	protected Player owner = NoPlayer.instance;
+	protected final Player owner;
 	protected final int id;
 	protected final GameLogic logic;
 
@@ -14,11 +14,15 @@ public abstract class WorldObject extends Node {
 	protected boolean hp_changed = false;
 	protected float last_hp_update = 0;
 
-	public WorldObject(GameLogic logic, int id, String name, Player owner) {
+	public WorldObject(GameLogic logic, int id, String name) {
+		this(logic, id, NoPlayer.instance, name);
+	}
+	
+	public WorldObject(GameLogic logic, int id, Player owner, String name) {
 		super(name);
+		this.owner = owner;
 		this.logic = logic;
 		this.id = id;
-		this.owner = owner;
 		hp = 100;
 	}
 
