@@ -13,13 +13,13 @@ public class OctTreeNode extends Node {
 	private static final long serialVersionUID = 1L;
 
 	private OctTreeData data;
-	
+
 	private final BoundingBox worldbound;
 
 	public OctTreeNode(BoundingBox worldbound){
 		this("OctTreeNode", worldbound);
 	}
-	
+
 	public BoundingVolume getWorldBound() {
 		return worldbound;
 	}
@@ -76,7 +76,7 @@ public class OctTreeNode extends Node {
 		boolean addIfColliding(WorldObject wobj);
 		void remove(WorldObject wobj);
 	}
-	
+
 	public void split() {
 		new SplitData(); //Så att Fredrik inte tar bort den igen.
 		throw new RuntimeException("Not yet");
@@ -107,7 +107,7 @@ public class OctTreeNode extends Node {
 			nodes.remove(wobj);
 		}
 	}
-	
+
 	private static class SplitData implements OctTreeData {
 		private final OctTreeNode n0;
 		private final OctTreeNode n1;
@@ -117,7 +117,7 @@ public class OctTreeNode extends Node {
 		private final OctTreeNode n5;
 		private final OctTreeNode n6;
 		private final OctTreeNode n7;
-		
+
 		public SplitData() {
 			//TODO: split. :)
 			n0 = new OctTreeNode(null);
@@ -130,7 +130,7 @@ public class OctTreeNode extends Node {
 			n7 = new OctTreeNode(null);
 			throw new RuntimeException("Trodde du ja!");
 		}
-		
+
 		public void findCollisions(WorldObject wobj, Collection<WorldObject> collided) {
 			n0.findCollisions(wobj, collided);
 			n1.findCollisions(wobj, collided);

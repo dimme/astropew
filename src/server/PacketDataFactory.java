@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
-import common.MessageType;
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
@@ -62,7 +61,7 @@ public class PacketDataFactory {
 	public byte[] createPosition(float time, Collection<Ship> ships) {
 
 		Collection<Ship> updated;
-		
+
 		if (lastAllSend + SEND_ALL_INTERVAL < time) {
 			lastAllSend = time;
 			updated = ships;
@@ -74,10 +73,10 @@ public class PacketDataFactory {
 				}
 			}
 		}
-			
+
 		lastPositionSend = time;
 		ships = null;
-		
+
 		//TODO: Check if the array will fit in a UDP Packet.
 		final byte[] b = new byte[updated.size() * OffsetConstants.PLAYER_POSITIONS_ONE_SIZE  + OffsetConstants.PLAYER_POSITIONS_DATA_START];
 

@@ -24,7 +24,7 @@ public class Missile extends MobileObject {
 		updateGeometricState(0, true);
 		updateModelBound();
 	}
-	
+
 	public int getType(){
 		return TYPE_MISSILE;
 	}

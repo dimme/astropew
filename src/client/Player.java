@@ -48,7 +48,7 @@ public class Player implements common.Player {
 	public void setPoints(int points) {
 		this.points = points;
 	}
-	
+
 	public void addPoints(int p) {
 		points+=p;
 	}

@@ -65,7 +65,7 @@ public abstract class MobileObject extends WorldObject {
 		transl.addLocal(movement.mult(deltafromupdate, tmpv));
 
 	}
-	
+
 	/**
 	 * Called when this object's collision check found wobj
 	 * @param wobj

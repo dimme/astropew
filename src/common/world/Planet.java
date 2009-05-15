@@ -26,8 +26,11 @@ public class Planet extends WorldObject {
 
 	public void collidedBy(WorldObject wobj, float time) {
 		if (getOwner() != wobj.getOwner()) {
+			if(wobj.getType() == TYPE_SHIP){
+				wobj.getOwner().addPoints(-1000);
+			}
 			wobj.forceHP(0, this.getOwner(), time);
 		}
 	}
-	
+
 }

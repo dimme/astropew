@@ -3,7 +3,6 @@ package common.world;
 import java.util.Random;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingVolume;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -36,7 +35,7 @@ public class Universe extends OctTreeNode {
 
 			position.set(x,y,z);
 			size = 0.3f+4*rnd.nextFloat();
-			
+
 
 			float r = 0.8f + 0.2f*rnd.nextFloat();
 			float g = r;
@@ -44,7 +43,7 @@ public class Universe extends OctTreeNode {
 			color.set(r, g, b, 1);
 
 			Planet planet = pf.createPlanet(position, size, color);
-			
+
 			float yaw = FastMath.TWO_PI * rnd.nextFloat();
 			float roll = FastMath.TWO_PI * rnd.nextFloat();
 			float pitch = FastMath.TWO_PI * rnd.nextFloat();

@@ -20,7 +20,7 @@ public class Ship extends MobileObject {
 	public ColorRGBA getColor() {
 		return color;
 	}
-	
+
 	public int getType(){
 		return TYPE_SHIP;
 	}
@@ -51,24 +51,24 @@ public class Ship extends MobileObject {
                         tempMb));
         shape.getLocalRotation().normalize();
 		attachChild(shape);
-		
+
 		updateGeometricState(0, true);
 		updateModelBound();
 	}
-	
+
 	public void setSpawnPositions(float time) {
 		getPosition().set(100*(float)Math.random(), 100*(float)Math.random(), 100*(float)Math.random());
 		getLocalTranslation().set(getPosition());
-		
+
 		Vector3f z = getPosition();
 		Vector3f y = z.cross(Vector3f.UNIT_X);
 		Vector3f x = z.cross(y);
 		getOrientation().fromAxes(x,y,z);
 		getOrientation().normalize();
 		getLocalRotation().set(getOrientation());
-		
+
 		getMovement().set(0,0,0);
-		
+
 		setLastUpdate(time);
 	}
 
@@ -95,7 +95,7 @@ public class Ship extends MobileObject {
 	protected void destroy(Player instigator) {
 		logic.destroy(this, instigator);
 	}
-	
+
 	public void collidedWith(WorldObject wobj, float time) {
 		wobj.takeDamage(100, this, time);
 	}

@@ -8,7 +8,6 @@ import common.GameLogic;
 import common.Player;
 import common.world.NoPlayer;
 import common.world.Ship;
-import common.world.WorldObject;
 
 public class SelfShip extends Ship {
 

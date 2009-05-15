@@ -3,7 +3,6 @@ package client.command;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import common.Player;
-import common.world.WorldObject;
 
 public interface GameCommandInterface {
 

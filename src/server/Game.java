@@ -21,7 +21,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.util.Timer;
-
 import common.Player;
 import common.world.NoPlayer;
 import common.world.Planet;
@@ -250,7 +249,7 @@ public class Game extends BaseHeadlessApp {
 			ps.controlledSendToAll(pdf.createSpawn(ship));
 
 			ship.setHP(100, NoPlayer.instance, frameTime);
-			
+
 			universe.updateGeometricState(0, true);
 		}
 

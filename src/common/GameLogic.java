@@ -89,7 +89,7 @@ public abstract class GameLogic {
 	}
 
 	public final WorldObject getObject(int objid) {
-		return 
+		return
 			objid == -1 ? WorldObject.NullWobj : objects.get(objid);
 	}
 

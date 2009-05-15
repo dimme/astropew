@@ -88,7 +88,7 @@ public class GamePlayObserver implements PacketObserver {
 			}
 			int strpos = OffsetConstants.MESSAGE_OVERHEAD_SIZE + numids*OffsetConstants.MESSAGE_OBJECT_ID_LENGTH;
 			String str = Util.getString(data, strpos);
-			
+
 			game.addCommand(new AutoMessageCommand(msgtype, ids, str, time));
 		} else {
 			return false;

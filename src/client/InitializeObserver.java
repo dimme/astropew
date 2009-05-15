@@ -16,8 +16,8 @@ public class InitializeObserver implements PacketObserver {
 
 	private final GameClient client;
 	private final PacketReaderThread reader;
-	private final LinkedList<Pair<byte[],SocketAddress>> unhandled = new LinkedList<Pair<byte[],SocketAddress>>(); 
-	
+	private final LinkedList<Pair<byte[],SocketAddress>> unhandled = new LinkedList<Pair<byte[],SocketAddress>>();
+
 	public InitializeObserver(PacketReaderThread reader, GameClient client) {
 		this.client = client;
 		this.reader = reader;
@@ -41,7 +41,7 @@ public class InitializeObserver implements PacketObserver {
 				GamePlayObserver gpo = new GamePlayObserver(client, game);
 				reader.addPacketObserver( gpo );
 				game.startInThread();
-				
+
 				for (Pair<byte[],SocketAddress> p: unhandled) {
 					gpo.packetReceived(p.item1, p.item2);
 				}

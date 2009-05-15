@@ -7,7 +7,6 @@ import client.command.MessageCommand;
 import com.jme.math.Vector3f;
 import common.Player;
 import common.world.NoPlayer;
-import common.world.WorldObject;
 
 public class OtherShip extends common.world.Ship {
 	private static final long serialVersionUID = -1L;
@@ -58,7 +57,7 @@ public class OtherShip extends common.world.Ship {
 	public void removeTargetSprite() {
 		ts.removeFromParent();
 	}
-	
+
 	public void destroy(Player instigator) {
 		super.destroy(instigator);
 		if (instigator != NoPlayer.instance) {

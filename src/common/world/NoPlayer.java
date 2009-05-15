@@ -39,7 +39,7 @@ public class NoPlayer implements Player {
 
 	public void setPoints(int p) {
 	}
-	
+
 	public void addPoints(int p) {
 	}
 }

@@ -8,24 +8,24 @@ public abstract class WorldObject extends Node {
 	public static final int TYPE_SHIP = 0;
 	public static final int TYPE_MISSILE = 1;
 	public static final int TYPE_OTHER = 2;
-	
+
 	private static final long serialVersionUID = 1L;
 	protected final Player owner;
 	protected final int id;
 	protected final GameLogic logic;
-	
+
 	public static final WorldObject NullWobj = NullWorldObject.instance;
 
 	protected float hp;
 	protected boolean hp_changed = false;
 	protected float last_hp_update = 0;
-	
+
 	private Player lastInstigator = NoPlayer.instance;
 
 	public WorldObject(GameLogic logic, int id, String name) {
 		this(logic, id, NoPlayer.instance, name);
 	}
-	
+
 	public WorldObject(GameLogic logic, int id, Player owner, String name) {
 		super(name);
 		this.owner = owner;
@@ -33,7 +33,7 @@ public abstract class WorldObject extends Node {
 		this.id = id;
 		hp = 100;
 	}
-	
+
 	public int getType(){
 		return TYPE_OTHER;
 	}
@@ -121,7 +121,7 @@ public abstract class WorldObject extends Node {
 	public float getHPLastUpdate() {
 		return last_hp_update;
 	}
-	
+
 	public Player getLastInstigator() {
 		return lastInstigator;
 	}

@@ -9,7 +9,7 @@ public interface ServerPacketType {
 	 * Time - float - 4 bytes <br>
 	 * MessageType - byte - 1 byte <br>
 	 * Number of object IDs (n) - int - 1 bytes<br>
-	 * <n object IDs> - n ints - 4*n bytes<br> 
+	 * <n object IDs> - n ints - 4*n bytes<br>
 	 * Message - String - arbitrary length <br>
 	 */
 	public static final byte MESSAGE = 32;

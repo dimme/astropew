@@ -2,16 +2,13 @@ package client;
 
 import java.awt.Font;
 import java.util.Formatter;
-import java.util.List;
 import java.util.PriorityQueue;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import client.command.Command;
 import client.command.GameCommandInterface;
 import client.command.Message;
-import client.world.NodeThatCanRemoveAllChildren;
 import client.world.OtherShip;
 import client.world.SelfShip;
 import client.world.TargetSprite;
@@ -33,12 +30,10 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.Spatial;
 import com.jme.scene.state.BlendState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
@@ -51,8 +46,6 @@ import com.jmex.font2d.Font2D;
 import com.jmex.font2d.Text2D;
 import com.jmex.game.state.BasicGameState;
 import com.jmex.game.state.GameStateManager;
-import com.sun.org.apache.xml.internal.serializer.utils.Messages;
-
 import common.world.Missile;
 import common.world.NoPlayer;
 import common.world.Planet;
@@ -155,10 +148,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		txtPoints = f2d.createText("10000", 1f, Font.PLAIN);
 		txtPoints.setLocalTranslation(0f, display.getHeight() - 20f, 0f);
 		universe.attachChild(txtPoints);
-		
+
 		scoreNode = new TextBox("ScoreDisplay", 20f, display.getHeight()-20f);
 		connected.getRootNode().attachChild(scoreNode);
-		
+
 		msgbox = new MessageBox("MessageBox", 5f, 0f);
 		msgbox.setGrowUpwards(true);
 		messages.getRootNode().attachChild(msgbox);
@@ -177,7 +170,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		final CullState cs = display.getRenderer().createCullState();
 		cs.setCullFace(CullState.Face.Back);
 		playingRoot.setRenderState(cs);
-		
+
 		//Wireframe
 		/*final RenderState wfs = display.getRenderer().createWireframeState();
 		playingRoot.setRenderState(wfs);*/
@@ -187,24 +180,24 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		ltst.setEnabled(true);
 
 		ColorRGBA ltclr = ColorRGBA.white.clone().multLocal(0.3f);
-		
+
 		final PointLight lt = new PointLight();
 		lt.setLocation(new Vector3f(1000, 0, 0));
 		lt.setDiffuse(ltclr);
 		lt.setAmbient(ltclr);
 		lt.setEnabled(true);
 		ltst.attach(lt);
-		
+
 		final PointLight lt2 = new PointLight();
 		lt2.copyFrom(lt);
 		lt2.setLocation(new Vector3f(0,1000,0));
 		ltst.attach(lt2);
-		
+
 		final PointLight lt3 = new PointLight();
 		lt3.copyFrom(lt);
 		lt3.setLocation(new Vector3f(0,-1000,-1000));
 		ltst.attach(lt3);
-		
+
 		final PointLight lt4 = new PointLight();
 		lt4.copyFrom(lt);
 		lt4.setLocation(new Vector3f(-1000,-1000,0));
@@ -330,46 +323,46 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 
-			if (lastPosSend + 1f < lastUpdateTime || 
-					(lastPosSend + 0.05f < lastUpdateTime && 
-					(!oldMovement.equals(ship.getMovement()) || 
+			if (lastPosSend + 1f < lastUpdateTime ||
+					(lastPosSend + 0.05f < lastUpdateTime &&
+					(!oldMovement.equals(ship.getMovement()) ||
 					 !oldRotation.equals(ship.getLocalRotation())))) {
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			}
-			
+
 			updateHUD();
 		}
 		if (connected.isActive()) {
 			String[] lines = new String[logic.getShips().size()+2];;
-			
+
 			lines[0] = "Scores:";
 			lines[1] = "";
-			
+
 			int pos = 2;
 			for (Ship s : logic.getShips()) {
 				lines[pos] = s.getOwner().getName() + " " + s.getOwner().getPoints() + "p";
 				pos++;
 			}
-			
+
 			scoreNode.updateText(lines);
 		}
 
 		//System.out.println("update ");
 	}
-	
+
 	private void updateHUD() {
 		Ship ship = self.getShip();
-		
+
 		StringBuilder sb = new StringBuilder();
 		Formatter fmt = new Formatter(sb);
-		
+
 		fmt.format("Hull:  %03d%%", Math.round(ship.getHP()));
 		txtHP.setText(fmt.out().toString());
 		sb.delete(0, sb.length());
-		
+
 		txtPoints.setText(self.getPoints() + "p");
-		
+
 		fmt.format("Speed: %03d", Math.round(10*ship.getMovement().length()));
 		txtSpeed.setText(fmt.out().toString());
 		//sb.delete(0, sb.length());
@@ -423,7 +416,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		ms.setSpecular(ColorRGBA.white.clone().multLocal(0.1f));
 		ms.setShininess(128f);
 		s.setRenderState(ms);
-		
+
 		universe.attachChild(s);
 
 		return s;
@@ -483,15 +476,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	private class PlanetFactory implements common.world.PlanetFactory {
 		private int object_id = 0;
-		
+
 		private final MaterialState ms;
 		private final TextureState ts;
-		
+
 		public PlanetFactory() {
 			ms = display.getRenderer().createMaterialState();
 			ms.setDiffuse(ColorRGBA.white);
 			ms.setAmbient(ColorRGBA.white.clone().multLocal(0.3f));
-			
+
 			ts = display.getRenderer().createTextureState();
 			final Texture texture = TextureManager.loadTexture("../files/moon.jpg",
 					Texture.MinificationFilter.Trilinear,
@@ -503,7 +496,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
 			Planet p = new Planet(logic, object_id++, center, 20, 20, size);
 
-			
+
 			p.setRenderState(ms);
 			p.setRenderState(ts);
 
@@ -558,24 +551,24 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		public void updateObjectHP(int objid, int instigatorpid, float hp, float time) {
 			WorldObject wobj = logic.getObject(objid);
 			common.Player inst = logic.getPlayer(instigatorpid);
-			
+
 			if (wobj == null) {
 				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Object was null!\n\t" +
-					wobj + "(" + objid + "), " + 
+					wobj + "(" + objid + "), " +
 					inst + "(" + instigatorpid + "), " +
-					hp + "hp, " + 
+					hp + "hp, " +
 					"@" + time);
 			} else {
-				
+
 				if (inst == null) {
 					inst = NoPlayer.instance;
 					Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Instigator was null!\n\t" +
-						wobj + "(" + objid + "), " + 
+						wobj + "(" + objid + "), " +
 						inst + "(" + instigatorpid + "), " +
-						hp + "hp, " + 
+						hp + "hp, " +
 						"@" + time);
 				}
-				
+
 				wobj.setHP(hp, inst, time);
 			}
 		}
