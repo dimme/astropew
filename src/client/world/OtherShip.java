@@ -1,9 +1,12 @@
 package client.world;
 
+import client.Game;
 import client.GameLogic;
+import client.command.MessageCommand;
 
 import com.jme.math.Vector3f;
 import common.Player;
+import common.world.WorldObject;
 
 public class OtherShip extends common.world.Ship {
 	private static final long serialVersionUID = -1L;
@@ -14,12 +17,14 @@ public class OtherShip extends common.world.Ship {
 	private static final float farBP = 50f;
 
 	private final TargetSprite ts;
-	private GameLogic logic;
+	private final GameLogic logic;
+	private final Game game;
 
 	private final Vector3f diff = new Vector3f();
 
-	public OtherShip(GameLogic logic, int id, Player owner, float creationtime, TargetSprite ts) {
+	public OtherShip(Game game, GameLogic logic, int id, Player owner, float creationtime, TargetSprite ts) {
 		super(logic, id, owner, 2, creationtime);
+		this.game = game;
 		this.ts = ts;
 		this.logic = logic;
 	}
@@ -51,5 +56,10 @@ public class OtherShip extends common.world.Ship {
 
 	public void removeTargetSprite() {
 		ts.removeFromParent();
+	}
+	
+	public void destroy(WorldObject instigator) {
+		super.destroy(instigator);
+		game.addCommand(new MessageCommand(this + " was killed by " + instigator, game.getLastUpdateTime()));
 	}
 }

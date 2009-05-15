@@ -17,6 +17,7 @@ public class AddPlayerCommand extends AbstractCommand {
 
 	public void perform(GameCommandInterface gci) {
 		gci.addPlayer(id,name, shipid);
+		gci.addMessage(new Message(name + " joined the game.", gci.getCurrentTime()));
 	}
 
 }

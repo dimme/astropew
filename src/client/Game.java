@@ -15,4 +15,6 @@ public interface Game {
 	public abstract Universe getUniverse();
 
 	public abstract void setPlaying(boolean b);
+	
+	public abstract float getLastUpdateTime();
 }

@@ -15,7 +15,7 @@ public class SetHPCommand extends AbstractCommand {
 
 	public void perform(GameCommandInterface gci) {
 		if (obj.getParent() != null) {
-			obj.setHP(hp, time);
+			obj.setHP(hp, WorldObject.NullWobj, time);
 		}
 	}
 

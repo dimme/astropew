@@ -168,9 +168,10 @@ public class PacketDataFactory {
 		b[0] = ServerPacketType.OBJECT_HP;
 		b[1] = 0;
 
-		Util.put(wobj.getID(), b, OffsetConstants.OBJECT_HP_ID_OFFSET);
-		Util.put(wobj.getHP(), b, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
 		Util.put(wobj.getHPLastUpdate(), b, OffsetConstants.OBJECT_HP_TIME_OFFSET);
+		Util.put(wobj.getID(), b, OffsetConstants.OBJECT_HP_ID_OFFSET);
+		Util.put(wobj.getLastInstigator().getID(), b, OffsetConstants.OBJECT_HP_INSTIGATOR_ID_OFFSET);
+		Util.put(wobj.getHP(), b, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
 
 		return b;
 	}
@@ -187,21 +188,6 @@ public class PacketDataFactory {
 		Util.put(ship.getOrientation(), b, OffsetConstants.SPAWN_ORT_OFFSET);
 		Util.put(ship.getMovement(), b, OffsetConstants.SPAWN_DIR_OFFSET);
 
-		return b;
-	}
-	
-	public byte[] createKilled(WorldObject killed, WorldObject killer, float time) {
-		final byte[] b = new byte[OffsetConstants.MESSAGE_OVERHEAD_SIZE + 2*OffsetConstants.MESSAGE_OBJECT_ID_LENGTH];
-		
-		b[0] = ServerPacketType.MESSAGE;
-		b[1] = 0;
-		b[OffsetConstants.MESSAGE_MESSAGE_TYPE_OFFSET] = MessageType.KILLED;
-		
-		Util.put(time, b, OffsetConstants.MESSAGE_TIME_OFFSET);
-		Util.put(2, b, OffsetConstants.MESSAGE_NUM_OBJECTS_OFFSET);
-		Util.put(killed.getID(), b, OffsetConstants.MESSAGE_OBJECT_IDS_OFFSET);
-		Util.put(killer.getID(), b, OffsetConstants.MESSAGE_OBJECT_IDS_OFFSET + OffsetConstants.MESSAGE_OBJECT_ID_LENGTH);
-		
 		return b;
 	}
 }

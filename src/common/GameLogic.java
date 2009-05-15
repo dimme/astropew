@@ -89,7 +89,8 @@ public abstract class GameLogic {
 	}
 
 	public final WorldObject getObject(int objid) {
-		return objects.get(objid);
+		return 
+			objid == -1 ? WorldObject.NullWobj : objects.get(objid);
 	}
 
 	public abstract void destroy(Missile m, WorldObject instigator);

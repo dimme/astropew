@@ -1,6 +1,7 @@
 package client.world;
 
 import client.Game;
+import client.command.MessageCommand;
 
 import com.jme.math.Vector3f;
 import common.GameLogic;
@@ -36,6 +37,7 @@ public class SelfShip extends Ship {
 
 	protected void destroy(WorldObject instigator) {
 		super.destroy(instigator);
+		game.addCommand(new MessageCommand("You were killed by " + instigator, game.getLastUpdateTime()));
 		game.setPlaying(false);
 	}
 }

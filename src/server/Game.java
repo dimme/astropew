@@ -88,7 +88,7 @@ public class Game extends BaseHeadlessApp {
 				if (wobj.getHPChanged()) {
 					System.out.println("hp update: " + wobj + " - " + wobj.getHP());
 					wobj.resetHPChanged();
-					if (wobj.getHP() == 0) {
+					if (wobj.getHP() <= 0) {
 						ps.controlledSendToAll(pdf.createHPUpdate(wobj));
 					} else {
 						ps.sendToAll(pdf.createHPUpdate(wobj));
@@ -236,9 +236,6 @@ public class Game extends BaseHeadlessApp {
 			universe.removeChild(obj);
 			logic.remove(obj);
 			ps.controlledSendToAll(pdf.createHPUpdate(obj));
-			if (instigator != obj && instigator != WorldObject.NullWobj) {
-				ps.sendToAll(pdf.createKilled(obj, instigator, frameTime));
-			}
 		}
 
 		public void spawn(Ship ship) {
@@ -249,7 +246,7 @@ public class Game extends BaseHeadlessApp {
 
 			ps.controlledSendToAll(pdf.createSpawn(ship));
 
-			ship.setHP(100, frameTime);
+			ship.setHP(100, WorldObject.NullWobj, frameTime);
 			
 			universe.updateGeometricState(0, true);
 		}

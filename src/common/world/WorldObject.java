@@ -15,6 +15,8 @@ public abstract class WorldObject extends Node {
 	protected float hp;
 	protected boolean hp_changed = false;
 	protected float last_hp_update = 0;
+	
+	private WorldObject lastInstigator = NullWobj;
 
 	public WorldObject(GameLogic logic, int id, String name) {
 		this(logic, id, NoPlayer.instance, name);
@@ -84,15 +86,16 @@ public abstract class WorldObject extends Node {
 		return hp;
 	}
 
-	public void setHP(float hp, float atTime) {
+	public void setHP(float hp, WorldObject instigator, float atTime) {
 		if (atTime >= last_hp_update) {
 			last_hp_update = atTime;
-			forceHP(hp, NullWobj);
+			forceHP(hp, instigator);
 		}
 	}
 
 	public void forceHP(float hp, WorldObject instigator) {
 		if (this.hp != hp) {
+			lastInstigator = instigator;
 			this.hp = hp;
 			hp_changed=true;
 			checkDestroy(instigator);
@@ -117,5 +120,9 @@ public abstract class WorldObject extends Node {
 
 	public float getHPLastUpdate() {
 		return last_hp_update;
+	}
+	
+	public WorldObject getLastInstigator() {
+		return lastInstigator;
 	}
 }

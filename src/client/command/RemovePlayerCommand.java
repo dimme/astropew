@@ -1,5 +1,7 @@
 package client.command;
 
+import common.Player;
+
 
 
 public class RemovePlayerCommand extends AbstractCommand {
@@ -11,7 +13,8 @@ public class RemovePlayerCommand extends AbstractCommand {
 	}
 
 	public void perform(GameCommandInterface gci) {
-		gci.removePlayer(id);
+		Player removed = gci.removePlayer(id);
+		gci.addMessage(new Message(removed.getName() + " left the game.", gci.getCurrentTime()));
 	}
 
 }

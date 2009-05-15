@@ -393,7 +393,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			skybox.setLocalTranslation(s.getLocalTranslation());
 		} else {
 			TargetSprite ts = new TargetSprite(p.getName());
-			s = new client.world.OtherShip(logic, id, p, lastUpdateTime, ts);
+			s = new client.world.OtherShip(this, logic, id, p, lastUpdateTime, ts);
 			s.attachChild(ts);
 
 
@@ -529,12 +529,13 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			logic.add(m);
 		}
 
-		public void removePlayer(int id) {
+		public common.Player removePlayer(int id) {
 			Ship removed = logic.remove(logic.getPlayer(id));
 			universe.removeChild(removed);
 			if (removed instanceof OtherShip) {
 				((OtherShip)removed).removeTargetSprite();
 			}
+			return removed.getOwner();
 		}
 
 		public void updatePosition(Vector3f pos, Quaternion ort, Vector3f dir, int pid, float time) {
@@ -553,10 +554,20 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			FlyingGame.this.addPlayer( shipid, new Player(name, id) );
 		}
 
-		public void updateObjectHP(int objid, float hp, float time) {
+		public void updateObjectHP(int objid, int instigatorid, float hp, float time) {
 			WorldObject wobj = logic.getObject(objid);
-			if (wobj != null) {
-				wobj.setHP(hp, time);
+			WorldObject inst = logic.getObject(instigatorid);
+			
+			if (wobj == null) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Object was null!");
+			} else {
+				
+				if (inst == null) {
+					inst = WorldObject.NullWobj;
+					Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Instigator was null!");
+				}
+				
+				wobj.setHP(hp, inst, time);
 			}
 		}
 
@@ -573,7 +584,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 				universe.attachChild(s);
 				logic.add(s);
-				s.setHP(100, time);
+				s.setHP(100, WorldObject.NullWobj, time);
 				if (playerid == self.getID()) {
 					//skybox.setLocalTranslation(s.getLocalTranslation());
 					playing.setActive(true);
@@ -592,6 +603,14 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		public void addMessage(Message m) {
 			msgbox.addMessage(m);
 		}
+
+		public float getCurrentTime() {
+			return lastUpdateTime;
+		}
+	}
+
+	public float getLastUpdateTime() {
+		return lastUpdateTime;
 	}
 
 }

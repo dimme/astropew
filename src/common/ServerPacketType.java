@@ -41,7 +41,9 @@ public interface ServerPacketType {
 	 * Sent to tell clients about an object's HP <br>
 	 * PacketType - 1 byte <br>
 	 * Seq - 1 byte <br>
+	 * time - float - 4 bytes <br>
 	 * object id - int - 4 bytes <br>
+	 * last instigator object id - int - 4 bytes <br>
 	 * hp - float - 4 bytes <br>
 	 */
 	public static final byte OBJECT_HP = 39;
