@@ -11,7 +11,7 @@ public interface GameCommandInterface {
 
 	void addPlayer(int id, String name, int shipid);
 
-	void updateObjectHP(int objid, int instigatorid, float hp, float time);
+	void updateObjectHP(int objid, int instigatorpid, float hp, float time);
 
 	Player removePlayer(int id);
 

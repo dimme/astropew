@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import common.Player;
 import common.world.Missile;
+import common.world.NoPlayer;
 import common.world.Ship;
 import common.world.WorldObject;
 
@@ -25,7 +26,8 @@ public class GameLogic extends common.GameLogic {
 	}
 
 	public Player getPlayer(int id) {
-		return players.get(id);
+		Player p = (id == -1 ? NoPlayer.instance : players.get(id));
+		return p;
 	}
 
 	public void add(Ship s) {
@@ -44,15 +46,15 @@ public class GameLogic extends common.GameLogic {
 		return getShipByPlayer(players.get(playerid));
 	}
 
-	public void destroy(WorldObject wobj, WorldObject instigator) {
+	public void destroy(WorldObject wobj, Player instigator) {
 		_destroy(wobj);
 	}
 
-	public void destroy(Missile m, WorldObject instigator) {
+	public void destroy(Missile m, Player instigator) {
 		_destroy(m);
 	}
 
-	public void destroy(Ship ship, WorldObject instigator) {
+	public void destroy(Ship ship, Player instigator) {
 		_destroy(ship);
 	}
 

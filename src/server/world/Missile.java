@@ -12,12 +12,12 @@ public class Missile extends common.world.Missile {
 		super(logic, id, pos, dir, owner, time);
 	}
 
-	public void collidedWith(WorldObject wobj) {
+	public void collidedWith(WorldObject wobj, float time) {
 		if (getOwner() != wobj.getOwner()) {
-			System.out.println("Missile (" + getID() + ") collided with " + wobj);
+			//System.out.println("Missile (" + getID() + ") collided with " + wobj);
 			setIsCollidable(false);
-			wobj.takeDamage(10, this);
-			forceHP(0, this);
+			wobj.takeDamage(10, this, time);
+			forceHP(0, wobj.getOwner(), time);
 		}
 	}
 }

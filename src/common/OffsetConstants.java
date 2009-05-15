@@ -69,7 +69,7 @@ public interface OffsetConstants {
 
 	public static final int OBJECT_HP_TIME_OFFSET = 2;
 	public static final int OBJECT_HP_ID_OFFSET = 6;
-	public static final int OBJECT_HP_INSTIGATOR_ID_OFFSET = 10;
+	public static final int OBJECT_HP_INSTIGATING_PLAYER_ID_OFFSET = 10;
 	public static final int OBJECT_HP_VALUE_OFFSET = 14;
 	public static final int OBJECT_HP_SIZE = 18;
 

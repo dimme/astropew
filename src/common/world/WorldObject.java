@@ -16,7 +16,7 @@ public abstract class WorldObject extends Node {
 	protected boolean hp_changed = false;
 	protected float last_hp_update = 0;
 	
-	private WorldObject lastInstigator = NullWobj;
+	private Player lastInstigator = NoPlayer.instance;
 
 	public WorldObject(GameLogic logic, int id, String name) {
 		this(logic, id, NoPlayer.instance, name);
@@ -45,15 +45,7 @@ public abstract class WorldObject extends Node {
 	 * Called when wobj's collision check found this object
 	 * @param wobj
 	 */
-	public void collidedBy(WorldObject wobj) {
-
-	}
-
-	/**
-	 * Called when this object's collision check found wobj
-	 * @param wobj
-	 */
-	public void collidedWith(WorldObject wobj) {
+	public void collidedBy(WorldObject wobj, float time) {
 
 	}
 
@@ -62,21 +54,21 @@ public abstract class WorldObject extends Node {
 	 * @param dmg
 	 * @return the actual damage taken.
 	 */
-	public final float takeDamage(float dmg, WorldObject instigator) {
+	public final float takeDamage(float dmg, WorldObject instigator, float time) {
 		float ad = actualDamage(dmg, instigator);
 		if (ad != 0) {
-			forceHP(hp-ad, instigator);
+			forceHP(hp-ad, instigator.getOwner(), time);
 		}
 		return ad;
 	}
 
-	protected final void checkDestroy(WorldObject instigator) {
+	protected final void checkDestroy(Player instigator) {
 		if (hp <= 0) {
 			destroy(instigator);
 		}
 	}
 
-	protected abstract void destroy(WorldObject instigator);
+	protected abstract void destroy(Player instigator);
 
 	protected float actualDamage(float dmg, WorldObject instigator) {
 		return 0; //no damage as default
@@ -86,15 +78,15 @@ public abstract class WorldObject extends Node {
 		return hp;
 	}
 
-	public void setHP(float hp, WorldObject instigator, float atTime) {
+	public void setHP(float hp, Player instigator, float atTime) {
 		if (atTime >= last_hp_update) {
-			last_hp_update = atTime;
-			forceHP(hp, instigator);
+			forceHP(hp, instigator, atTime);
 		}
 	}
 
-	public void forceHP(float hp, WorldObject instigator) {
+	public void forceHP(float hp, Player instigator, float atTime) {
 		if (this.hp != hp) {
+			last_hp_update = atTime;
 			lastInstigator = instigator;
 			this.hp = hp;
 			hp_changed=true;
@@ -122,7 +114,7 @@ public abstract class WorldObject extends Node {
 		return last_hp_update;
 	}
 	
-	public WorldObject getLastInstigator() {
+	public Player getLastInstigator() {
 		return lastInstigator;
 	}
 }

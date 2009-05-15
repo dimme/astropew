@@ -25,7 +25,7 @@ public class Missile extends MobileObject {
 		updateModelBound();
 	}
 
-	protected void destroy(WorldObject instigator) {
-		logic.destroy(this, this);
+	protected void destroy(Player instigator) {
+		logic.destroy(this, getOwner());
 	}
 }

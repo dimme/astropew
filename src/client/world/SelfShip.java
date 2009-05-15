@@ -6,6 +6,7 @@ import client.command.MessageCommand;
 import com.jme.math.Vector3f;
 import common.GameLogic;
 import common.Player;
+import common.world.NoPlayer;
 import common.world.Ship;
 import common.world.WorldObject;
 
@@ -35,9 +36,13 @@ public class SelfShip extends Ship {
 		return false;
 	}
 
-	protected void destroy(WorldObject instigator) {
+	protected void destroy(Player instigator) {
 		super.destroy(instigator);
-		game.addCommand(new MessageCommand("You were killed by " + instigator, game.getLastUpdateTime()));
+		if (instigator != NoPlayer.instance) {
+			game.addCommand(new MessageCommand("You were killed by " + instigator, game.getLastUpdateTime()));
+		} else {
+			game.addCommand(new MessageCommand("You died.", game.getLastUpdateTime()));
+		}
 		game.setPlaying(false);
 	}
 }

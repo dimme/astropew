@@ -6,6 +6,7 @@ import client.command.MessageCommand;
 
 import com.jme.math.Vector3f;
 import common.Player;
+import common.world.NoPlayer;
 import common.world.WorldObject;
 
 public class OtherShip extends common.world.Ship {
@@ -58,8 +59,12 @@ public class OtherShip extends common.world.Ship {
 		ts.removeFromParent();
 	}
 	
-	public void destroy(WorldObject instigator) {
+	public void destroy(Player instigator) {
 		super.destroy(instigator);
-		game.addCommand(new MessageCommand(this + " was killed by " + instigator, game.getLastUpdateTime()));
+		if (instigator != NoPlayer.instance) {
+			game.addCommand(new MessageCommand(this.getOwner() + " was killed by " + instigator, game.getLastUpdateTime()));
+		} else {
+			game.addCommand(new MessageCommand(this.getOwner() + " died.", game.getLastUpdateTime()));
+		}
 	}
 }

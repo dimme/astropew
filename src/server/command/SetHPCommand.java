@@ -1,5 +1,6 @@
 package server.command;
 
+import common.world.NoPlayer;
 import common.world.WorldObject;
 
 public class SetHPCommand extends AbstractCommand {
@@ -15,7 +16,7 @@ public class SetHPCommand extends AbstractCommand {
 
 	public void perform(GameCommandInterface gci) {
 		if (obj.getParent() != null) {
-			obj.setHP(hp, WorldObject.NullWobj, time);
+			obj.setHP(hp, NoPlayer.instance, time);
 		}
 	}
 

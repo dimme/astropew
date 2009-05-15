@@ -43,7 +43,7 @@ public interface ServerPacketType {
 	 * Seq - 1 byte <br>
 	 * time - float - 4 bytes <br>
 	 * object id - int - 4 bytes <br>
-	 * last instigator object id - int - 4 bytes <br>
+	 * last instigator player id - int - 4 bytes <br>
 	 * hp - float - 4 bytes <br>
 	 */
 	public static final byte OBJECT_HP = 39;

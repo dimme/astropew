@@ -21,6 +21,9 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.util.Timer;
+
+import common.Player;
+import common.world.NoPlayer;
 import common.world.Planet;
 import common.world.Ship;
 import common.world.Universe;
@@ -134,7 +137,7 @@ public class Game extends BaseHeadlessApp {
 		logic.interpolate(delta, frameTime);
 		universe.updateGeometricState(delta, true);
 
-		logic.handleCollisions(universe);
+		logic.handleCollisions(universe, frameTime);
 	}
 
 	private void sendPlayersInfo(Client c) {
@@ -232,7 +235,7 @@ public class Game extends BaseHeadlessApp {
 			}
 		}
 
-		public void destroy(WorldObject obj, WorldObject instigator) {
+		public void destroy(WorldObject obj, Player instigator) {
 			universe.removeChild(obj);
 			logic.remove(obj);
 			ps.controlledSendToAll(pdf.createHPUpdate(obj));
@@ -246,7 +249,7 @@ public class Game extends BaseHeadlessApp {
 
 			ps.controlledSendToAll(pdf.createSpawn(ship));
 
-			ship.setHP(100, WorldObject.NullWobj, frameTime);
+			ship.setHP(100, NoPlayer.instance, frameTime);
 			
 			universe.updateGeometricState(0, true);
 		}

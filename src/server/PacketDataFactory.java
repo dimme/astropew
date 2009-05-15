@@ -170,7 +170,7 @@ public class PacketDataFactory {
 
 		Util.put(wobj.getHPLastUpdate(), b, OffsetConstants.OBJECT_HP_TIME_OFFSET);
 		Util.put(wobj.getID(), b, OffsetConstants.OBJECT_HP_ID_OFFSET);
-		Util.put(wobj.getLastInstigator().getID(), b, OffsetConstants.OBJECT_HP_INSTIGATOR_ID_OFFSET);
+		Util.put(wobj.getLastInstigator().getID(), b, OffsetConstants.OBJECT_HP_INSTIGATING_PLAYER_ID_OFFSET);
 		Util.put(wobj.getHP(), b, OffsetConstants.OBJECT_HP_VALUE_OFFSET);
 
 		return b;

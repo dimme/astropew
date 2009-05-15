@@ -4,6 +4,7 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Sphere;
 import common.GameLogic;
+import common.Player;
 
 public class Planet extends WorldObject {
 
@@ -20,12 +21,12 @@ public class Planet extends WorldObject {
 		updateModelBound();
 	}
 
-	protected void destroy(WorldObject instigator) {
+	protected void destroy(Player instigator) {
 	}
 
-	public void collidedBy(WorldObject wobj) {
+	public void collidedBy(WorldObject wobj, float time) {
 		if (getOwner() != wobj.getOwner()) {
-			wobj.forceHP(0, this);
+			wobj.forceHP(0, this.getOwner(), time);
 		}
 	}
 	

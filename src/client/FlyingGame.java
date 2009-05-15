@@ -54,6 +54,7 @@ import com.jmex.game.state.GameStateManager;
 import com.sun.org.apache.xml.internal.serializer.utils.Messages;
 
 import common.world.Missile;
+import common.world.NoPlayer;
 import common.world.Planet;
 import common.world.Ship;
 import common.world.Universe;
@@ -554,17 +555,25 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			FlyingGame.this.addPlayer( shipid, new Player(name, id) );
 		}
 
-		public void updateObjectHP(int objid, int instigatorid, float hp, float time) {
+		public void updateObjectHP(int objid, int instigatorpid, float hp, float time) {
 			WorldObject wobj = logic.getObject(objid);
-			WorldObject inst = logic.getObject(instigatorid);
+			common.Player inst = logic.getPlayer(instigatorpid);
 			
 			if (wobj == null) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Object was null!");
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Object was null!\n\t" +
+					wobj + "(" + objid + "), " + 
+					inst + "(" + instigatorpid + "), " +
+					hp + "hp, " + 
+					"@" + time);
 			} else {
 				
 				if (inst == null) {
-					inst = WorldObject.NullWobj;
-					Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Instigator was null!");
+					inst = NoPlayer.instance;
+					Logger.getLogger(getClass().getName()).log(Level.WARNING, "Update HP: Instigator was null!\n\t" +
+						wobj + "(" + objid + "), " + 
+						inst + "(" + instigatorpid + "), " +
+						hp + "hp, " + 
+						"@" + time);
 				}
 				
 				wobj.setHP(hp, inst, time);
@@ -584,7 +593,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 				universe.attachChild(s);
 				logic.add(s);
-				s.setHP(100, WorldObject.NullWobj, time);
+				s.setHP(100, NoPlayer.instance, time);
 				if (playerid == self.getID()) {
 					//skybox.setLocalTranslation(s.getLocalTranslation());
 					playing.setActive(true);

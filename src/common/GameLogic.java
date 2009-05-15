@@ -74,15 +74,15 @@ public abstract class GameLogic {
 		}
 	}
 
-	public void handleCollisions(Universe universe) {
+	public void handleCollisions(Universe universe, float time) {
 		for (MobileObject mobj : mobjs) {
 			//System.out.println("Checking collisions for " + mobj);
 			Collection<WorldObject> collisions = new LinkedList<WorldObject>();
 			universe.findCollisions(mobj, collisions);
 
 			for (WorldObject wobj : collisions) {
-				mobj.collidedWith(wobj);
-				wobj.collidedBy(mobj);
+				mobj.collidedWith(wobj, time);
+				wobj.collidedBy(mobj, time);
 				//System.out.println(mobj + ", owned by " + mobj.getOwner().getName() + ", collided with " + wobj);
 			}
 		}
@@ -93,7 +93,7 @@ public abstract class GameLogic {
 			objid == -1 ? WorldObject.NullWobj : objects.get(objid);
 	}
 
-	public abstract void destroy(Missile m, WorldObject instigator);
-	public abstract void destroy(Ship ship, WorldObject instigator);
-	public abstract void destroy(WorldObject worldObject, WorldObject instigator);
+	public abstract void destroy(Missile m, Player instigator);
+	public abstract void destroy(Ship ship, Player instigator);
+	public abstract void destroy(WorldObject worldObject, Player instigator);
 }
