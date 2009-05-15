@@ -1,11 +1,16 @@
 package client;
 
 import java.awt.Font;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Formatter;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import client.audio.Audio;
+import client.audio.SoundEffect;
 import client.command.Command;
 import client.command.GameCommandInterface;
 import client.command.Message;
@@ -42,6 +47,10 @@ import com.jme.system.JmeException;
 import com.jme.system.PropertiesGameSettings;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
+import com.jmex.audio.AudioSystem;
+import com.jmex.audio.AudioTrack;
+import com.jmex.audio.RangedAudioTracker;
+import com.jmex.audio.AudioTrack.TrackType;
 import com.jmex.font2d.Font2D;
 import com.jmex.font2d.Text2D;
 import com.jmex.game.state.BasicGameState;
@@ -89,6 +98,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private float lastPosSend = 0;
 	private final Vector3f oldMovement = new Vector3f();
 	private final Quaternion oldRotation = new Quaternion();
+	private Audio audio;
 
 	public FlyingGame(int id, String name, int selfshipid, long seed, GameClient gc, long serverltime, float serverftime) {
 		super();
@@ -117,6 +127,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		connected.setActive(true);
 		messages.setActive(true);
 
+		audio = new Audio();
+		
 		GameStateManager gsm = GameStateManager.create();
 		gsm.attachChild(playing);
 		gsm.attachChild(connected);
@@ -330,6 +342,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			}
+			
+			audio.update(ship.getWorldTranslation());
+			//audio.update(new Vector3f());
 
 			updateHUD();
 		}
@@ -515,6 +530,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			Ship s = owner.getShip();
 			Missile m = new Missile(logic, id, pos, dir, owner, time);
 
+			audio.queueSound(SoundEffect.Pew, s);
+			
 			MaterialState ms = display.getRenderer().createMaterialState();
 
 			ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
@@ -616,5 +633,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	public float getLastUpdateTime() {
 		return lastUpdateTime;
 	}
+	
+	
+
 
 }
