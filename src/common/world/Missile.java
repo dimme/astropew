@@ -24,6 +24,10 @@ public class Missile extends MobileObject {
 		updateGeometricState(0, true);
 		updateModelBound();
 	}
+	
+	public int getType(){
+		return TYPE_MISSILE;
+	}
 
 	protected void destroy(Player instigator) {
 		logic.destroy(this, getOwner());

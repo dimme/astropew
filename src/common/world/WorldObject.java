@@ -5,6 +5,10 @@ import common.GameLogic;
 import common.Player;
 
 public abstract class WorldObject extends Node {
+	public static final int TYPE_SHIP = 0;
+	public static final int TYPE_MISSILE = 1;
+	public static final int TYPE_OTHER = 2;
+	
 	private static final long serialVersionUID = 1L;
 	protected final Player owner;
 	protected final int id;
@@ -28,6 +32,10 @@ public abstract class WorldObject extends Node {
 		this.logic = logic;
 		this.id = id;
 		hp = 100;
+	}
+	
+	public int getType(){
+		return TYPE_OTHER;
 	}
 
 	public Player getOwner() {
@@ -89,13 +97,13 @@ public abstract class WorldObject extends Node {
 			last_hp_update = atTime;
 			lastInstigator = instigator;
 			this.hp = hp;
-			hp_changed=true;
+			hp_changed = true;
 			checkDestroy(instigator);
 		}
 	}
 
 	public void resetHPChanged() {
-		hp_changed=false;
+		hp_changed = false;
 	}
 
 	public boolean isAlive() {
