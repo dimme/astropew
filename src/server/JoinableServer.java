@@ -19,7 +19,6 @@ public class JoinableServer extends Thread {
 	}
 
 	public JoinableServer() {
-		System.out.println("Starting server..");
 		try {
 
 			final ClientDB cdb = new ClientDatabase();
@@ -47,5 +46,6 @@ public class JoinableServer extends Thread {
 					e.getMessage(), e);
 			System.exit(1);
 		}
+		System.out.println("Server started..");
 	}
 }
