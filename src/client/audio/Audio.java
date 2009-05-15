@@ -54,10 +54,10 @@ public class Audio {
 		while(!queue.isEmpty()) {
 			final Entry e = queue.removeFirst();
 			final AudioTrack trk = tracks.get(e.item1);
-			float dist = earpos.distance(e.item2.getWorldTranslation());
+			float dist = earpos.distanceSquared(e.item2.getWorldTranslation());
 			float vol;
-			if (dist < 400f) {
-				vol = 1 - 0.0025f*dist;
+			if (dist < 160000f) {
+				vol = 1 - 0.00000625f*dist;
 				vol = vol > 1f ? 1f : vol;
 			} else {
 				vol = 0;
