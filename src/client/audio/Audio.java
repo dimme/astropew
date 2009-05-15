@@ -57,7 +57,7 @@ public class Audio {
 			float dist = earpos.distance(e.item2.getWorldTranslation());
 			float vol;
 			if (dist < 400f) {
-				vol = 20f/dist;
+				vol = 1 - 0.0025f*dist;
 				vol = vol > 1f ? 1f : vol;
 			} else {
 				vol = 0;
