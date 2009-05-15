@@ -77,7 +77,7 @@ public class Ship extends MobileObject {
 	}
 
 	protected float actualDamage(float dmg, WorldObject instigator) {
-		instigator.getOwner().setPoints(instigator.getOwner().getPoints()+100);
+		instigator.getOwner().addPoints(100);
 		return dmg;
 	}
 
