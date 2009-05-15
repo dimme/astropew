@@ -11,15 +11,14 @@ public class Message implements Comparable<Message> {
 	
 	public int compareTo(Message m) {
 		if (m.time == time) {
-			return 0;
+			return msg.compareTo(m.msg);
 		}
 		return time > m.time ? 1 : -1;
 	}
 	
 	public boolean equals(Object rhs) {
 		if (rhs instanceof Message) {
-			Message m = (Message)rhs;
-			return (time == m.time && msg.equals(m.msg));
+			return compareTo((Message)rhs) == 0;
 		}
 		return false;
 	}
