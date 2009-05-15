@@ -323,7 +323,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 
-			if (lastPosSend + 1f < lastUpdateTime ||
+			if (lastPosSend + 0.5f < lastUpdateTime ||
 					(lastPosSend + 0.05f < lastUpdateTime &&
 					(!oldMovement.equals(ship.getMovement()) ||
 					 !oldRotation.equals(ship.getLocalRotation())))) {
@@ -478,19 +478,19 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		private int object_id = 0;
 
 		private final MaterialState ms;
-		private final TextureState ts;
+		//private final TextureState ts;
 
 		public PlanetFactory() {
 			ms = display.getRenderer().createMaterialState();
 			ms.setDiffuse(ColorRGBA.white);
 			ms.setAmbient(ColorRGBA.white.clone().multLocal(0.3f));
 
-			ts = display.getRenderer().createTextureState();
+			/*ts = display.getRenderer().createTextureState();
 			final Texture texture = TextureManager.loadTexture("../files/moon.jpg",
 					Texture.MinificationFilter.Trilinear,
 					Texture.MagnificationFilter.Bilinear, 1.0f, true);
 			ts.setTexture(texture);
-			ts.setEnabled(true);
+			ts.setEnabled(true);*/
 		}
 
 		public Planet createPlanet(Vector3f center, float size, ColorRGBA c) {
@@ -498,7 +498,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 
 			p.setRenderState(ms);
-			p.setRenderState(ts);
+			//p.setRenderState(ts);
 
 			logic.add(p);
 

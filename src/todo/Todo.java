@@ -8,6 +8,10 @@ public class Todo {
 	// TODO: inte så många new Vector3f() i pakethantering
 	// TODO: Kolla så att grejor tas bort helt (alla referenser) både på klient och server. Glöm inte att skepp/missiler/worldobjects kan behandlas olika.
 
+	// TODO: Ta bort messages efter en viss tid.
+	// TODO: Svängningar mjuka
+	// TODO: Hitta server.
+	
 	// TODO: Lägre prioritet: Inte skicka allt till alla hela tiden.
 	// TODO: Riktigt låg prioritet: Servern bestämmer!
 	// TODO: Otroligt låg prioritet: rörliga himlakroppar. :)
