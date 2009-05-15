@@ -321,10 +321,11 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			finished = true;
 		}
 
+		Ship ship = self.getShip();
 		if (playing.isActive()) {
 			GameStateManager.getInstance().update(interpolation);
 
-			Ship ship = self.getShip();
+			
 
 			oldMovement.set(ship.getMovement());
 			oldRotation.set(ship.getLocalRotation());
@@ -342,9 +343,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
 			}
-			
-			audio.update(ship.getWorldTranslation());
-			//audio.update(new Vector3f());
 
 			updateHUD();
 		}
@@ -363,6 +361,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			scoreNode.updateText(lines);
 		}
 		
+		audio.update(ship.getWorldTranslation());
 		msgbox.update(lastUpdateTime);
 
 		//System.out.println("update ");
@@ -530,7 +529,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			Ship s = owner.getShip();
 			Missile m = new Missile(logic, id, pos, dir, owner, time);
 
-			audio.queueSound(SoundEffect.Pew, s);
+			if (owner != self) { //TODO: remove if.
+				audio.queueSound(SoundEffect.Pew, s);
+			}
 			
 			MaterialState ms = display.getRenderer().createMaterialState();
 

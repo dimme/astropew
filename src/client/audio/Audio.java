@@ -56,8 +56,8 @@ public class Audio {
 			final AudioTrack trk = tracks.get(e.item1);
 			float dist = earpos.distanceSquared(e.item2.getWorldTranslation());
 			float vol;
-			if (dist < 160000f) {
-				vol = 1 - 0.00000625f*dist;
+			if (dist < 40000f) {
+				vol = 1f - 0.000025f*dist;
 				vol = vol > 1f ? 1f : vol;
 			} else {
 				vol = 0;
