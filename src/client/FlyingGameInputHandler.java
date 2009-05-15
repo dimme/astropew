@@ -1,5 +1,8 @@
 package client;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
@@ -14,6 +17,8 @@ import common.world.Ship;
 public class FlyingGameInputHandler extends InputHandler {
 	protected final Ship ship;
 	protected final Game game;
+	
+	private final List<TurnAction> turnactions = new LinkedList<TurnAction>();
 
 	public FlyingGameInputHandler(Ship s, Game game) {
 		this.ship = s;
@@ -37,17 +42,29 @@ public class FlyingGameInputHandler extends InputHandler {
 		keyboard.set("fire_missile", KeyInput.KEY_SPACE);
 	}
 
+	private void add(TurnAction ta, String cmd) {
+		_add(ta, cmd);
+	}
+	
+	private void add(InputActionInterface iai, String cmd) {
+		_add(iai, cmd);
+	}
+	
+	private void _add(InputActionInterface iai, String cmd) {
+		addAction(iai, cmd, true);
+	}
+	
 	private void setActions(Ship s) {
-		addAction(new AccelerateAction(AccelerateAction.ACCELERATE), "accelerate", true);
-		addAction(new AccelerateAction(AccelerateAction.DECELERATE), "decelerate", true);
-		addAction(new BrakeAction(), "brake", true);
-		addAction(new TurnAction(TurnAction.Y, TurnAction.RIGHT), "turn_right", true);
-		addAction(new TurnAction(TurnAction.Y, TurnAction.LEFT), "turn_left", true);
-		addAction(new TurnAction(TurnAction.X, TurnAction.UP), "turn_down", true);
-		addAction(new TurnAction(TurnAction.X, TurnAction.DOWN), "turn_up", true);
-		addAction(new TurnAction(TurnAction.Z, TurnAction.CW), "turn_cw", true);
-		addAction(new TurnAction(TurnAction.Z, TurnAction.CCW), "turn_ccw", true);
-		addAction(new FireMissileAction(), "fire_missile", true);
+		add(new AccelerateAction(AccelerateAction.ACCELERATE), "accelerate");
+		add(new AccelerateAction(AccelerateAction.DECELERATE), "decelerate");
+		add(new BrakeAction(), "brake");
+		add(new TurnAction(TurnAction.Y, TurnAction.RIGHT), "turn_right");
+		add(new TurnAction(TurnAction.Y, TurnAction.LEFT), "turn_left");
+		add(new TurnAction(TurnAction.X, TurnAction.UP), "turn_down");
+		add(new TurnAction(TurnAction.X, TurnAction.DOWN), "turn_up");
+		add(new TurnAction(TurnAction.Z, TurnAction.CW), "turn_cw");
+		add(new TurnAction(TurnAction.Z, TurnAction.CCW), "turn_ccw");
+		add(new FireMissileAction(), "fire_missile");
 	}
 
 	private class FireMissileAction implements InputActionInterface {
@@ -118,6 +135,8 @@ public class FlyingGameInputHandler extends InputHandler {
 		private final Matrix3f tmp;
 		private final Vector3f axis;
 		private final int axisid;
+		
+		private float held = 0;
 
 		public TurnAction(int axisid, float angle) {
 			this.angle=angle;
@@ -136,5 +155,10 @@ public class FlyingGameInputHandler extends InputHandler {
 			rotation.multLocal(tmp);
 			ort.fromRotationMatrix(rotation);
 		}
+	}
+	
+	public void update(float interpolation) {
+		
+		super.update(interpolation);
 	}
 }
