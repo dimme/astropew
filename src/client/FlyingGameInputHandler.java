@@ -43,6 +43,7 @@ public class FlyingGameInputHandler extends InputHandler {
 	}
 
 	private void add(TurnAction ta, String cmd) {
+		turnactions.add(ta);
 		_add(ta, cmd);
 	}
 	
@@ -123,12 +124,12 @@ public class FlyingGameInputHandler extends InputHandler {
 		public static final int Y = 1;
 		public static final int Z = 2;
 
-		public static final float LEFT = 1f;
-		public static final float RIGHT = -1f;
-		public static final float UP = 1f;
-		public static final float DOWN = -1f;
-		public static final float CW = -1f;
-		public static final float CCW = 1f;
+		public static final float LEFT = 1.5f;
+		public static final float RIGHT = -1.5f;
+		public static final float UP = 1.5f;
+		public static final float DOWN = -1.5f;
+		public static final float CW = -1.5f;
+		public static final float CCW = 1.5f;
 
 		protected final float angle;
 		private final Matrix3f rotation;
@@ -136,7 +137,10 @@ public class FlyingGameInputHandler extends InputHandler {
 		private final Vector3f axis;
 		private final int axisid;
 		
+		private boolean heldLastTime = false;
+		private boolean heldThisTime = false;
 		private float held = 0;
+		private static final float TURN_ACCELERATION_TIME = 0.3f;
 
 		public TurnAction(int axisid, float angle) {
 			this.angle=angle;
@@ -147,18 +151,33 @@ public class FlyingGameInputHandler extends InputHandler {
 		}
 
 		public void performAction(InputActionEvent evt) {
+			heldThisTime = true;
+			if (heldLastTime) {
+				held += evt.getTime();
+				held = Math.min(held, TURN_ACCELERATION_TIME);
+			} else {
+				held = 0;
+			}
+			
 			Quaternion ort = ship.getLocalRotation();
 			ort.getRotationColumn(axisid, axis);
-			rotation.fromAngleAxis(angle*evt.getTime(), axis);
+			rotation.fromAngleAxis((held/TURN_ACCELERATION_TIME)*angle*evt.getTime(), axis);
 
 			ort.toRotationMatrix(tmp);
 			rotation.multLocal(tmp);
 			ort.fromRotationMatrix(rotation);
 		}
+
+		public void startingUpdate() {
+			heldLastTime = heldThisTime;
+			heldThisTime = false;
+		}
 	}
 	
 	public void update(float interpolation) {
-		
+		for (TurnAction ta : turnactions) {
+			ta.startingUpdate();
+		}
 		super.update(interpolation);
 	}
 }

@@ -347,6 +347,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 			scoreNode.updateText(lines);
 		}
+		
+		msgbox.update(lastUpdateTime);
 
 		//System.out.println("update ");
 	}

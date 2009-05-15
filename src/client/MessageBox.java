@@ -13,6 +13,7 @@ public class MessageBox extends TextBox {
 	private static final long serialVersionUID = 1L;
 	private final TreeSet<Message> messages = new TreeSet<Message>();
 	private static final int MAX_NUM_MESSAGES = 5;
+	private static final float MESSAGE_TTL = 5f;
 
 	public MessageBox(String name, float xbase, float ybase) {
 		super(name, xbase, ybase);
@@ -24,6 +25,12 @@ public class MessageBox extends TextBox {
 			messages.remove(messages.first());
 		}
 
+		update();
+		
+		System.out.println(msg.msg);
+	}
+	
+	private void update() {
 		String[] lines = new String[messages.size()];
 		int i = 0;
 		Iterator<Message> it = messages.descendingIterator();
@@ -31,7 +38,19 @@ public class MessageBox extends TextBox {
 			lines[i++] = it.next().msg;
 		}
 		updateText(lines);
-		System.out.println(msg.msg);
+	}
+
+	public void update(float time) {
+		
+		Iterator<Message> it = messages.iterator();
+		while (it.hasNext()) {
+			final Message m = it.next();
+			if (m.time+MESSAGE_TTL < time) {
+				it.remove();
+			}
+		}
+		
+		update();
 	}
 
 }

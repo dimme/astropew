@@ -203,7 +203,7 @@ public class Game extends BaseHeadlessApp {
 			if (c != null) {
 				Ship s = c.getShip();
 				if (s.canFire(time)) {
-					c.setPoints(c.getPoints()-1);
+					c.addPoints(-7);
 					s.setLastFireTime(time);
 					s.interpolate(-1f,time);
 					Vector3f pos = s.getLocalTranslation();
