@@ -83,12 +83,11 @@ public class Game extends BaseHeadlessApp {
 		frameCount++;
 		if (frameCount  == RENDER_SPACING) {
 			frameCount = 0;
-
+			
 			ps.sendToAll(pdf.createPosition(frameTime, logic.getShips()));
 
 			for (WorldObject wobj : logic.getObjects()) {
 				if (wobj.getHPChanged()) {
-					System.out.println("hp update: " + wobj + " - " + wobj.getHP());
 					wobj.resetHPChanged();
 					if (wobj.getHP() <= 0) {
 						ps.controlledSendToAll(pdf.createHPUpdate(wobj));

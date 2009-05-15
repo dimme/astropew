@@ -4,6 +4,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import common.GameLogic;
 import common.Player;
@@ -16,6 +17,7 @@ public class Ship extends MobileObject {
 
 	private static final float FIRE_INTERVAL = 0.23f;
 	private float lastFire = 0;
+	protected final ShipHull hull;
 
 	public ColorRGBA getColor() {
 		return color;
@@ -33,20 +35,20 @@ public class Ship extends MobileObject {
 		float max = Math.max(color.r, Math.max(color.g, color.b));
 		color.r /= max;  color.g /= max;  color.b /= max;
 
-		TriMesh shape = ShipHull.create(subdivides);
-		shape.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
-		shape.getLocalScale().z = 0.3f;
+		hull = ShipHull.create(subdivides);
+		hull.rotateUpTo(Vector3f.UNIT_Z.mult(-1));
+		hull.getLocalScale().z = 0.3f;
 
 		Matrix3f incr = new Matrix3f();
 		Matrix3f tempMa = new Matrix3f();
 		Matrix3f tempMb = new Matrix3f();
         incr.fromAngleNormalAxis(FastMath.PI, Vector3f.UNIT_Y);
 
-        shape.getLocalRotation().fromRotationMatrix(
-                incr.mult(shape.getLocalRotation().toRotationMatrix(tempMa),
+        hull.getLocalRotation().fromRotationMatrix(
+                incr.mult(hull.getLocalRotation().toRotationMatrix(tempMa),
                         tempMb));
-        shape.getLocalRotation().normalize();
-		attachChild(shape);
+        hull.getLocalRotation().normalize();
+		attachChild(hull);
 
 		updateGeometricState(0, true);
 		updateModelBound();

@@ -17,7 +17,7 @@ public class SelfShip extends Ship {
 	private final Game game;
 
 	public SelfShip(Game game, GameLogic logic, int id, Player owner, float creationtime) {
-		super(logic, id, owner, 4, creationtime);
+		super(logic, id, owner, 3, creationtime);
 		this.game = game;
 	}
 
@@ -43,5 +43,10 @@ public class SelfShip extends Ship {
 			game.addCommand(new MessageCommand("You died.", game.getLastUpdateTime()));
 		}
 		game.setPlaying(false);
+	}
+	
+	public void forceHP(float hp, Player instigator, float atTime) {
+		super.forceHP(hp, instigator, atTime);
+		hull.distort(1f - this.hp * 0.01f);
 	}
 }
