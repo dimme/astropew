@@ -88,4 +88,8 @@ public class Ship extends MobileObject {
 	public void collidedWith(WorldObject wobj, float time) {
 		wobj.takeDamage(100, this, time);
 	}
+	
+	public void collidedBy(WorldObject wobj, float time) {
+		wobj.takeDamage(100, this, time);
+	}
 }

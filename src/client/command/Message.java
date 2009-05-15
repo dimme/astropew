@@ -18,7 +18,8 @@ public class Message implements Comparable<Message> {
 	
 	public boolean equals(Object rhs) {
 		if (rhs instanceof Message) {
-			return compareTo((Message)rhs) == 0;
+			Message m = (Message)rhs;
+			return (time == m.time && msg.equals(m.msg));
 		}
 		return false;
 	}
