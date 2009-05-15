@@ -1,5 +1,7 @@
 package client.audio;
 
 public enum SoundEffect {
-	Pew
+	Pew, 
+	Weee,
+	Splode
 }

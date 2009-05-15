@@ -57,6 +57,7 @@ import com.jmex.game.state.BasicGameState;
 import com.jmex.game.state.GameStateManager;
 import common.world.Missile;
 import common.world.NoPlayer;
+import common.world.ObjectType;
 import common.world.Planet;
 import common.world.Ship;
 import common.world.Universe;
@@ -528,10 +529,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			common.Player owner = logic.getPlayer(ownerid);
 			Ship s = owner.getShip();
 			Missile m = new Missile(logic, id, pos, dir, owner, time);
-
-			if (owner != self) { //TODO: remove if.
-				audio.queueSound(SoundEffect.Pew, s);
-			}
 			
 			MaterialState ms = display.getRenderer().createMaterialState();
 
@@ -541,6 +538,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 			universe.attachChild(m);
 			logic.add(m);
+			
+			audio.queueSound(SoundEffect.Pew, s);
+			audio.addEmit(SoundEffect.Weee, m);
 		}
 
 		public common.Player removePlayer(int id) {
@@ -588,7 +588,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 						hp + "hp, " +
 						"@" + time);
 				}
-
+				
+				if (hp <= 0 && wobj.getType() == ObjectType.Ship) {
+					audio.queueSound(SoundEffect.Splode, wobj);
+				}
 				wobj.setHP(hp, inst, time);
 			}
 		}
