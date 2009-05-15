@@ -21,12 +21,8 @@ public class Ship extends MobileObject {
 		return color;
 	}
 
-	public int getType(){
-		return TYPE_SHIP;
-	}
-
 	public Ship(GameLogic logic, int id, Player owner, int subdivides, float creationtime) {
-		super(logic, id, "Ship", owner, creationtime);
+		super(ObjectType.Ship, logic, id, "Ship", owner, creationtime);
 
 		owner.setShip(this);
 
@@ -81,12 +77,12 @@ public class Ship extends MobileObject {
 	}
 
 	protected float actualDamage(float dmg, WorldObject instigator) {
-		if (instigator.getType() == TYPE_MISSILE) {
+		if (instigator.type == ObjectType.Missile) {
 			if(hp<=dmg){
 				instigator.getOwner().addPoints(200);
 			}
 			instigator.getOwner().addPoints(100);
-		} else if ( instigator.getType() == TYPE_SHIP ) {
+		} else if ( instigator.type == ObjectType.Ship) {
 			instigator.getOwner().addPoints(-500);
 		}
 		return dmg;

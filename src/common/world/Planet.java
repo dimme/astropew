@@ -11,7 +11,7 @@ public class Planet extends WorldObject {
 	private static final long serialVersionUID = 1L;
 
 	public Planet(GameLogic logic, int id, Vector3f center, int zsamples, int rsamples, float size) {
-		super(logic, id, "Planet");
+		super(ObjectType.Planet, logic, id, "Planet");
 
 		Sphere s = new Sphere("PlanetSphere", center, zsamples, rsamples, size);
 		s.setModelBound( new BoundingSphere(size, center) );
@@ -26,7 +26,7 @@ public class Planet extends WorldObject {
 
 	public void collidedBy(WorldObject wobj, float time) {
 		if (getOwner() != wobj.getOwner()) {
-			if(wobj.getType() == TYPE_SHIP){
+			if(wobj.type == ObjectType.Ship){
 				wobj.getOwner().addPoints(-1000);
 			}
 			wobj.forceHP(0, this.getOwner(), time);

@@ -5,10 +5,6 @@ import common.GameLogic;
 import common.Player;
 
 public abstract class WorldObject extends Node {
-	public static final int TYPE_SHIP = 0;
-	public static final int TYPE_MISSILE = 1;
-	public static final int TYPE_OTHER = 2;
-
 	private static final long serialVersionUID = 1L;
 	protected final Player owner;
 	protected final int id;
@@ -19,23 +15,30 @@ public abstract class WorldObject extends Node {
 	protected float hp;
 	protected boolean hp_changed = false;
 	protected float last_hp_update = 0;
+	
+	protected final ObjectType type;
 
 	private Player lastInstigator = NoPlayer.instance;
 
 	public WorldObject(GameLogic logic, int id, String name) {
-		this(logic, id, NoPlayer.instance, name);
+		this(ObjectType.Unspecified, logic, id, NoPlayer.instance, name);
+	}
+	
+	public WorldObject(ObjectType type, GameLogic logic, int id, String name) {
+		this(type, logic, id, NoPlayer.instance, name);
 	}
 
-	public WorldObject(GameLogic logic, int id, Player owner, String name) {
+	public WorldObject(ObjectType type, GameLogic logic, int id, Player owner, String name) {
 		super(name);
 		this.owner = owner;
 		this.logic = logic;
 		this.id = id;
 		hp = 100;
+		this.type = type;
 	}
 
-	public int getType(){
-		return TYPE_OTHER;
+	public final ObjectType getType(){
+		return type;
 	}
 
 	public Player getOwner() {

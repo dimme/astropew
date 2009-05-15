@@ -11,7 +11,7 @@ public class Missile extends MobileObject {
 	private static final long serialVersionUID = 1L;
 
 	public Missile(GameLogic logic, int id, Vector3f pos, Vector3f dir, Player owner, float time) {
-		super(logic, id, "Missile", owner, time);
+		super(ObjectType.Missile, logic, id, "Missile", owner, time);
 
 		final Sphere shape = new Sphere("MissileSphere", 10, 10, 0.1f );
 		shape.setModelBound(new BoundingSphere(0.1f, Vector3f.ZERO));
@@ -23,10 +23,6 @@ public class Missile extends MobileObject {
 
 		updateGeometricState(0, true);
 		updateModelBound();
-	}
-
-	public int getType(){
-		return TYPE_MISSILE;
 	}
 
 	protected void destroy(Player instigator) {
