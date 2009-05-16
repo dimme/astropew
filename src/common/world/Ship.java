@@ -34,6 +34,15 @@ public class Ship extends MobileObject {
 		color.a = 1;
 		float max = Math.max(color.r, Math.max(color.g, color.b));
 		color.r /= max;  color.g /= max;  color.b /= max;
+		if (color.r > 0.5 && color.g > 0.5 && color.b > 0.5) {
+			if (color.r <= color.g && color.r <= color.b) {
+				color.r = 0.5f;
+			} else if (color.g < color.b) {
+				color.g = 0.5f;
+			} else {
+				color.b = 0.5f;
+			}
+		}
 
 		hull = ShipHull.create(subdivides);
 		hull.rotateUpTo(Vector3f.UNIT_Z.mult(-1));

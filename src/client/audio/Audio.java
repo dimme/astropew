@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jmex.audio.AudioSystem;
@@ -16,11 +17,15 @@ import com.jmex.audio.AudioTrack.TrackType;
 import com.jmex.audio.event.TrackStateListener;
 
 import common.Pair;
+import common.world.MobileObject;
 
 public class Audio {
 	
 	private final AudioSystem asys;
-	private final Vector3f tmpv = new Vector3f();
+	private final Vector3f tmpv1 = new Vector3f();
+	private final Vector3f tmpv2 = new Vector3f();
+	private final Vector3f tmpv3 = new Vector3f();
+	private final Vector3f tmpv4 = new Vector3f();
 	
 	private HashMap<SoundEffect, AudioTrack> tracks = new HashMap<SoundEffect, AudioTrack>();
 	
@@ -41,6 +46,7 @@ public class Audio {
 			seFiles.put(SoundEffect.Pew, new File("../files/pew.wav").toURI().toURL());
 			seFiles.put(SoundEffect.Weee, new File("../files/weee.wav").toURI().toURL());
 			seFiles.put(SoundEffect.Splode, new File("../files/prrh.wav").toURI().toURL());
+			seFiles.put(SoundEffect.Shh, new File("../files/shh.wav").toURI().toURL());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -67,7 +73,7 @@ public class Audio {
 		queue.addLast(new Entry(s,source));
 	}
 	
-	public void update(Vector3f earpos) {
+	public void update(Vector3f earpos, Vector3f earmovement) {
 		while(!queue.isEmpty()) {
 			final Entry e = queue.removeFirst();
 			final AudioTrack trk = tracks.get(e.item1);
@@ -82,10 +88,23 @@ public class Audio {
 				it.remove();
 			} else {
 				setVolume(e.item1, earpos, e.item2.getWorldTranslation());
+				if (e.item2 instanceof MobileObject) {
+					setPitch(e.item1, earpos, earmovement, e.item2.getWorldTranslation(), 
+							((MobileObject)e.item2).getMovement());
+				}
 			}
 		}
 	}
 	
+	private void setPitch(AudioTrack trk, Vector3f earpos, Vector3f earmov, Vector3f srcpos, Vector3f srcmov) {
+		Vector3f olddist = earpos.subtract(srcpos, tmpv1);
+		Vector3f newdist = earpos.add(earmov, tmpv2).subtract(srcpos.add(srcmov, tmpv3), tmpv4);
+		float distdiff = olddist.length() - newdist.length(); 
+		
+		float pitch = 1f + distdiff*0.0005f;
+		trk.setPitch(pitch);
+	}
+
 	private void setVolume(AudioTrack trk, Vector3f earpos, Vector3f srcpos) {
 		float dist = earpos.distanceSquared(srcpos);
 		float vol;

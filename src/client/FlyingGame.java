@@ -362,7 +362,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			scoreNode.updateText(lines);
 		}
 		
-		audio.update(ship.getWorldTranslation());
+		audio.update(ship.getWorldTranslation(), ship.getMovement());
 		msgbox.update(lastUpdateTime);
 
 		//System.out.println("update ");
@@ -410,9 +410,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 			MaterialState ms = display.getRenderer().createMaterialState();
 			ColorRGBA c = s.getColor().clone();
-			float max = Math.max(c.r, Math.max(c.g, c.b)) * 0.8f;
+			float max = Math.max(c.r, Math.max(c.g, c.b));
 			c.r /= max;  c.g /= max;  c.b /= max;
-			c.clamp();
+			
 			ms.setAmbient(c);
 			ms.setDiffuse(ColorRGBA.black);
 			ms.setEmissive(ColorRGBA.black);
@@ -532,7 +532,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			
 			MaterialState ms = display.getRenderer().createMaterialState();
 
-			ms.setDiffuse(s.getColor().clone().multLocal(0.7f));
+			ms.setDiffuse(s.getColor().clone().multLocal(2f));
 			ms.setAmbient(s.getColor());
 			m.setRenderState(ms);
 
@@ -540,7 +540,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			logic.add(m);
 			
 			audio.queueSound(SoundEffect.Pew, s);
-			audio.addEmit(SoundEffect.Weee, m);
+			audio.addEmit(SoundEffect.Shh, m);
 		}
 
 		public common.Player removePlayer(int id) {
