@@ -66,4 +66,9 @@ public class OtherShip extends common.world.Ship {
 			game.addCommand(new MessageCommand(this.getOwner() + " died.", game.getLastUpdateTime()));
 		}
 	}
+	
+	public void forceHP(float hp, Player instigator, float atTime) {
+		super.forceHP(hp, instigator, atTime);
+		hull.distort(1f - this.hp * 0.01f);
+	}
 }

@@ -3,9 +3,11 @@ package common.world;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.FastMath;
@@ -23,6 +25,11 @@ public class ShipHull extends TriMesh {
 	private static boolean basisIsInitiated = false;
 	
 	private final int subdivs;
+
+	private static final Vector3f tmpv1 = new Vector3f();
+	private static final Vector3f tmpv2 = new Vector3f();
+	
+	private static final Random rnd = new Random();
 	
 	private ShipHull(int subdivides) {
 		super("ShipHull");
@@ -37,7 +44,7 @@ public class ShipHull extends TriMesh {
 		
 		ShipHull hull = new ShipHull(subdivides);
 		hull.setModelBound(new BoundingSphere());
-		subdivide(hull, 0f);
+		hull.distort(0f);
 
 		return hull;
 	}
@@ -59,10 +66,11 @@ public class ShipHull extends TriMesh {
 	}
 	
 	public void distort(float amount) {
-		if (subdivs == 0) {
-			return;
+		if (subdivs != 0 || getVertexBuffer() == null) {
+			subdivide(this, amount);
 		}
-		subdivide(this, amount);
+		ng.generateNormals(this, 0);
+		this.updateModelBound();
 	}
 
 	private static void subdivide(ShipHull hull, float distort) {
@@ -72,7 +80,14 @@ public class ShipHull extends TriMesh {
 		}
 		Triangle[] tris = new Triangle[basis.getTriangleCount()];
 		basis.getMeshAsTriangles(tris);
-		Triangle[] divd = subdivide(tris, hull.subdivs, distort, new HashMap<Vector3f, Vector3f>());
+		Collection<Triangle> tlist = new ArrayList<Triangle>();
+		for (Triangle t : tris) {
+			tlist.add(t);
+		}
+		tris = null;
+		tlist = subdivide(tlist, hull.subdivs, distort, new HashMap<Vector3f, Vector3f>());
+		Triangle[] divd = new Triangle[tlist.size()];
+		tlist.toArray(divd);
 
 		Vector3f[] positions = new Vector3f[divd.length*3];
 		int[] indices = new int[divd.length * 3];
@@ -89,11 +104,9 @@ public class ShipHull extends TriMesh {
 		IntBuffer ib = BufferUtils.createIntBuffer(indices);
 		
 		hull.reconstruct(fb, null, null, null, ib);
-		ng.generateNormals(hull, 0);
-		hull.updateModelBound();
 	}
 
-	private static Triangle[] subdivide(Triangle[] ts, int numdivs, float distort, HashMap<Vector3f, Vector3f> points) {
+	private static Collection<Triangle> subdivide(Collection<Triangle> ts, int numdivs, float distort, HashMap<Vector3f, Vector3f> points) {
 		if (numdivs == 0) {
 			return ts;
 		}
@@ -101,18 +114,20 @@ public class ShipHull extends TriMesh {
 		ts = subdivide(ts, numdivs-1, distort, points);
 
 		List<Triangle> newts = new LinkedList<Triangle>();
+		
+		float max = 2.4f * distort * FastMath.pow(0.5f, numdivs);
+		float maxany = max * 0.1f; 
 
 		for (Triangle t : ts) {
 			Vector3f v0 = t.get(0);
 			Vector3f v1 = t.get(1);
 			Vector3f v2 = t.get(2);
 
-			Vector3f v01 = v0.add(v1).multLocal(0.5f);
-			Vector3f v12 = v1.add(v2).multLocal(0.5f);
-			Vector3f v20 = v2.add(v0).multLocal(0.5f);
-
-			Vector3f normal = v20.cross(v12);
-
+			Vector3f v01 = v0.add(v1, new Vector3f()).multLocal(0.5f);
+			Vector3f v12 = v1.add(v2, new Vector3f()).multLocal(0.5f);
+			Vector3f v20 = v2.add(v0, new Vector3f()).multLocal(0.5f);
+			
+			v20.cross(v12, tmpv1); //normal
 			Vector3f v01t;
 			Vector3f v12t;
 			Vector3f v20t;
@@ -120,21 +135,27 @@ public class ShipHull extends TriMesh {
 			if (points.containsKey(v01)) {
 				v01t = points.get(v01);
 			} else {
-				v01t = v01.add(normal.mult(distort*((float)Math.random()-0.5f)));
+				tmpv1.mult(max*(rnd.nextFloat()-0.5f), tmpv2);
+				tmpv2.addLocal(maxany*(rnd.nextFloat()-0.5f), maxany*(rnd.nextFloat()-0.5f), maxany*(rnd.nextFloat()-0.5f));
+				v01t = v01.add(tmpv2, new Vector3f());
 				points.put(v01, v01t);
 			}
 
 			if (points.containsKey(v12)) {
 				v12t = points.get(v12);
 			} else {
-				v12t = v12.add(normal.mult(distort*((float)Math.random()-0.5f)));
+				tmpv1.mult(max*(rnd.nextFloat()-0.5f), tmpv2);
+				tmpv2.addLocal(maxany*(rnd.nextFloat()-0.5f), maxany*(rnd.nextFloat()-0.5f), maxany*(rnd.nextFloat()-0.5f));
+				v12t = v12.add(tmpv2, new Vector3f());
 				points.put(v12, v12t);
 			}
 
 			if (points.containsKey(v20)) {
 				v20t = points.get(v20);
 			} else {
-				v20t = v20.add(normal.mult(distort*((float)Math.random()-0.5f)));
+				tmpv1.mult(max*(rnd.nextFloat()-0.5f), tmpv2);
+				tmpv2.addLocal(maxany*(rnd.nextFloat()-0.5f), maxany*(rnd.nextFloat()-0.5f), maxany*(rnd.nextFloat()-0.5f));
+				v20t = v20.add(tmpv2, new Vector3f());
 				points.put(v20, v20t);
 			}
 
@@ -145,7 +166,7 @@ public class ShipHull extends TriMesh {
 			newts.add(new Triangle(v01t, v12t, v20t));
 		}
 
-		return newts.toArray(new Triangle[newts.size()]);
+		return newts;
 	}
 
 }
