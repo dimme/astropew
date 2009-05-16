@@ -547,16 +547,14 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.attachChild(m);
 			logic.add(m);
 			
-			if (owner != self) {
-				audio.queueSound(SoundEffect.Pew, s);
-				audio.addEmit(SoundEffect.Shh, m);
-			}
+			audio.queueSound(SoundEffect.Pew, s);
+			audio.addEmit(SoundEffect.Shh, m);
 		}
 
 		public common.Player removePlayer(int id) {
 			Ship removed = logic.remove(logic.getPlayer(id));
 			universe.removeChild(removed);
-			if (removed instanceof OtherShip) {
+			if (removed != self.getShip()) {
 				((OtherShip)removed).removeTargetSprite();
 			}
 			return removed.getOwner();
@@ -628,6 +626,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 				
 				if (s.getOwner() != self) {
 					audio.addEmit(SoundEffect.Weow, s);
+					//TODO: Borde vi höra vårt eget skepps "weow".. verkar irriterande. 
 				}
 			}
 		}
