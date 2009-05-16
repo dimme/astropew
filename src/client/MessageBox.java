@@ -13,7 +13,7 @@ public class MessageBox extends TextBox {
 	private static final long serialVersionUID = 1L;
 	private final TreeSet<Message> messages = new TreeSet<Message>();
 	private static final int MAX_NUM_MESSAGES = 5;
-	private static final float MESSAGE_TTL = 5f;
+	private static final float MESSAGE_TTL = 3f;
 
 	public MessageBox(String name, float xbase, float ybase) {
 		super(name, xbase, ybase);

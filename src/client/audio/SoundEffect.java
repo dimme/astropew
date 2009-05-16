@@ -4,5 +4,6 @@ public enum SoundEffect {
 	Pew, 
 	Weee,
 	Splode, 
-	Shh
+	Shh,
+	Weow
 }

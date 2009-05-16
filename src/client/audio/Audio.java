@@ -6,18 +6,17 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
-import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
-import com.jme.scene.Spatial;
 import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
-import com.jmex.audio.event.TrackStateListener;
 
 import common.Pair;
 import common.world.MobileObject;
+import common.world.ObjectType;
+import common.world.ObjectTypeSets;
+import common.world.WorldObject;
 
 public class Audio {
 	
@@ -47,6 +46,7 @@ public class Audio {
 			seFiles.put(SoundEffect.Weee, new File("../files/weee.wav").toURI().toURL());
 			seFiles.put(SoundEffect.Splode, new File("../files/prrh.wav").toURI().toURL());
 			seFiles.put(SoundEffect.Shh, new File("../files/shh.wav").toURI().toURL());
+			seFiles.put(SoundEffect.Weow, new File("../files/weow.wav").toURI().toURL());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -69,17 +69,23 @@ public class Audio {
         return at;
 	}
 	
-	public void queueSound(SoundEffect s, Spatial source) {
+	public void queueSound(SoundEffect s, WorldObject source) {
 		queue.addLast(new Entry(s,source));
 	}
 	
 	public void update(Vector3f earpos, Vector3f earmovement) {
+		asys.update();
+		
+		//one-shots
 		while(!queue.isEmpty()) {
 			final Entry e = queue.removeFirst();
 			final AudioTrack trk = tracks.get(e.item1);
 			setVolume(trk, earpos, e.item2.getWorldTranslation());
+			setPitch(trk,earpos,earmovement, e.item2);
 			trk.play();
 		}
+		
+		//emitted, looping sounds
 		final Iterator<Emit> it = emits.iterator();
 		while (it.hasNext()) {
 			Emit e = it.next();
@@ -88,11 +94,15 @@ public class Audio {
 				it.remove();
 			} else {
 				setVolume(e.item1, earpos, e.item2.getWorldTranslation());
-				if (e.item2 instanceof MobileObject) {
-					setPitch(e.item1, earpos, earmovement, e.item2.getWorldTranslation(), 
-							((MobileObject)e.item2).getMovement());
-				}
+				setPitch(e.item1, earpos, earmovement, e.item2);
 			}
+		}
+	}
+	
+	private void setPitch(AudioTrack trk, Vector3f earpos, Vector3f earmov, WorldObject src) {
+		if (ObjectTypeSets.mobileObjects.contains(src.getType())) {
+			setPitch(trk, earpos, earmov, src.getWorldTranslation(), 
+					((MobileObject)src).getMovement());
 		}
 	}
 	
@@ -101,15 +111,15 @@ public class Audio {
 		Vector3f newdist = earpos.add(earmov, tmpv2).subtract(srcpos.add(srcmov, tmpv3), tmpv4);
 		float distdiff = olddist.length() - newdist.length(); 
 		
-		float pitch = 1f + distdiff*0.0005f;
+		float pitch = 1f + distdiff*0.001f;
 		trk.setPitch(pitch);
 	}
 
 	private void setVolume(AudioTrack trk, Vector3f earpos, Vector3f srcpos) {
-		float dist = earpos.distanceSquared(srcpos);
+		float dist = earpos.distance(srcpos);
 		float vol;
-		if (dist < 40000f) {
-			vol = 1f - 0.000025f*dist;
+		if (dist < 200f) {
+			vol = 1f - 0.005f*dist;
 			vol = vol > 1f ? 1f : vol;
 		} else {
 			vol = 0;
@@ -117,7 +127,7 @@ public class Audio {
 		trk.setVolume(vol);
 	}
 	
-	public void addEmit(SoundEffect se, Spatial source) {
+	public void addEmit(SoundEffect se, WorldObject source) {
 		AudioTrack at = loadAudioTrack(se);
 		at.setVolume(0f);
 		at.setLooping(true);
@@ -125,14 +135,14 @@ public class Audio {
 		emits.addLast(new Emit(at, source));
 	}
 	
-	private class Entry extends Pair<SoundEffect,Spatial> {
-		public Entry(SoundEffect se, Spatial sp) {
+	private class Entry extends Pair<SoundEffect,WorldObject> {
+		public Entry(SoundEffect se, WorldObject sp) {
 			super(se, sp);
 		}
 	}
 	
-	private class Emit extends Pair<AudioTrack,Spatial> {
-		public Emit(AudioTrack at, Spatial sp) {
+	private class Emit extends Pair<AudioTrack,WorldObject> {
+		public Emit(AudioTrack at, WorldObject sp) {
 			super(at, sp);
 		}
 	}

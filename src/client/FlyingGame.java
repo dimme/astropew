@@ -336,14 +336,23 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
-
-			if (lastPosSend + 0.5f < lastUpdateTime ||
-					(lastPosSend + 0.05f < lastUpdateTime &&
-					(!oldMovement.equals(ship.getMovement()) ||
-					 !oldRotation.equals(ship.getLocalRotation())))) {
+			
+			boolean lsend = lastPosSend + 0.5f < lastUpdateTime;
+			boolean ssend = lastPosSend + 0.05f < lastUpdateTime;
+			boolean mc = !oldMovement.equals(ship.getMovement());
+			boolean rc = !oldRotation.equals(ship.getLocalRotation());
+			
+			if ( lsend || (ssend && (mc||rc)) ){
 				lastPosSend = lastUpdateTime;
 				gc.sender.send(PacketDataFactory.createPlayerUpdate(lastUpdateTime, ship));
+				//System.out.println("sent update");
 			}
+			/*System.out.println(
+					(lsend ? 1 : 0) + "" +
+					(ssend ? 1 : 0) + "" +
+					(mc    ? 1 : 0) + "" +
+					(rc    ? 1 : 0) + "" +
+					" at " + lastUpdateTime);*/
 
 			updateHUD();
 		}
@@ -427,7 +436,6 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		MaterialState ms = display.getRenderer().createMaterialState();
 
 		ColorRGBA diffuse = s.getColor().clone();
-		diffuse.clamp();
 		ms.setDiffuse(diffuse);
 		ms.setAmbient(s.getColor().clone().multLocal(0.2f));
 		ms.setSpecular(ColorRGBA.white.clone().multLocal(0.1f));
@@ -539,8 +547,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			universe.attachChild(m);
 			logic.add(m);
 			
-			audio.queueSound(SoundEffect.Pew, s);
-			audio.addEmit(SoundEffect.Shh, m);
+			if (owner != self) {
+				audio.queueSound(SoundEffect.Pew, s);
+				audio.addEmit(SoundEffect.Shh, m);
+			}
 		}
 
 		public common.Player removePlayer(int id) {
@@ -614,6 +624,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 					//skybox.setLocalTranslation(s.getLocalTranslation());
 					playing.setActive(true);
 					connected.setActive(false);
+				}
+				
+				if (s.getOwner() != self) {
+					audio.addEmit(SoundEffect.Weow, s);
 				}
 			}
 		}
