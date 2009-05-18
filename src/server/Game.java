@@ -207,7 +207,7 @@ public class Game extends BaseHeadlessApp {
 					s.interpolate(-1f,time);
 					Vector3f pos = s.getLocalTranslation();
 					Vector3f dir = s.getLocalRotation().getRotationColumn(2);
-					dir.multLocal(150f);
+					dir.multLocal(200f);
 					//dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
 					Missile m = new Missile(logic, objectId++, pos, dir, c, frameTime);

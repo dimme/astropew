@@ -1,5 +1,11 @@
 package client;
 
+import client.command.AbstractCommand;
+import client.command.Command;
+import client.command.GameCommandInterface;
+import client.command.Message;
+import client.command.MessageCommand;
+
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;

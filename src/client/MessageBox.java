@@ -35,7 +35,7 @@ public class MessageBox extends TextBox {
 		int i = 0;
 		Iterator<Message> it = messages.descendingIterator();
 		while(it.hasNext()) {
-			lines[i++] = it.next().msg;
+			lines[i++] = it.next().msg.toString();
 		}
 		updateText(lines);
 	}

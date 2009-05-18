@@ -2,7 +2,7 @@ package client.command;
 
 public class Message implements Comparable<Message> {
 	public final String msg;
-	public final float time;
+	public float time;
 
 	public Message(String msg, float time) {
 		this.msg = msg;

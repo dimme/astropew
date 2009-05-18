@@ -14,11 +14,11 @@ public abstract class AbstractCommand implements Command {
 	}
 
 	public int compareTo(Command c) {
-		if (time == c.getTime()) {
-			return 0;
+		if (getTime() == c.getTime()) {
+			return new Integer(c.hashCode()).compareTo(this.hashCode());
 		}
 
-		return time > c.getTime() ? 1 : -1;
+		return getTime() > c.getTime() ? 1 : -1;
 	}
 
 	public boolean equals(Object o) {
