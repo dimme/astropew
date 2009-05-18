@@ -624,10 +624,9 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 					connected.setActive(false);
 				}
 				
-				if (s.getOwner() != self) {
-					audio.addEmit(SoundEffect.Weow, s);
-					//TODO: Borde vi höra vårt eget skepps "weow".. verkar irriterande. 
-				}
+				/*if (s.getOwner() != self) {
+					audio.addEmit(SoundEffect.Weow, s); 
+				}*/
 			}
 		}
 

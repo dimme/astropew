@@ -64,7 +64,7 @@ public class Ship extends MobileObject {
 	}
 
 	public void setSpawnPositions(float time) {
-		getPosition().set(600*(float)Math.random(), 600*(float)Math.random(), 600*(float)Math.random());
+		getPosition().set(300*(float)Math.random(), 300*(float)Math.random(), 300*(float)Math.random());
 		//getPosition().set(0,0,0);
 		getLocalTranslation().set(getPosition());
 
