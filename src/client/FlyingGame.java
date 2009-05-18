@@ -23,16 +23,20 @@ import com.jme.image.Texture;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.InputActionInterface;
 import com.jme.input.controls.GameControl;
 import com.jme.input.controls.GameControlManager;
 import com.jme.input.controls.binding.KeyboardBinding;
 import com.jme.input.controls.controller.CameraController;
 import com.jme.light.PointLight;
+import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
 import com.jme.scene.state.BlendState;
@@ -51,6 +55,8 @@ import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.RangedAudioTracker;
 import com.jmex.audio.AudioTrack.TrackType;
+import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleMesh;
 import com.jmex.font2d.Font2D;
 import com.jmex.font2d.Text2D;
 import com.jmex.game.state.BasicGameState;
@@ -73,6 +79,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	protected final int selfShipId;
 	protected final Universe universe;
 	private InputHandler inputHandler;
+	private ChatInputHandler chatInputHandler;
 	private float lastUpdateTime;
 	private CameraController cameraController;
 	private Timer timer;
@@ -81,6 +88,10 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private ZBufferState targetSpriteZbufs;
 	private TextureState targetSpriteTexture;
 	private BlendState targetSpriteBlend;
+	
+	private ZBufferState missileTrailZbufs;
+	private TextureState missileTrailTexture;
+	private BlendState missileTrailBlend;
 
 	private BasicGameState playing;
 	private BasicGameState connected;
@@ -174,6 +185,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		playingRoot.attachChild(universe);
 
 		initTargetSpriteStates();
+		initMissileTrailStates();
 
 		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
@@ -220,6 +232,8 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		addPlayer(selfShipId, self);
 		inputHandler = new FlyingGameInputHandler(self.getShip(), this);
+		chatInputHandler = new ChatInputHandler(this);
+		chatInputHandler.setEnabled(false);
 
 		playingRoot.updateRenderState();
 
@@ -255,6 +269,36 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		targetSpriteBlend.setBlendEquation( BlendState.BlendEquation.Add );
 		targetSpriteBlend.setTestEnabled( false );
 		targetSpriteBlend.setEnabled( true );
+	}
+	
+	private void initMissileTrailStates() {
+		missileTrailZbufs = display.getRenderer().createZBufferState();
+		missileTrailZbufs.setEnabled(true);
+		missileTrailZbufs.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
+
+		missileTrailTexture = display.getRenderer().createTextureState();
+		final Texture targettext = TextureManager.loadTexture("../files/trail.png",
+				Texture.MinificationFilter.Trilinear,
+				Texture.MagnificationFilter.Bilinear, 1.0f, true);
+		missileTrailTexture.setTexture(targettext);
+		missileTrailTexture.setEnabled(true);
+
+		/*missileTrailBlend = display.getRenderer().createBlendState();
+		missileTrailBlend.setBlendEnabled( true );
+		missileTrailBlend.setSourceFunctionAlpha( BlendState.SourceFunction.SourceAlpha );
+		missileTrailBlend.setDestinationFunctionAlpha( BlendState.DestinationFunction.OneMinusSourceAlpha );
+		missileTrailBlend.setBlendEquation( BlendState.BlendEquation.Add );
+		missileTrailBlend.setTestEnabled( false );
+		missileTrailBlend.setEnabled( true );*/
+		
+		missileTrailBlend = display.getRenderer().createBlendState();
+		missileTrailBlend.setBlendEnabled( true );
+		missileTrailBlend.setSourceFunctionAlpha(BlendState.SourceFunction.SourceAlpha);
+		missileTrailBlend.setDestinationFunctionAlpha(BlendState.DestinationFunction.One);
+		missileTrailBlend.setBlendEquation( BlendState.BlendEquation.Add );
+		missileTrailBlend.setTestEnabled( true );
+		missileTrailBlend.setTestFunction(BlendState.TestFunction.GreaterThan);
+		missileTrailBlend.setEnabled( true );
 	}
 
 	protected void initSystem() {
@@ -323,17 +367,17 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		}
 
 		Ship ship = self.getShip();
+		chatInputHandler.update(interpolation);
 		if (playing.isActive()) {
+			
 			GameStateManager.getInstance().update(interpolation);
 
-			
+			logic.interpolate(interpolation, lastUpdateTime);
 
 			oldMovement.set(ship.getMovement());
 			oldRotation.set(ship.getLocalRotation());
 			inputHandler.update(interpolation);
-
-			logic.interpolate(interpolation, lastUpdateTime);
-
+			
 			universe.updateGeometricState(interpolation, true);
 			universe.updateRenderState();
 			
@@ -530,26 +574,79 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			return p;
 		}
 	}
+	
+	public common.Player getPlayer(int id) {
+		return logic.getPlayer(id);
+	}
 
 	private class CommandInterface implements GameCommandInterface {
 
 		public void addMissile(int id, Vector3f pos, Vector3f dir, int ownerid, float time) {
 			common.Player owner = logic.getPlayer(ownerid);
-			Ship s = owner.getShip();
+			
+			//final ParticleMesh pm = createTrail(owner.getShip().getColor().clone().multLocal(2f));
+			Missile m = createMissile(id, pos, dir, owner, null, time);
+			
+			
+			
+			audio.queueSound(SoundEffect.Pew, owner.getShip());
+			audio.addEmit(SoundEffect.Shh, m);
+		}
+		
+		private Missile createMissile(int id, Vector3f pos, Vector3f dir, common.Player owner, ParticleMesh trail, float time) {
 			Missile m = new Missile(logic, id, pos, dir, owner, time);
+			Ship s = owner.getShip();
+			
+			//m.attachChild(trail);
 			
 			MaterialState ms = display.getRenderer().createMaterialState();
 
-			ms.setDiffuse(s.getColor().clone().multLocal(2f));
-			ms.setAmbient(s.getColor());
+			ms.setDiffuse(s.getColor().clone().multLocal(1f));
+			ms.setAmbient(s.getColor().clone().multLocal(0.5f));
+			ms.setEmissive(s.getColor());
 			m.setRenderState(ms);
 
 			universe.attachChild(m);
 			logic.add(m);
 			
-			audio.queueSound(SoundEffect.Pew, s);
-			audio.addEmit(SoundEffect.Shh, m);
+			return m;
 		}
+		
+		//TODO: private, men vi måste skydda den från Fredrik.. (unused)
+		protected ParticleMesh createTrail(ColorRGBA color) {
+			//Code mostly by Core-Dump:
+			// http://www.jmonkeyengine.com/wiki/doku.php?id=simple_fireworks
+			
+	        ParticleMesh particleGeom = ParticleFactory.buildParticles("trail", 20);
+	        particleGeom.setReleaseRate(4000);
+	        //particleGeom.setStartColor(color);
+	        //particleGeom.setEndColor(color);
+	        // add a gravity effect to the particle effect
+	        /*particleGeom.addInfluence(SimpleParticleInfluenceFactory
+	                .createBasicGravity(new Vector3f(0, -0.15f, 0), true));*/
+	        particleGeom.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
+	        // allow to shoot only downwards in a 20° angle
+	        particleGeom.getParticleController().setSpeed(1f);
+	        particleGeom.setMinimumLifeTime(10.0f);
+	        particleGeom.setMaximumLifeTime(50.0f);
+	        particleGeom.setStartSize(0.1f);
+	        particleGeom.setEndSize(0.01f);
+	        particleGeom.setStartColor(color);
+	        particleGeom.setEndColor(color);
+	        particleGeom.getParticleController().setControlFlow(false);
+	        // set the repeat type to looping
+	        particleGeom.getParticleController().setRepeatType(Controller.RT_CYCLE);
+	        particleGeom.warmUp(100);
+	        particleGeom.setInitialVelocity(0.005f);
+	        // apply alpha, texture and ZBuffer renderstates
+	        
+	        particleGeom.setRenderState(missileTrailBlend);
+	        particleGeom.setRenderState(missileTrailZbufs);
+	        particleGeom.setRenderState(missileTrailTexture);
+	        particleGeom.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+	        
+	        return particleGeom;
+	    }
 
 		public common.Player removePlayer(int id) {
 			Ship removed = logic.remove(logic.getPlayer(id));
@@ -648,6 +745,15 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 	public float getLastUpdateTime() {
 		return lastUpdateTime;
+	}
+
+	public void sendChatMessage(String msg) {
+		gc.sender.send(PacketDataFactory.createChatMessage(msg));
+	}
+
+	public void setChatMode(boolean b) {
+		inputHandler.setEnabled(!b);
+		chatInputHandler.setEnabled(b);
 	}
 	
 	

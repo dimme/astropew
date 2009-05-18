@@ -19,6 +19,7 @@ public class FlyingGameInputHandler extends InputHandler {
 	protected final Game game;
 	
 	private final List<TurnAction> turnactions = new LinkedList<TurnAction>();
+	private float chatDelay = 0;
 
 	public FlyingGameInputHandler(Ship s, Game game) {
 		this.ship = s;
@@ -29,7 +30,8 @@ public class FlyingGameInputHandler extends InputHandler {
 
 	private void setKeyBindings() {
 		final KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
-
+		
+		
 		keyboard.set("accelerate", KeyInput.KEY_W);
 		keyboard.set("decelerate", KeyInput.KEY_S);
 		keyboard.set("brake", KeyInput.KEY_LSHIFT);
@@ -40,6 +42,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		keyboard.set("turn_ccw", KeyInput.KEY_LEFT);
 		keyboard.set("turn_cw", KeyInput.KEY_RIGHT);
 		keyboard.set("fire_missile", KeyInput.KEY_SPACE);
+		keyboard.set("chat", KeyInput.KEY_RETURN);
 	}
 
 	private void add(TurnAction ta, String cmd) {
@@ -66,6 +69,7 @@ public class FlyingGameInputHandler extends InputHandler {
 		add(new TurnAction(TurnAction.Z, TurnAction.CW), "turn_cw");
 		add(new TurnAction(TurnAction.Z, TurnAction.CCW), "turn_ccw");
 		add(new FireMissileAction(), "fire_missile");
+		add(new ChatAction(), "chat");
 	}
 
 	private class FireMissileAction implements InputActionInterface {
@@ -115,6 +119,14 @@ public class FlyingGameInputHandler extends InputHandler {
 
 		public void performAction(InputActionEvent evt) {
 			ship.getMovement().multLocal(FastMath.pow(BRAKE_COEFFICIENT, evt.getTime()));
+		}
+	}
+	
+	private class ChatAction implements InputActionInterface {
+		public void performAction(InputActionEvent evt) {
+			if (chatDelay <= 0f) {
+				game.setChatMode(true);
+			}
 		}
 	}
 
@@ -174,7 +186,13 @@ public class FlyingGameInputHandler extends InputHandler {
 		}
 	}
 	
+	public void setEnabled(boolean b) {
+		chatDelay = 0.2f;
+		super.setEnabled(b);
+	}
+	
 	public void update(float interpolation) {
+		chatDelay = Math.max(chatDelay-interpolation, 0);
 		for (TurnAction ta : turnactions) {
 			ta.startingUpdate();
 		}

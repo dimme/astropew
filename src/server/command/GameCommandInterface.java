@@ -15,4 +15,5 @@ public interface GameCommandInterface {
 	public void playerUpdate(Vector3f pos, Quaternion ort, Vector3f dir, float time, SocketAddress sender);
 	public void destroy(WorldObject destroyed, Player instigator);
 	public void spawn(Ship ship);
+	public void relayChatMessage(SocketAddress sender, String msg);
 }

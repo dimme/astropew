@@ -2,6 +2,7 @@ package server;
 
 import java.net.SocketAddress;
 
+import server.command.ChatMessageCommand;
 import server.command.ClientJoiningCommand;
 import server.command.ClientLeavingCommand;
 import server.command.FireMissileCommand;
@@ -43,7 +44,10 @@ public class PacketDecoder implements PacketObserver {
 		case ClientPacketType.FIRE_MISSILE:
 			float t = Util.getFloat(data, OffsetConstants.FIRE_MISSILE_TIME_OFFSET);
 			game.addCommand(new FireMissileCommand(sender, t) );
-
+			break;
+		case ClientPacketType.CHAT_MESSAGE:
+			String msg = Util.getString(data, OffsetConstants.CHAT_MESSAGE_STRING_OFFSET);
+			game.addCommand(new ChatMessageCommand(sender, msg));
 			break;
 		default:
 			return false;

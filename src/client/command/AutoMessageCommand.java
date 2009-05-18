@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashMap;
 
+import client.Game;
+import client.GameLogic;
 import common.MessageType;
 
 
@@ -14,17 +16,17 @@ public class AutoMessageCommand extends MessageCommand {
 	private static final Formatter fmt = new Formatter(fmtout);
 	private static Object[] formatData = new Object[3];
 
-	public AutoMessageCommand(byte msgtype, int[] ids, String str, float time) {
-		super(createMessageString(msgtype, ids, str), time);
+	public AutoMessageCommand(Game game, byte msgtype, int[] ids, String str, float time) {
+		super(createMessageString(game, msgtype, ids, str), time);
 
 	}
 
-	private static String createMessageString(byte msgtype, int[] ids, String str) {
+	private static String createMessageString(Game game, byte msgtype, int[] ids, String str) {
 		if (formatData.length < ids.length+1) {
 			formatData = new Object[2*(ids.length+1)];
 		}
 		for (int i=0; i<ids.length; i++) {
-			formatData[i] = ids[i]; //TODO: Fetch actual object? Not needed until we actually use the Message Packet type. :)
+			formatData[i] = game.getPlayer(ids[i]);
 		}
 		formatData[ids.length] = str;
 
@@ -40,7 +42,7 @@ public class AutoMessageCommand extends MessageCommand {
 
 	private static String getFormatString(byte msgtype) {
 		if (messages.isEmpty()) {
-			messages.put(MessageType.CHAT, "%s");
+			messages.put(MessageType.CHAT, "%s: %s");
 		}
 
 		return messages.get(msgtype);

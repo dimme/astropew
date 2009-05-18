@@ -28,5 +28,7 @@ public interface ClientPacketType {
 	 * Time - long - 8 byte <br>
 	 */
 	public static final byte FIRE_MISSILE = 67;
+	
+	public static final byte CHAT_MESSAGE = 68;
 
 }

@@ -9,10 +9,8 @@ public class Todo {
 	// TODO: Kolla så att grejor tas bort helt (alla referenser) både på klient och server. Glöm inte att skepp/missiler/worldobjects kan behandlas olika.
 
 	// TODO: Hitta server.
-	// TODO: Ljud
 	// TODO: effects
 	
-	// TODO: Lägre prioritet: Inte skicka allt till alla hela tiden.
 	// TODO: Riktigt låg prioritet: Servern bestämmer!
 	// TODO: Otroligt låg prioritet: rörliga himlakroppar. :)
 }

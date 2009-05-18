@@ -18,6 +18,17 @@ public class PacketDataFactory {
 		return b;
 	}
 
+	public static byte[] createChatMessage(String message) {
+		final byte[] sb = message.getBytes();
+		final byte[] b = new byte[2 + sb.length];
+
+		b[0] = ClientPacketType.CHAT_MESSAGE;
+		b[1] = 0;
+		Util.put(sb, b, OffsetConstants.CHAT_MESSAGE_STRING_OFFSET);
+
+		return b;
+	}
+	
 	public static byte[] createJoin(String playername) {
 		final byte[] sb = playername.getBytes();
 		final byte[] b = new byte[2 + sb.length];

@@ -17,4 +17,10 @@ public interface Game {
 	public abstract void setPlaying(boolean b);
 
 	public abstract float getLastUpdateTime();
+	
+	public abstract common.Player getPlayer(int id);
+
+	public abstract void setChatMode(boolean b);
+
+	public abstract void sendChatMessage(String msg);
 }

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import server.clientdb.Client;
 import server.clientdb.ClientDB;
 
+import common.MessageType;
 import common.OffsetConstants;
 import common.ServerPacketType;
 import common.Util;
@@ -188,5 +189,20 @@ public class PacketDataFactory {
 		Util.put(ship.getMovement(), b, OffsetConstants.SPAWN_DIR_OFFSET);
 
 		return b;
+	}
+
+	public byte[] createChatMessage(int id, String msg, float time) {
+		byte[] sb = msg.getBytes();
+		byte[] data = new byte[OffsetConstants.MESSAGE_OVERHEAD_SIZE + OffsetConstants.MESSAGE_ID_LENGTH + sb.length];
+		data[0] = ServerPacketType.MESSAGE;
+		data[1] = 0;
+		data[OffsetConstants.MESSAGE_MESSAGE_TYPE_OFFSET] = MessageType.CHAT;
+		
+		Util.put(time, data, OffsetConstants.MESSAGE_TIME_OFFSET);
+		Util.put(1, data, OffsetConstants.MESSAGE_NUM_PLAYER_IDS_OFFSET);
+		Util.put(id, data, OffsetConstants.MESSAGE_PLAYER_IDS_OFFSET);
+		Util.put(sb, data, OffsetConstants.MESSAGE_OVERHEAD_SIZE + OffsetConstants.MESSAGE_ID_LENGTH);
+		
+		return data;
 	}
 }

@@ -207,11 +207,11 @@ public class Game extends BaseHeadlessApp {
 					s.interpolate(-1f,time);
 					Vector3f pos = s.getLocalTranslation();
 					Vector3f dir = s.getLocalRotation().getRotationColumn(2);
-					dir.multLocal(200f);
+					dir.multLocal(150f);
 					//dir.addLocal(s.getMovement());
 					//pos = pos.add(dir.normalize().multLocal(1.5f));
 					Missile m = new Missile(logic, objectId++, pos, dir, c, frameTime);
-					addCommand(new SetHPCommand(m, 0, frameTime+2f));
+					addCommand(new SetHPCommand(m, 0, frameTime+4f));
 					universe.attachChild(m);
 					logic.add(m);
 					ps.sendToAll(pdf.createMissile(m));
@@ -234,9 +234,11 @@ public class Game extends BaseHeadlessApp {
 		}
 
 		public void destroy(WorldObject obj, Player instigator) {
-			universe.removeChild(obj);
-			logic.remove(obj);
-			ps.controlledSendToAll(pdf.createHPUpdate(obj));
+			if (obj.getParent() != null) {
+				universe.removeChild(obj);
+				logic.remove(obj);
+				ps.controlledSendToAll(pdf.createHPUpdate(obj));
+			}
 		}
 
 		public void spawn(Ship ship) {
@@ -250,6 +252,13 @@ public class Game extends BaseHeadlessApp {
 			ship.setHP(100, NoPlayer.instance, frameTime);
 
 			universe.updateGeometricState(0, true);
+		}
+
+		public void relayChatMessage(SocketAddress sender, String msg) {
+			Client c = cdb.getClient(sender);
+			if (c!=null) {
+				ps.controlledSendToAll(pdf.createChatMessage(c.getID(), msg, frameTime));
+			}
 		}
 
 
