@@ -5,6 +5,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Formatter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,7 +108,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 	private Text2D txtPoints;
 	private Text2D txtSpeed;
 	private TextBox scoreNode;
-	private MessageBox msgbox;
+	private ChatMessageBox msgbox;
 	private float lastPosSend = 0;
 	private final Vector3f oldMovement = new Vector3f();
 	private final Quaternion oldRotation = new Quaternion();
@@ -176,7 +178,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 		scoreNode = new TextBox("ScoreDisplay", 20f, display.getHeight()-20f);
 		connected.getRootNode().attachChild(scoreNode);
 
-		msgbox = new MessageBox("MessageBox", 5f, 0f);
+		msgbox = new ChatMessageBox("MessageBox", 5f, 0f);
 		msgbox.setGrowUpwards(true);
 		messages.getRootNode().attachChild(msgbox);
 
@@ -232,7 +234,7 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 
 		addPlayer(selfShipId, self);
 		inputHandler = new FlyingGameInputHandler(self.getShip(), this);
-		chatInputHandler = new ChatInputHandler(this);
+		chatInputHandler = new ChatInputHandler(this, msgbox);
 		chatInputHandler.setEnabled(false);
 
 		playingRoot.updateRenderState();
@@ -401,15 +403,13 @@ public class FlyingGame extends VariableTimestepGame implements Game {
 			updateHUD();
 		}
 		if (connected.isActive()) {
-			String[] lines = new String[logic.getShips().size()+2];;
+			List<String> lines = new LinkedList<String>();
 
-			lines[0] = "Scores:";
-			lines[1] = "";
+			lines.add("Scores:");
+			lines.add("");
 
-			int pos = 2;
 			for (Ship s : logic.getShips()) {
-				lines[pos] = s.getOwner().getName() + " " + s.getOwner().getPoints() + "p";
-				pos++;
+				lines.add(s.getOwner().getName() + " " + s.getOwner().getPoints() + "p");
 			}
 
 			scoreNode.updateText(lines);

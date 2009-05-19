@@ -1,6 +1,8 @@
 package client;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeSet;
 
 import client.command.Message;
@@ -11,9 +13,9 @@ public class MessageBox extends TextBox {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	private final TreeSet<Message> messages = new TreeSet<Message>();
-	private static final int MAX_NUM_MESSAGES = 5;
-	private static final float MESSAGE_TTL = 3f;
+	protected final TreeSet<Message> messages = new TreeSet<Message>();
+	protected static final int MAX_NUM_MESSAGES = 5;
+	protected static final float MESSAGE_TTL = 3f;
 
 	public MessageBox(String name, float xbase, float ybase) {
 		super(name, xbase, ybase);
@@ -31,11 +33,10 @@ public class MessageBox extends TextBox {
 	}
 	
 	private void update() {
-		String[] lines = new String[messages.size()];
-		int i = 0;
+		List<String> lines = new LinkedList<String>();
 		Iterator<Message> it = messages.descendingIterator();
 		while(it.hasNext()) {
-			lines[i++] = it.next().msg.toString();
+			lines.add(it.next().msg);
 		}
 		updateText(lines);
 	}

@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Font;
+import java.util.List;
 
 import client.world.NodeThatCanRemoveAllChildren;
 
@@ -23,7 +24,7 @@ public class TextBox extends NodeThatCanRemoveAllChildren {
 		setGrowUpwards(false);
 	}
 
-	public void updateText(String[] lines) {
+	public void updateText(List<String> lines) {
 		removeAllChildren();
 
 		float pos = 0f;

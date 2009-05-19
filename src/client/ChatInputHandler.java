@@ -1,13 +1,6 @@
 package client;
 
-import client.command.AbstractCommand;
-import client.command.Command;
-import client.command.GameCommandInterface;
-import client.command.Message;
-import client.command.MessageCommand;
-
 import com.jme.input.InputHandler;
-import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.InputActionInterface;
@@ -16,10 +9,11 @@ public class ChatInputHandler extends InputHandler {
 	private final Game game;
 	private final StringBuilder sb;
 	
-	public ChatInputHandler(Game game) {
+	public ChatInputHandler(Game game, ChatMessageBox cmb) {
 		this.game = game;
 		setActions();
 		sb = new StringBuilder();
+		cmb.setWritingObj(sb);
 	}
 	
 	private void setActions() {
