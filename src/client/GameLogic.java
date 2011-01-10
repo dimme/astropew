@@ -30,7 +30,7 @@ public class GameLogic extends common.GameLogic {
 		return p;
 	}
 
-	public void add(Ship s) {
+	public void add(Ship s)  {
 		final Player owner = s.getOwner();
 		players.put(owner.getID(), owner);
 		super.add(s);
