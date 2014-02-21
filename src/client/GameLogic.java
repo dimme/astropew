@@ -8,6 +8,7 @@ import common.world.NoPlayer;
 import common.world.Ship;
 import common.world.WorldObject;
 
+
 public class GameLogic extends common.GameLogic {
 
 	private final HashMap<Integer, Player> players;
